@@ -20,7 +20,7 @@ int main()
 
     Ecore_Evas* ee = ecore_evas_new(0, 0, 0, WIDTH, HEIGHT, 0);
 
-    ecore_evas_title_set(ee, "Eva - WebKit2/Efl based test browser");
+    ecore_evas_title_set(ee, "Eagle - WebKit2/Efl based test browser");
     ecore_evas_show(ee);
 
     Evas* evas = ecore_evas_get(ee);
