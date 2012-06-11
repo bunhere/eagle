@@ -19,7 +19,13 @@ elm_main(int argc, char** argv)
     defaultWindow->setTitle("Eagle");
     defaultWindow->show();
 
-    defaultWindow->loadUrl("http://enlightenment.org");
+    const char* defaultURL;
+    if (argc > 1)
+        defaultURL = argv[1];
+    else
+        defaultURL = "http://enlightenment.org";
+
+    defaultWindow->loadUrl(defaultURL);
 
     elm_run();
     elm_shutdown();
