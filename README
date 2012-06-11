@@ -1,0 +1,9 @@
+Eagle - 0.0.1
+
+DESCRIPTION:
+This is WebKit/Efl based browser.
+More description will be added.
+
+CODING STYLE:
+Although this is EFL based application, it try to follow WebKit coding style.
+http://www.webkit.org/coding/coding-style.html

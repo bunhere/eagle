@@ -1,13 +1,21 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 PROJECT(Eagle CXX)
 
+ADD_DEFINITIONS(-DPROJECT_NAME=\"Eagle\")
+
 SET(EVA_SOURCES
-    src/main.cpp
+    src/browser/Browser.cpp
+    src/browser/WebView.cpp
+
+    src/EflWrappers/Object.cpp
+    src/EflWrappers/Window.cpp
+
+    src/Main.cpp
 )
 
 INCLUDE(FindPkgConfig)
 pkg_check_modules(pkgs REQUIRED
-    eina ecore evas ecore-evas
+    eina ecore evas ecore-evas elementary
     ewebkit2
 )
 
@@ -19,3 +27,4 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTAR_CFLAGS}")
 
 ADD_EXECUTABLE(eagle ${EVA_SOURCES})
 TARGET_LINK_LIBRARIES(eagle ${pkgs_LDFLAGS})
+INCLUDE_DIRECTORIES(eagle "src/")
