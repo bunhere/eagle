@@ -8,7 +8,6 @@
 
 #include "Browser.h"
 
-#include <EWebKit2.h>
 #include <browser/WebView.h>
 
 Browser* Browser::create()

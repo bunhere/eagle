@@ -3,9 +3,29 @@ PROJECT(Eagle CXX)
 
 ADD_DEFINITIONS(-DPROJECT_NAME=\"Eagle\")
 
+# Check package dependency.
+SET(PKG_LIST
+    eina ecore evas ecore-evas elementary
+)
+
+IF (USE_WEBKIT)
+    LIST(APPEND PKG_LIST ewebkit)
+ELSE ()
+    LIST(APPEND PKG_LIST ewebkit2)
+ENDIF ()
+
+INCLUDE(FindPkgConfig)
+pkg_check_modules(PKGS REQUIRED ${PKG_LIST})
+
+FOREACH(flag ${PKGS_CFLAGS})
+    SET(EAGLE_CFLAGS "${EAGLE_CFLAGS} ${flag}")
+ENDFOREACH(flag)
+
+SET(EAGLE_LDFLAGS ${PKGS_LDFLAGS})
+
+# Set sources
 SET(EAGLE_SOURCES
     src/browser/Browser.cpp
-    src/browser/WebView.cpp
 
     src/EflWrappers/Object.cpp
     src/EflWrappers/Window.cpp
@@ -13,18 +33,18 @@ SET(EAGLE_SOURCES
     src/Main.cpp
 )
 
-INCLUDE(FindPkgConfig)
-pkg_check_modules(pkgs REQUIRED
-    eina ecore evas ecore-evas elementary
-    ewebkit2
-)
+IF (USE_WEBKIT)
+    LIST(APPEND EAGLE_SOURCES
+        src/browser/ewk/WebView.cpp
+    )
+ELSE ()
+    LIST(APPEND EAGLE_SOURCES
+        src/browser/ewk2/WebView.cpp
+    )
+ENDIF ()
 
-FOREACH(flag ${pkgs_CFLAGS})
-    SET(EXTAR_CFLAGS "${EXTAR_CFLAGS} ${flag}")
-ENDFOREACH(flag)
-
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTAR_CFLAGS}")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_CFLAGS} ${EAGLE_CFLAGS}")
 
 ADD_EXECUTABLE(eagle ${EAGLE_SOURCES})
-TARGET_LINK_LIBRARIES(eagle ${pkgs_LDFLAGS})
+TARGET_LINK_LIBRARIES(eagle ${EAGLE_LDFLAGS})
 INCLUDE_DIRECTORIES(eagle "src/")
