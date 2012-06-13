@@ -9,8 +9,10 @@ SET(PKG_LIST
 )
 
 IF (USE_WEBKIT)
+    ADD_DEFINITIONS(-DUSE_WEBKIT=1)
     LIST(APPEND PKG_LIST ewebkit)
 ELSE ()
+    ADD_DEFINITIONS(-DUSE_WEBKIT2=1)
     LIST(APPEND PKG_LIST ewebkit2)
 ENDIF ()
 
@@ -26,6 +28,7 @@ SET(EAGLE_LDFLAGS ${PKGS_LDFLAGS})
 # Set sources
 SET(EAGLE_SOURCES
     src/browser/Browser.cpp
+    src/browser/WebView.cpp
 
     src/EflWrappers/Object.cpp
     src/EflWrappers/Window.cpp
@@ -35,11 +38,11 @@ SET(EAGLE_SOURCES
 
 IF (USE_WEBKIT)
     LIST(APPEND EAGLE_SOURCES
-        src/browser/ewk/WebView.cpp
+        src/browser/ewk/WebViewEWK.cpp
     )
 ELSE ()
     LIST(APPEND EAGLE_SOURCES
-        src/browser/ewk2/WebView.cpp
+        src/browser/ewk2/WebViewEWK2.cpp
     )
 ENDIF ()
 

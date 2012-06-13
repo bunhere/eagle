@@ -21,8 +21,3 @@ WebView::WebView(Object* container)
 
     setObject(ewkView);
 }
-
-void WebView::loadUrl(const char* url)
-{
-    ewk_view_uri_set(object(), url);
-}
