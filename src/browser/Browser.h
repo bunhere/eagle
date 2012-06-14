@@ -24,6 +24,7 @@ public:
 private:
     Browser();
 
+    static bool s_initialized;
     WebView* m_webView;
 };
 

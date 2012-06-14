@@ -10,8 +10,16 @@
 
 #include <browser/WebView.h>
 
+bool Browser::s_initialized = false;
+
 Browser* Browser::create()
 {
+    if (!s_initialized) {
+        WebView::initialize();
+
+        s_initialized = true;
+    }
+
     Browser* newBrowser = new Browser;
     if (!newBrowser->object()) {
         delete newBrowser;

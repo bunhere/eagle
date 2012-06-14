@@ -14,6 +14,8 @@
 class WebView : public Object
 {
 public:
+    static void initialize();
+
     WebView(Object* container);
 
     void loadUrl(const char* url);

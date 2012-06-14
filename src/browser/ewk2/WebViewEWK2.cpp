@@ -10,6 +10,10 @@
 #include <Elementary.h>
 #include <browser/WebView.h>
 
+void WebView::initialize()
+{
+}
+
 WebView::WebView(Object* container)
 {
     Evas* evas = evas_object_evas_get(container->object());
