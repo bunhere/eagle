@@ -15,8 +15,10 @@ class WebView : public Object
 {
 public:
     static void initialize();
+    static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
 
     WebView(Object* container);
+    ~WebView();
 
     void loadUrl(const char* url);
 private:
