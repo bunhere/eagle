@@ -20,11 +20,14 @@ public:
 
     void loadUrl(const char* url);
 
+    const char* getTheme();
+
     virtual void resize(int width, int height);
 private:
     Browser();
 
     static bool s_initialized;
+    Evas_Object* m_layout;
     WebView* m_webView;
 };
 

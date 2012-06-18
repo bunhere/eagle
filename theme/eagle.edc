@@ -1,0 +1,57 @@
+/*
+ * eagle
+ *
+ * Copyright (C) 2012 Ryuan Choi
+ *
+ * License LGPL-3, see COPYING file at project folder.
+ */
+
+#include "config.h"
+
+collections {
+    group { name: "eagle/browser-view";
+        parts {
+            PART_START("bg", RECT, 0)
+                description { state: "default" 0.0;
+                    visible: 1;
+                    align: 0.0 0.0;
+                    rel1 { relative: 0.0 0.0; }
+                    rel2 { relative: 1.0 1.0; }
+                    color: 255 255 0 255;
+                }
+            }
+            PART_START("bg.urlbar", RECT, 0)
+                description { state: "default" 0.0;
+                    visible: 1;
+                    fixed: 1 1;
+                    align: 0.0 0.0;
+                    min: 0 URLBAR_HEIGHT;
+                    rel1 { relative: 0.0 0.0; }
+                    rel2 { relative: 1.0 0.0; }
+                    color: 255 0 0 255;
+                }
+
+            }
+            PART_START("sw.urlbar", SWALLOW, 0)
+                description { state: "default" 0.0;
+                    visible: 1;
+                    fixed: 1 1;
+                    align: 0.0 0.0;
+                    min: 0 URLBAR_HEIGHT;
+                    rel1 { relative: 0.0 0.0; }
+                    rel2 { relative: 1.0 0.0; }
+                    color: 255 0 0 255;
+                }
+
+            }
+            PART_START("sw.webview", SWALLOW, 0)
+                description { state: "default" 0.0;
+                    visible: 1;
+                    align: 0.0 0.0;
+                    rel1 { relative: 0.0 1.0; to: "sw.urlbar"; }
+                    rel2 { relative: 1.0 1.0; }
+                }
+            }
+        }
+    }
+}

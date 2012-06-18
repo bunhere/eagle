@@ -27,8 +27,6 @@ WebView::WebView(Object* container)
 
     evas_object_event_callback_add(ewkView, EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
 
-    elm_win_resize_object_add(container->object(), ewkView);
-
     setObject(ewkView);
 }
 
