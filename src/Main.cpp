@@ -23,7 +23,7 @@ elm_main(int argc, char** argv)
     if (argc > 1)
         defaultURL = argv[1];
     else
-        defaultURL = "http://enlightenment.org";
+        defaultURL = "http://google.com";
 
     defaultWindow->loadUrl(defaultURL);
 
