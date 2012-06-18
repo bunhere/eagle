@@ -28,6 +28,7 @@ private:
 
     static bool s_initialized;
     Evas_Object* m_layout;
+    Evas_Object* m_entry;
     WebView* m_webView;
 };
 
