@@ -23,19 +23,6 @@ WebView::WebView(Object* container)
 {
     Evas* evas = evas_object_evas_get(container->object());
     Evas_Object* ewkView = ewk_view_single_add(evas);
-    evas_object_size_hint_weight_set(ewkView, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-
-    evas_object_event_callback_add(ewkView, EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
 
     setObject(ewkView);
-}
-
-WebView::~WebView()
-{
-    evas_object_event_callback_del(object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown);
-}
-
-void WebView::onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info)
-{
-    evas_object_focus_set(webview, true);
 }

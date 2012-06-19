@@ -69,7 +69,7 @@ Browser::Browser()
 
     elm_object_part_content_set(m_layout, "sw.urlbar", m_entry);
 
-    m_webView = new WebView(this);
+    m_webView = WebView::create(this);
     elm_object_part_content_set(m_layout, "sw.webview", m_webView->object());
     m_webView->show();
 }

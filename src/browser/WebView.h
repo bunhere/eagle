@@ -14,17 +14,17 @@
 class WebView : public Object
 {
 public:
-    static void initialize();
-    static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
-
-    WebView(Object* container);
     ~WebView();
+
+    static WebView* create(Object* container);
+
+    static void initialize();
+
+    static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
 
     void loadUrl(const char* url);
 private:
-
-    //static WebView* head;
-    //WebView* next;
+    WebView(Object* container);
 };
 
 #endif

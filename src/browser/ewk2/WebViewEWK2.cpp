@@ -18,7 +18,6 @@ WebView::WebView(Object* container)
 {
     Evas* evas = evas_object_evas_get(container->object());
     Evas_Object* ewkView = ewk_view_add(evas);
-    evas_object_size_hint_weight_set(ewkView, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 
     setObject(ewkView);
 }
