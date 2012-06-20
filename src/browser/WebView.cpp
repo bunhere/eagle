@@ -29,6 +29,9 @@ WebView* WebView::create(Object* container)
 {
     WebView* webview = new WebView(container);
 
+    //FIXME: hard typed path is bad.
+    ewk_view_theme_set(webview->object(), "/usr/local/share/ewebkit-0/themes/default.edj");
+
     evas_object_size_hint_weight_set(webview->object(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 
     evas_object_event_callback_add(webview->object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, webview);
