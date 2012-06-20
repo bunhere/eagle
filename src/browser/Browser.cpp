@@ -8,8 +8,9 @@
 
 #include "Browser.h"
 
+#include "Urlbar.h"
+#include "WebView.h"
 #include <Elementary.h>
-#include <browser/WebView.h>
 
 bool Browser::s_initialized = false;
 
@@ -30,19 +31,6 @@ Browser* Browser::create()
     return newBrowser;
 }
 
-static void urlbarChanged(void* data, Evas_Object* obj, void* eventInfo)
-{
-    printf(" [%s]\n", elm_object_text_get(obj));
-}
-
-static void urlbarActivated(void* data, Evas_Object* obj, void* eventInfo)
-{
-    Browser* browser = static_cast<Browser*>(data);
-    const char* url = elm_object_text_get(obj);
-    printf(" [%s entered]\n", elm_object_text_get(obj));
-    browser->loadUrl(elm_entry_markup_to_utf8(url));
-}
-
 Browser::Browser()
 {
     m_layout = elm_layout_add(object());
@@ -58,16 +46,9 @@ Browser::Browser()
     elm_win_resize_object_add(object(), m_layout);
 	evas_object_show(m_layout);
 
-    m_entry = elm_entry_add(m_layout);
-    elm_entry_single_line_set(m_entry, true);
+    m_urlbar = new Urlbar(this);
 
-    evas_object_size_hint_weight_set(m_entry, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
-
-    //evas_object_smart_callback_add(m_entry, "changed", urlbarChanged, this);
-    evas_object_smart_callback_add(m_entry, "activated", urlbarActivated, this);
-
-    elm_object_part_content_set(m_layout, "sw.urlbar", m_entry);
+    elm_object_part_content_set(m_layout, "sw.urlbar", m_urlbar->object());
 
     m_webView = WebView::create(this);
     elm_object_part_content_set(m_layout, "sw.webview", m_webView->object());
@@ -76,7 +57,7 @@ Browser::Browser()
 
 void Browser::loadUrl(const char* url)
 {
-    elm_object_text_set(m_entry, url);
+    m_urlbar->changeUrlEntry(url);
     printf(" %s will be loaded\n", url);
     m_webView->loadUrl(url);
 }

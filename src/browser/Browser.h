@@ -11,6 +11,7 @@
 
 #include <EflWrappers/Window.h>
 
+class Urlbar;
 class WebView;
 
 class Browser : public Window
@@ -28,7 +29,7 @@ private:
 
     static bool s_initialized;
     Evas_Object* m_layout;
-    Evas_Object* m_entry;
+    Urlbar* m_urlbar;
     WebView* m_webView;
 };
 

@@ -9,5 +9,6 @@
 #include "config.h"
 
 collections {
+#include "browser-urlbar.edc"
 #include "browser-view.edc"
 }

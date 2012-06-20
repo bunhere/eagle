@@ -28,6 +28,7 @@ SET(EAGLE_LDFLAGS ${PKGS_LDFLAGS})
 # Set sources
 SET(EAGLE_SOURCES
     src/browser/Browser.cpp
+    src/browser/Urlbar.cpp
     src/browser/WebView.cpp
 
     src/EflWrappers/Object.cpp
