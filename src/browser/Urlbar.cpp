@@ -37,6 +37,20 @@ void Urlbar::forward_clicked(void *data, Evas_Object *obj, const char *emission,
     self->container()->forward();
 }
 
+void Urlbar::reload_clicked(void *data, Evas_Object *obj, const char *emission, const char *source)
+{
+    Urlbar* self = static_cast<Urlbar*>(data);
+    self->container()->reload();
+    printf(" %s \n" , __func__);
+}
+
+void Urlbar::stop_clicked(void *data, Evas_Object *obj, const char *emission, const char *source)
+{
+    Urlbar* self = static_cast<Urlbar*>(data);
+    self->container()->stop();
+    printf(" %s \n" , __func__);
+}
+
 Urlbar::Urlbar(Browser* container)
     : m_container(container)
 {
@@ -62,6 +76,8 @@ Urlbar::Urlbar(Browser* container)
 
     edje_object_signal_callback_add(elm_layout_edje_get(obj), "mouse,clicked,1", "back", back_clicked, this);
     edje_object_signal_callback_add(elm_layout_edje_get(obj), "mouse,clicked,1", "forward", forward_clicked, this);
+    edje_object_signal_callback_add(elm_layout_edje_get(obj), "reload", "", reload_clicked, this);
+    edje_object_signal_callback_add(elm_layout_edje_get(obj), "stop", "", stop_clicked, this);
 
     setObject(obj);
 }

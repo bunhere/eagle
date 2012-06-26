@@ -25,6 +25,8 @@ public:
     void loadUrl(const char* url);
     void back();
     void forward();
+    void reload();
+    void stop();
 private:
     WebView(Object* container);
 };

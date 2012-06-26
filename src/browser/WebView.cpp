@@ -52,3 +52,13 @@ void WebView::forward()
 {
     ewk_view_forward(object());
 }
+
+void WebView::reload()
+{
+    ewk_view_reload(object());
+}
+
+void WebView::stop()
+{
+    ewk_view_stop(object());
+}

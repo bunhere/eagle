@@ -73,6 +73,16 @@ void Browser::forward()
     m_webView->forward();
 }
 
+void Browser::reload()
+{
+    m_webView->reload();
+}
+
+void Browser::stop()
+{
+    m_webView->stop();
+}
+
 const char* Browser::getTheme()
 {
     //FIXME: Need to find real path
