@@ -53,6 +53,7 @@ Browser::Browser()
     m_webView = WebView::create(this);
     elm_object_part_content_set(m_layout, "sw.webview", m_webView->object());
     m_webView->show();
+
 }
 
 void Browser::loadUrl(const char* url)
@@ -60,6 +61,16 @@ void Browser::loadUrl(const char* url)
     m_urlbar->changeUrlEntry(url);
     printf(" %s will be loaded\n", url);
     m_webView->loadUrl(url);
+}
+
+void Browser::back()
+{
+    m_webView->back();
+}
+
+void Browser::forward()
+{
+    m_webView->forward();
 }
 
 const char* Browser::getTheme()

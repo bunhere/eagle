@@ -23,6 +23,8 @@ public:
     static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
 
     void loadUrl(const char* url);
+    void back();
+    void forward();
 private:
     WebView(Object* container);
 };

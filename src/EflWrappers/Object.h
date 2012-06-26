@@ -11,6 +11,9 @@
 
 #include <Evas.h>
 
+#define SIGNAL_FUNC_DECLARE(function) \
+    static void function(void* data, Evas_Object* obj, const char* emission, const char* source)
+
 class Object
 {
 public:

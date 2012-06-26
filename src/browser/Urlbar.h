@@ -22,6 +22,9 @@ public:
     Browser* container() { return m_container; };
     void changeUrlEntry(const char* url);
     //static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
+
+    SIGNAL_FUNC_DECLARE(forward_clicked);
+    SIGNAL_FUNC_DECLARE(back_clicked);
 private:
     Browser* m_container;
     Evas_Object* m_entry;

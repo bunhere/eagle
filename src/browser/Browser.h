@@ -20,6 +20,8 @@ public:
     static Browser* create();
 
     void loadUrl(const char* url);
+    void back();
+    void forward();
 
     const char* getTheme();
 

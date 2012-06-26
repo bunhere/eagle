@@ -9,6 +9,7 @@
 #include "Urlbar.h"
 
 #include "Browser.h"
+#include <Edje.h>
 #include <Elementary.h>
 
 static void urlbarChanged(void* data, Evas_Object* obj, void* eventInfo)
@@ -22,6 +23,18 @@ static void urlbarActivated(void* data, Evas_Object* obj, void* eventInfo)
     const char* url = elm_object_text_get(obj);
     printf(" [%s entered]\n", elm_object_text_get(obj));
     urlbar->container()->loadUrl(elm_entry_markup_to_utf8(url));
+}
+
+void Urlbar::back_clicked(void *data, Evas_Object *obj, const char *emission, const char *source)
+{
+    Urlbar* self = static_cast<Urlbar*>(data);
+    self->container()->back();
+}
+
+void Urlbar::forward_clicked(void *data, Evas_Object *obj, const char *emission, const char *source)
+{
+    Urlbar* self = static_cast<Urlbar*>(data);
+    self->container()->forward();
 }
 
 Urlbar::Urlbar(Browser* container)
@@ -41,10 +54,14 @@ Urlbar::Urlbar(Browser* container)
     evas_object_size_hint_weight_set(m_entry, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(m_entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
 
+    elm_object_part_content_set(obj, "sw.url", m_entry);
+
+    //connect signal
     //evas_object_smart_callback_add(m_entry, "changed", urlbarChanged, this);
     evas_object_smart_callback_add(m_entry, "activated", urlbarActivated, this);
 
-    elm_object_part_content_set(obj, "sw.url", m_entry);
+    edje_object_signal_callback_add(elm_layout_edje_get(obj), "mouse,clicked,1", "back", back_clicked, this);
+    edje_object_signal_callback_add(elm_layout_edje_get(obj), "mouse,clicked,1", "forward", forward_clicked, this);
 
     setObject(obj);
 }

@@ -42,3 +42,13 @@ void WebView::loadUrl(const char* url)
 {
     ewk_view_uri_set(object(), url);
 }
+
+void WebView::back()
+{
+    ewk_view_back(object());
+}
+
+void WebView::forward()
+{
+    ewk_view_forward(object());
+}

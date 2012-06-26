@@ -24,10 +24,12 @@ group { name: "eagle/browser-urlbar";
             }
         }
         PART_START("back", IMAGE, 1)
+            repeat_events: 1;
             description { state: "default" 0.0;
                 visible: 1;
                 min: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
                 max: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
+                fixed: 1 1;
                 align: 0.0 0.5;
                 rel1 { relative: 0.0 0.0; }
                 rel2 { relative: 0.0 1.0; }
