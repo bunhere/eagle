@@ -9,11 +9,38 @@
 #include <Elementary.h>
 #include <browser/WebView.h>
 
+#include <browser/Browser.h>
+#include <browser/Urlbar.h>
+
 #if USE_WEBKIT
 #include <EWebKit.h>
 #else
 #include <EWebKit2.h>
 #endif
+
+inline static WebView* toWebView(void* userData)
+{
+    return static_cast<WebView*>(userData);
+}
+
+void WebView::onTitleChanged(void *userData, Evas_Object *webView, void *eventInfo)
+{
+    if (!eventInfo)
+        return;
+
+#if USE_WEBKIT
+    const char* title = static_cast<const Ewk_Text_With_Direction*>(eventInfo)->string;
+#else
+    const char* title = static_cast<const char*>(eventInfo);
+#endif
+    toWebView(userData)->container()->setTitle(title);
+}
+
+void WebView::onUriChanged(void *userData, Evas_Object *webView, void *eventInfo)
+{
+    Urlbar* urlbar = toWebView(userData)->container()->urlbar();
+    urlbar->changeUrlEntry(static_cast<const char*>(eventInfo));
+}
 
 void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
@@ -44,7 +71,7 @@ WebView::~WebView()
     evas_object_event_callback_del(object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown);
 }
 
-WebView* WebView::create(Object* container)
+WebView* WebView::create(Browser* container)
 {
     WebView* webview = new WebView(container);
 
@@ -55,6 +82,9 @@ WebView* WebView::create(Object* container)
 
     evas_object_event_callback_add(webview->object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, webview);
     evas_object_event_callback_add(webview->object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, webview);
+
+    evas_object_smart_callback_add(webview->object(), "title,changed", onTitleChanged, webview);
+    evas_object_smart_callback_add(webview->object(), "uri,changed", onUriChanged, webview);
     return webview;
 }
 

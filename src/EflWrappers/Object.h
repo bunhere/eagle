@@ -11,6 +11,9 @@
 
 #include <Evas.h>
 
+#define SMART_CALLBACK_DECLARE(func) \
+    static void func(void *user_data, Evas_Object *webview, void *event_info)
+
 #define SIGNAL_FUNC_DECLARE(function) \
     static void function(void* data, Evas_Object* obj, const char* emission, const char* source)
 

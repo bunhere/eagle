@@ -8,6 +8,7 @@
 
 #include <EWebKit.h>
 #include <Elementary.h>
+#include <browser/Browser.h>
 #include <browser/WebView.h>
 
 static Ewk_View_Smart_Class _parent_sc = EWK_VIEW_SMART_CLASS_INIT_NULL;
@@ -43,7 +44,8 @@ void WebView::initialize()
         ewk_network_proxy_uri_set(httpProxy);
 }
 
-WebView::WebView(Object* container)
+WebView::WebView(Browser* container)
+    : m_container(container)
 {
     Evas* evas = evas_object_evas_get(container->object());
     //Evas_Object* ewkView = ewk_view_single_add(evas);

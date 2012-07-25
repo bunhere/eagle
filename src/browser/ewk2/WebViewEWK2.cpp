@@ -8,13 +8,15 @@
 
 #include <EWebKit2.h>
 #include <Elementary.h>
+#include <browser/Browser.h>
 #include <browser/WebView.h>
 
 void WebView::initialize()
 {
 }
 
-WebView::WebView(Object* container)
+WebView::WebView(Browser* container)
+    : m_container(container)
 {
     Evas* evas = evas_object_evas_get(container->object());
     Evas_Object* ewkView = ewk_view_add(evas);

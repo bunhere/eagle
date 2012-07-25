@@ -28,6 +28,8 @@ public:
     const char* getTheme();
 
     virtual void resize(int width, int height);
+
+    Urlbar* urlbar() { return m_urlbar; }
 private:
     Browser();
 

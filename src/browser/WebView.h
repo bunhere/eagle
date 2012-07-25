@@ -11,14 +11,21 @@
 
 #include <EflWrappers/Object.h>
 
+class Browser;
+
 class WebView : public Object
 {
 public:
     ~WebView();
 
-    static WebView* create(Object* container);
+    static WebView* create(Browser* container);
 
     static void initialize();
+
+    Browser* container() { return m_container; };
+
+    SMART_CALLBACK_DECLARE(onTitleChanged);
+    SMART_CALLBACK_DECLARE(onUriChanged);
 
     static void onKeyDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
     static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
@@ -29,7 +36,9 @@ public:
     void reload();
     void stop();
 private:
-    WebView(Object* container);
+    WebView(Browser* container);
+
+    Browser* m_container;
 };
 
 #endif
