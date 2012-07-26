@@ -52,10 +52,10 @@ void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event
     if (ctrlPressed) {
         if (!strcmp(ev->key, "KP_Add")) {
             double ratio = ewk_view_device_pixel_ratio_get(ewkObject);
-            ewk_view_device_pixel_ratio_set(ewkObject, ratio * 1.1);
+            ewk_view_device_pixel_ratio_set(ewkObject, ratio + 0.1);
         } else if (!strcmp(ev->key, "KP_Subtract")) {
             double ratio = ewk_view_device_pixel_ratio_get(ewkObject);
-            ewk_view_device_pixel_ratio_set(ewkObject, ratio * 0.9);
+            ewk_view_device_pixel_ratio_set(ewkObject, ratio - 0.1);
         }
     }
 #endif
