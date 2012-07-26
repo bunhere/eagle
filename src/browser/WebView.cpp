@@ -38,8 +38,8 @@ void WebView::onTitleChanged(void *userData, Evas_Object *webView, void *eventIn
 
 void WebView::onUriChanged(void *userData, Evas_Object *webView, void *eventInfo)
 {
-    Urlbar* urlbar = toWebView(userData)->container()->urlbar();
-    urlbar->changeUrlEntry(static_cast<const char*>(eventInfo));
+    Urlbar& urlbar = toWebView(userData)->container()->urlbar();
+    urlbar.changeUrlEntry(static_cast<const char*>(eventInfo));
 }
 
 void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)

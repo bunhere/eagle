@@ -10,6 +10,7 @@
 #define Browser_h
 
 #include <EflWrappers/Window.h>
+#include <browser/Urlbar.h>
 
 class Urlbar;
 class WebView;
@@ -29,13 +30,14 @@ public:
 
     virtual void resize(int width, int height);
 
-    Urlbar* urlbar() { return m_urlbar; }
+    Urlbar& urlbar() { return m_urlbar; }
 private:
     Browser();
 
     static bool s_initialized;
+    Urlbar m_urlbar;
+
     Evas_Object* m_layout;
-    Urlbar* m_urlbar;
     WebView* m_webView;
 };
 
