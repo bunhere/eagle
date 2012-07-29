@@ -47,18 +47,15 @@ void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event
     Evas_Event_Key_Down *ev = (Evas_Event_Key_Down*) event_info;
     Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
 
-#if USE_WEBKIT
-#else
     if (ctrlPressed) {
         if (!strcmp(ev->key, "KP_Add")) {
-            double ratio = ewk_view_device_pixel_ratio_get(ewkObject);
-            ewk_view_device_pixel_ratio_set(ewkObject, ratio + 0.1);
+            double ratio = ewk_view_scale_get(ewkObject);
+            ewk_view_scale_set(ewkObject, ratio + 0.1, 0, 0);
         } else if (!strcmp(ev->key, "KP_Subtract")) {
-            double ratio = ewk_view_device_pixel_ratio_get(ewkObject);
-            ewk_view_device_pixel_ratio_set(ewkObject, ratio - 0.1);
+            double ratio = ewk_view_scale_get(ewkObject);
+            ewk_view_scale_set(ewkObject, ratio - 0.1, 0, 0);
         }
     }
-#endif
 }
 
 void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
