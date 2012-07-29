@@ -11,10 +11,6 @@
 #include <browser/Browser.h>
 #include <browser/WebView.h>
 
-void WebView::initialize()
-{
-}
-
 WebView::WebView(Browser* container)
     : m_container(container)
 {

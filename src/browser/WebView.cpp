@@ -85,6 +85,17 @@ WebView* WebView::create(Browser* container)
     return webview;
 }
 
+void WebView::initialize()
+{
+    ewk_init();
+
+#if USE_WEBKIT
+    const char* httpProxy = getenv("http_proxy");
+    if (httpProxy)
+        ewk_network_proxy_uri_set(httpProxy);
+#endif
+}
+
 void WebView::loadUrl(const char* url)
 {
     ewk_view_uri_set(object(), url);

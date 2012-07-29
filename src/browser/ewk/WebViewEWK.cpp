@@ -35,15 +35,6 @@ static inline WebView* toCpp(Evas_Object* o)
 
 static Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView);
 
-void WebView::initialize()
-{
-    ewk_init();
-
-    const char* httpProxy = getenv("http_proxy");
-    if (httpProxy)
-        ewk_network_proxy_uri_set(httpProxy);
-}
-
 WebView::WebView(Browser* container)
     : m_container(container)
 {
