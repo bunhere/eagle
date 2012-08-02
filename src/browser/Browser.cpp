@@ -33,6 +33,7 @@ Browser* Browser::create()
 
 Browser::Browser()
     : m_urlbar(this)
+    , m_inspector(0)
 {
     m_layout = elm_layout_add(object());
     //FIXME: add error handling
@@ -80,6 +81,27 @@ void Browser::reload()
 void Browser::stop()
 {
     m_webView->stop();
+}
+
+void Browser::createInspector(WebView* receivedWebView)
+{
+    printf( "%s is called\n", __func__);
+    if (!m_inspector) {
+        m_inspector = WebView::create(this);
+        elm_object_part_content_set(m_layout, "sw.inspector", m_inspector->object());
+        m_inspector->show();
+    }
+    receivedWebView->setInspectorView(*m_inspector);
+}
+
+void Browser::closeInspector()
+{
+    printf( "%s is called\n", __func__);
+    if (!m_inspector)
+        return;
+
+    delete m_inspector;
+    m_inspector = 0;
 }
 
 const char* Browser::getTheme()

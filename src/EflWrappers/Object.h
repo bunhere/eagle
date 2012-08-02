@@ -27,7 +27,7 @@ public:
     int width() { return m_width; }
     int height() { return m_height; }
 
-    Evas_Object* object() { return m_object; }
+    Evas_Object* object() const { return m_object; }
     void setObject(Evas_Object* obj) { m_object = obj; }
 
 private:

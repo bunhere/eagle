@@ -23,6 +23,16 @@ inline static WebView* toWebView(void* userData)
     return static_cast<WebView*>(userData);
 }
 
+void WebView::onInspectorViewCreate(void *userData, Evas_Object *webView, void *eventInfo)
+{
+    toWebView(userData)->container()->createInspector(toWebView(userData));
+}
+
+void WebView::onInspectorViewClose(void *userData, Evas_Object *webView, void *eventInfo)
+{
+    toWebView(userData)->container()->closeInspector();
+}
+
 void WebView::onTitleChanged(void *userData, Evas_Object *webView, void *eventInfo)
 {
     if (!eventInfo)
@@ -48,7 +58,11 @@ void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event
     Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
 
     if (ctrlPressed) {
-        if (!strcmp(ev->key, "KP_Add")) {
+        if (!strcmp(ev->key, "i")) {
+            // FIXME: we need better way to handle setting.
+            ewk_view_setting_enable_developer_extras_set(ewkObject, true);
+            ewk_view_web_inspector_show(ewkObject);
+        } else if (!strcmp(ev->key, "KP_Add")) {
             double ratio = ewk_view_scale_get(ewkObject);
             ewk_view_scale_set(ewkObject, ratio + 0.1, 0, 0);
         } else if (!strcmp(ev->key, "KP_Subtract")) {
@@ -66,6 +80,9 @@ void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* eve
 WebView::~WebView()
 {
     evas_object_event_callback_del(object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown);
+
+    evas_object_smart_callback_del(object(), "inspector,view,create", onInspectorViewCreate);
+    evas_object_smart_callback_del(object(), "inspector,view,close", onInspectorViewClose);
 }
 
 WebView* WebView::create(Browser* container)
@@ -80,6 +97,8 @@ WebView* WebView::create(Browser* container)
     evas_object_event_callback_add(webview->object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, webview);
     evas_object_event_callback_add(webview->object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, webview);
 
+    evas_object_smart_callback_add(webview->object(), "inspector,view,create", onInspectorViewCreate, webview);
+    evas_object_smart_callback_add(webview->object(), "inspector,view,close", onInspectorViewClose, webview);
     evas_object_smart_callback_add(webview->object(), "title,changed", onTitleChanged, webview);
     evas_object_smart_callback_add(webview->object(), "uri,changed", onUriChanged, webview);
     return webview;
@@ -119,4 +138,9 @@ void WebView::reload()
 void WebView::stop()
 {
     ewk_view_stop(object());
+}
+
+void WebView::setInspectorView(const WebView& view)
+{
+    ewk_view_web_inspector_view_set(object(), view.object());
 }

@@ -24,6 +24,8 @@ public:
 
     Browser* container() { return m_container; };
 
+    SMART_CALLBACK_DECLARE(onInspectorViewCreate);
+    SMART_CALLBACK_DECLARE(onInspectorViewClose);
     SMART_CALLBACK_DECLARE(onTitleChanged);
     SMART_CALLBACK_DECLARE(onUriChanged);
 
@@ -35,6 +37,8 @@ public:
     void forward();
     void reload();
     void stop();
+
+    void setInspectorView(const WebView& view);
 private:
     WebView(Browser* container);
 

@@ -26,6 +26,8 @@ public:
     void reload();
     void stop();
 
+    void createInspector(WebView* receivedWebView);
+    void closeInspector();
     const char* getTheme();
 
     virtual void resize(int width, int height);
@@ -38,6 +40,7 @@ private:
     Urlbar m_urlbar;
 
     Evas_Object* m_layout;
+    WebView* m_inspector;
     WebView* m_webView;
 };
 

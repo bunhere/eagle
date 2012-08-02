@@ -35,5 +35,13 @@ group { name: "eagle/browser-view";
                 rel2 { relative: 1.0 1.0; }
             }
         }
+        PART_START("sw.inspector", SWALLOW, 1)
+            description { state: "default" 0.0;
+                visible: 1;
+                align: 0.0 0.0;
+                rel1 { relative: 0.0 0.5; }
+                rel2 { relative: 1.0 1.0; }
+            }
+        }
     }
 }
