@@ -28,6 +28,7 @@ public:
     SMART_CALLBACK_DECLARE(onInspectorViewClose);
     SMART_CALLBACK_DECLARE(onTitleChanged);
     SMART_CALLBACK_DECLARE(onUriChanged);
+    SMART_CALLBACK_DECLARE(onLoadError);
 
     static void onKeyDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
     static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);

@@ -52,6 +52,30 @@ void WebView::onUriChanged(void *userData, Evas_Object *webView, void *eventInfo
     urlbar.changeUrlEntry(static_cast<const char*>(eventInfo));
 }
 
+void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
+{
+    printf(" %s \n", __func__);
+#if USE_WEBKIT
+    Ewk_Frame_Load_Error* error = static_cast<Ewk_Frame_Load_Error*>(eventInfo);
+    printf(" %d %d (%s : %s : %s)\n %d\n",
+            error->code,
+            error->is_cancellation,
+            error->domain,
+            error->description,
+            error->failing_url,
+            error->resource_identifier);
+#else
+    Ewk_Web_Error* error = static_cast<Ewk_Web_Error*>(eventInfo);
+    printf(" %d %d (%d : %s : %s)\n",
+            ewk_web_error_code_get(error),
+            ewk_web_error_cancellation_get(error),
+            ewk_web_error_type_get(error),
+            ewk_web_error_description_get(error),
+            ewk_web_error_url_get(error));
+    ewk_web_error_free(error);
+#endif
+}
+
 void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
     Evas_Event_Key_Down *ev = (Evas_Event_Key_Down*) event_info;
@@ -60,8 +84,10 @@ void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event
     if (ctrlPressed) {
         if (!strcmp(ev->key, "i")) {
             // FIXME: we need better way to handle setting.
+#if USE_WEBKIT
             ewk_view_setting_enable_developer_extras_set(ewkObject, true);
             ewk_view_web_inspector_show(ewkObject);
+#endif
         } else if (!strcmp(ev->key, "KP_Add")) {
             double ratio = ewk_view_scale_get(ewkObject);
             ewk_view_scale_set(ewkObject, ratio + 0.1, 0, 0);
@@ -104,6 +130,7 @@ WebView* WebView::create(Browser* container)
     SMART_CALLBACK_ADD("inspector,view,close", onInspectorViewClose);
     SMART_CALLBACK_ADD("title,changed", onTitleChanged);
     SMART_CALLBACK_ADD("uri,changed", onUriChanged);
+    SMART_CALLBACK_ADD("load,error", onLoadError);
 #undef SMART_CALLBACK_ADD
 
     return webview;
@@ -147,5 +174,7 @@ void WebView::stop()
 
 void WebView::setInspectorView(const WebView& view)
 {
+#if USE_WEBKIT
     ewk_view_web_inspector_view_set(object(), view.object());
+#endif
 }
