@@ -97,10 +97,15 @@ WebView* WebView::create(Browser* container)
     evas_object_event_callback_add(webview->object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, webview);
     evas_object_event_callback_add(webview->object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, webview);
 
-    evas_object_smart_callback_add(webview->object(), "inspector,view,create", onInspectorViewCreate, webview);
-    evas_object_smart_callback_add(webview->object(), "inspector,view,close", onInspectorViewClose, webview);
-    evas_object_smart_callback_add(webview->object(), "title,changed", onTitleChanged, webview);
-    evas_object_smart_callback_add(webview->object(), "uri,changed", onUriChanged, webview);
+#define SMART_CALLBACK_ADD(signal, func) \
+    evas_object_smart_callback_add(webview->object(), signal, func, webview)
+
+    SMART_CALLBACK_ADD("inspector,view,create", onInspectorViewCreate);
+    SMART_CALLBACK_ADD("inspector,view,close", onInspectorViewClose);
+    SMART_CALLBACK_ADD("title,changed", onTitleChanged);
+    SMART_CALLBACK_ADD("uri,changed", onUriChanged);
+#undef SMART_CALLBACK_ADD
+
     return webview;
 }
 
