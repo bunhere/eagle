@@ -8,11 +8,7 @@ CODING STYLE:
 Although this is EFL based application, it try to follow WebKit coding style.
 http://www.webkit.org/coding/coding-style.html
 
-How to build (for webkit2/efl):
-Now, some patches are waiting and dependency is not clear.
-1. clone git://github.com/bunhere/webkit-mirror.git and build 'upstreaming-patch' branch
-2. make install after moved WebKitBuild/Release
-3. build latest efl trunk.
+How to build:
 
 mkdir -p build
 cmake .. (-DUSE_WEBKIT=On)
