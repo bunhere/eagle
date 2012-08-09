@@ -33,18 +33,6 @@ static inline WebView* toCpp(Evas_Object* o)
     return sd->cppInstance;
 }
 
-static Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView);
-
-WebView::WebView(Browser* container)
-    : m_container(container)
-{
-    Evas* evas = evas_object_evas_get(container->object());
-    //Evas_Object* ewkView = ewk_view_single_add(evas);
-    Evas_Object* ewkView = ewkViewAdd(container->object(), this);
-
-    setObject(ewkView);
-}
-
 static void ewkViewSmartAdd(Evas_Object* o)
 {
     View_Smart_Data* sd = (View_Smart_Data*)calloc(1, sizeof(View_Smart_Data));
@@ -62,15 +50,6 @@ static Evas_Object* ewkViewSmartWindowCreate(Ewk_View_Smart_Data *sd, Eina_Bool 
 {
     //FIXME
     return 0;
-}
-
-void ewkViewInitialize(Evas_Object* o, WebView* webView)
-{
-    View_Smart_Data* sd = (View_Smart_Data*)evas_object_smart_data_get(o);
-    if (!sd)
-        return;
-
-    sd->cppInstance = webView;
 }
 
 Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
@@ -93,6 +72,8 @@ Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
             return 0;
     }
     Evas_Object* ewkView = evas_object_smart_add(canvas, smart);
-    ewkViewInitialize(ewkView, webView);
+    View_Smart_Data* sd = (View_Smart_Data*)evas_object_smart_data_get(ewkView);
+    sd->cppInstance = webView;
+
     return ewkView;
 }

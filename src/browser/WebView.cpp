@@ -103,6 +103,31 @@ void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* eve
     evas_object_focus_set(ewkObject, true);
 }
 
+WebView::WebView(Browser* container)
+    : m_container(container)
+{
+    Evas* evas = evas_object_evas_get(container->object());
+    Evas_Object* ewkView = ewkViewAdd(container->object(), this);
+
+    setObject(ewkView);
+
+    evas_object_size_hint_weight_set(ewkView, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+
+    evas_object_event_callback_add(ewkView, EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
+    evas_object_event_callback_add(ewkView, EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
+
+#define SMART_CALLBACK_ADD(signal, func) \
+    evas_object_smart_callback_add(ewkView, signal, func, this)
+
+    SMART_CALLBACK_ADD("inspector,view,create", onInspectorViewCreate);
+    SMART_CALLBACK_ADD("inspector,view,close", onInspectorViewClose);
+    SMART_CALLBACK_ADD("title,changed", onTitleChanged);
+    SMART_CALLBACK_ADD("uri,changed", onUriChanged);
+    SMART_CALLBACK_ADD("load,error", onLoadError);
+#undef SMART_CALLBACK_ADD
+
+}
+
 WebView::~WebView()
 {
     evas_object_event_callback_del(object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown);
@@ -117,21 +142,6 @@ WebView* WebView::create(Browser* container)
 
     //FIXME: hard typed path is bad.
     ewk_view_theme_set(webview->object(), "/usr/local/share/ewebkit-0/themes/default.edj");
-
-    evas_object_size_hint_weight_set(webview->object(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-
-    evas_object_event_callback_add(webview->object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, webview);
-    evas_object_event_callback_add(webview->object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, webview);
-
-#define SMART_CALLBACK_ADD(signal, func) \
-    evas_object_smart_callback_add(webview->object(), signal, func, webview)
-
-    SMART_CALLBACK_ADD("inspector,view,create", onInspectorViewCreate);
-    SMART_CALLBACK_ADD("inspector,view,close", onInspectorViewClose);
-    SMART_CALLBACK_ADD("title,changed", onTitleChanged);
-    SMART_CALLBACK_ADD("uri,changed", onUriChanged);
-    SMART_CALLBACK_ADD("load,error", onLoadError);
-#undef SMART_CALLBACK_ADD
 
     return webview;
 }

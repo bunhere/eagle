@@ -46,4 +46,6 @@ private:
     Browser* m_container;
 };
 
+Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView);
+
 #endif
