@@ -1,0 +1,21 @@
+/*
+ * eagle
+ *
+ * Copyright (C) 2012 Ryuan Choi
+ *
+ * License LGPL-3, see COPYING file at project folder.
+ */
+
+group { name: "eagle/bookmarks-view";
+    parts {
+        PART_START("bg", RECT, 0)
+            description { state: "default" 0.0;
+                visible: 1;
+                align: 0.0 0.0;
+                color: 125 125 125 255;
+                rel1 { relative: 0.0 0.0; }
+                rel2 { relative: 1.0 1.0; }
+            }
+        }
+    }
+}
