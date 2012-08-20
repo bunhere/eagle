@@ -66,7 +66,7 @@ Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
 
     Evas_Object* ewkView = ewk_view_smart_add(canvas, smart, ewk_context_default_get());
     View_Smart_Data* sd = (View_Smart_Data*)evas_object_smart_data_get(ewkView);
-    sd->instance = webView;
+    sd->cppInstance = webView;
 
     return ewkView;
 }
