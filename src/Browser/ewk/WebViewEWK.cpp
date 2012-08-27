@@ -6,10 +6,10 @@
  * License LGPL-3, see COPYING file at project folder.
  */
 
+#include "Browser/Browser.h"
+#include "Browser/WebView.h"
 #include <EWebKit.h>
 #include <Elementary.h>
-#include <browser/Browser.h>
-#include <browser/WebView.h>
 
 static Ewk_View_Smart_Class _parent_sc = EWK_VIEW_SMART_CLASS_INIT_NULL;
 typedef struct _View_Smart_Data View_Smart_Data;

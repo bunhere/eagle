@@ -7,12 +7,12 @@
  */
 
 #include <Elementary.h>
-#include <browser/WebView.h>
+#include <Browser/WebView.h>
 
-#include <browser/Browser.h>
-#include <browser/Urlbar.h>
-#include <browser/Features/AutoFormFill.h>
-#include <browser/Features/Features.h>
+#include <Browser/Browser.h>
+#include <Browser/Urlbar.h>
+#include <Browser/Features/AutoFormFill.h>
+#include <Browser/Features/Features.h>
 
 #if USE_WEBKIT
 #include <EWebKit.h>

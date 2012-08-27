@@ -27,12 +27,12 @@ SET(EAGLE_LDFLAGS ${PKGS_LDFLAGS})
 
 # Set sources
 SET(EAGLE_SOURCES
-    src/browser/Features/AutoFormFill.cpp
-    src/browser/Features/Features.cpp
+    src/Browser/Features/AutoFormFill.cpp
+    src/Browser/Features/Features.cpp
 
-    src/browser/Browser.cpp
-    src/browser/Urlbar.cpp
-    src/browser/WebView.cpp
+    src/Browser/Browser.cpp
+    src/Browser/Urlbar.cpp
+    src/Browser/WebView.cpp
 
     src/EflWrappers/Object.cpp
     src/EflWrappers/Window.cpp
@@ -42,11 +42,11 @@ SET(EAGLE_SOURCES
 
 IF (USE_WEBKIT)
     LIST(APPEND EAGLE_SOURCES
-        src/browser/ewk/WebViewEWK.cpp
+        src/Browser/ewk/WebViewEWK.cpp
     )
 ELSE ()
     LIST(APPEND EAGLE_SOURCES
-        src/browser/ewk2/WebViewEWK2.cpp
+        src/Browser/ewk2/WebViewEWK2.cpp
     )
 ENDIF ()
 

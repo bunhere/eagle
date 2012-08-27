@@ -9,8 +9,8 @@
 #ifndef Browser_h
 #define Browser_h
 
-#include <EflWrappers/Window.h>
-#include <browser/Urlbar.h>
+#include "Browser/Urlbar.h"
+#include "EflWrappers/Window.h"
 
 class Urlbar;
 class WebView;
