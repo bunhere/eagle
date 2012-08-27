@@ -6,12 +6,14 @@
  * License LGPL-3, see COPYING file at project folder.
  */
 
-#include <browser/Browser.h>
 #include <Elementary.h>
+#include "browser/Browser.h"
+#include "browser/Features/Features.h"
 
 EAPI_MAIN int
 elm_main(int argc, char** argv)
 {
+    Features::instance().initialize();
     Browser* defaultWindow = Browser::create();
     if (!defaultWindow)
         return -1;

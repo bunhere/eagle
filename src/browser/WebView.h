@@ -24,11 +24,16 @@ public:
 
     Browser* container() { return m_container; };
 
+    SMART_CALLBACK_DECLARE(onFormSubmissionRequest);
+
     SMART_CALLBACK_DECLARE(onInspectorViewCreate);
     SMART_CALLBACK_DECLARE(onInspectorViewClose);
+
+    SMART_CALLBACK_DECLARE(onLoadError);
+    SMART_CALLBACK_DECLARE(onLoadFinished);
+
     SMART_CALLBACK_DECLARE(onTitleChanged);
     SMART_CALLBACK_DECLARE(onUriChanged);
-    SMART_CALLBACK_DECLARE(onLoadError);
 
     static void onKeyDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
     static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);

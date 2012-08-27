@@ -11,6 +11,8 @@
 
 #include <browser/Browser.h>
 #include <browser/Urlbar.h>
+#include <browser/Features/AutoFormFill.h>
+#include <browser/Features/Features.h>
 
 #if USE_WEBKIT
 #include <EWebKit.h>
@@ -76,6 +78,41 @@ void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
 #endif
 }
 
+void WebView::onLoadFinished(void *userData, Evas_Object *webView, void *eventInfo)
+{
+    printf(" %s \n", __func__);
+    AutoFormFill* formFillFeature = Features::instance().autoFormFill();
+
+    if (formFillFeature && formFillFeature->existURI(ewk_view_uri_get(webView))) {
+        // FIXME: we need a way to change contents.
+    }
+}
+
+void WebView::onFormSubmissionRequest(void *userData, Evas_Object *webView, void *eventInfo)
+{
+    printf(" %s \n", __func__);
+#if USE_WEBKIT
+#else
+    Ewk_Form_Submission_Request* request = static_cast<Ewk_Form_Submission_Request*>(eventInfo);
+
+    AutoFormFill* formFillFeature = Features::instance().autoFormFill();
+
+    if (formFillFeature) {
+        bool needToUpdate = true;
+
+        const char* uri = ewk_view_uri_get(webView);
+        if (formFillFeature->existURI(uri)) {
+            needToUpdate = false;
+        }
+
+        if (needToUpdate)
+            formFillFeature->saveFormValues(uri, request);
+    }
+
+    ewk_form_submission_request_submit(request);
+#endif
+}
+
 void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
     Evas_Event_Key_Down *ev = (Evas_Event_Key_Down*) event_info;
@@ -124,6 +161,13 @@ WebView::WebView(Browser* container)
     SMART_CALLBACK_ADD("title,changed", onTitleChanged);
     SMART_CALLBACK_ADD("uri,changed", onUriChanged);
     SMART_CALLBACK_ADD("load,error", onLoadError);
+    SMART_CALLBACK_ADD("load,finished", onLoadFinished);
+
+#if USE_WEBKIT
+#else
+    SMART_CALLBACK_ADD("form,submission,request", onFormSubmissionRequest);
+#endif
+
 #undef SMART_CALLBACK_ADD
 
 }

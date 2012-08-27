@@ -27,6 +27,9 @@ SET(EAGLE_LDFLAGS ${PKGS_LDFLAGS})
 
 # Set sources
 SET(EAGLE_SOURCES
+    src/browser/Features/AutoFormFill.cpp
+    src/browser/Features/Features.cpp
+
     src/browser/Browser.cpp
     src/browser/Urlbar.cpp
     src/browser/WebView.cpp
