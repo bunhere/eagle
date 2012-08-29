@@ -6,8 +6,10 @@
  * License LGPL-3, see COPYING file at project folder.
  */
 
-#include "Browser/Browser.h"
 #include "Browser/WebView.h"
+
+#include "Browser/Browser.h"
+#include "Browser/PopupMenu.h"
 #include <EWebKit2.h>
 #include <Elementary.h>
 
@@ -46,6 +48,18 @@ void ewkViewSmartDel(Evas_Object* o)
     _parent_sc.sc.del(o);
 }
 
+static Eina_Bool showPopupMenu(Ewk_View_Smart_Data* sd, Eina_Rectangle rect, Ewk_Text_Direction textDirection, double pageScaleFactor, Eina_List* items, int selectedIndex)
+{
+    PopupMenu::instance().create(sd->self, rect, items, selectedIndex);
+    return true;
+}
+
+static Eina_Bool hidePopupMenu(Ewk_View_Smart_Data *sd)
+{
+    PopupMenu::instance().destroy();
+    return true;
+}
+
 Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
 {
     static Evas_Smart* smart = 0;
@@ -58,6 +72,9 @@ Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
 
         api.sc.add = ewkViewSmartAdd;
         api.sc.del = ewkViewSmartDel;
+
+        api.popup_menu_show = showPopupMenu;
+        api.popup_menu_hide = hidePopupMenu;
 
         smart = evas_smart_class_new(&api.sc);
         if (!smart)

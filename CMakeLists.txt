@@ -47,6 +47,7 @@ IF (USE_WEBKIT)
 ELSE ()
     LIST(APPEND EAGLE_SOURCES
         src/Browser/ewk2/WebViewEWK2.cpp
+        src/Browser/PopupMenu.cpp
     )
 ENDIF ()
 
