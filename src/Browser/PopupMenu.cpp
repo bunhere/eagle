@@ -78,6 +78,7 @@ void PopupMenu::create(Evas_Object* ewkView, Eina_Rectangle rect, Eina_List* ite
     EINA_LIST_FOREACH(items, l, itemv) {
         Ewk_Popup_Menu_Item* menuItem = static_cast<Ewk_Popup_Menu_Item*>(itemv);
 
+        printf (" --- %d: %d\n", index, ewk_popup_menu_item_type_get(menuItem));
         const char* text = ewk_popup_menu_item_text_get(menuItem);
         Elm_Object_Item* itemObject = elm_list_item_append(popupList, text, 0, 0, 0, 0);
         if (selectedIndex == index)

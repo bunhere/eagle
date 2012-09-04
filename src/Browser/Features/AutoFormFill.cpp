@@ -78,7 +78,8 @@ bool AutoFormFill::existURI(const char* uri)
     return false;
 }
 
-#if !USE_WEBKIT
+#if USE_WEBKIT || USE_ELM_WEB
+#else
 void AutoFormFill::saveFormValues(const char* uri, Ewk_Form_Submission_Request* request)
 {
     sqlite3_exec(m_database, "begin transaction;", 0, 0, 0);

@@ -51,6 +51,8 @@ private:
     Browser* m_container;
 };
 
+#if !USE_ELM_WEB
 Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView);
+#endif
 
 #endif

@@ -9,7 +9,7 @@
 #ifndef AutoFormFill_h
 #define AutoFormFill_h
 
-#if USE_WEBKIT
+#if USE_WEBKIT || USE_ELM_WEB
 #include <EWebKit.h>
 #else
 #include <EWebKit2.h>
@@ -28,7 +28,7 @@ public:
 
     void loadSavedSites();
     bool existURI(const char* uri);
-#if USE_WEBKIT
+#if USE_WEBKIT || USE_ELM_WEB
 #else
     void saveFormValues(const char* uri, Ewk_Form_Submission_Request*);
 #endif

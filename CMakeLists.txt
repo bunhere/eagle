@@ -11,6 +11,9 @@ SET(PKG_LIST
 IF (USE_WEBKIT)
     ADD_DEFINITIONS(-DUSE_WEBKIT=1)
     LIST(APPEND PKG_LIST ewebkit)
+ELSEIF (USE_ELM_WEB)
+    #elementary have webkit/efl dependency
+    ADD_DEFINITIONS(-DUSE_ELM_WEB=1)
 ELSE ()
     ADD_DEFINITIONS(-DUSE_WEBKIT2=1)
     LIST(APPEND PKG_LIST ewebkit2)
@@ -44,6 +47,7 @@ IF (USE_WEBKIT)
     LIST(APPEND EAGLE_SOURCES
         src/Browser/ewk/WebViewEWK.cpp
     )
+ELSEIF (USE_ELM_WEB)
 ELSE ()
     LIST(APPEND EAGLE_SOURCES
         src/Browser/ewk2/WebViewEWK2.cpp

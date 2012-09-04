@@ -14,7 +14,7 @@
 #include <Browser/Features/AutoFormFill.h>
 #include <Browser/Features/Features.h>
 
-#if USE_WEBKIT
+#if USE_WEBKIT || USE_ELM_WEB
 #include <EWebKit.h>
 #else
 #include <EWebKit2.h>
@@ -40,7 +40,7 @@ void WebView::onTitleChanged(void *userData, Evas_Object *webView, void *eventIn
     if (!eventInfo)
         return;
 
-#if USE_WEBKIT
+#if USE_WEBKIT || USE_ELM_WEB
     const char* title = static_cast<const Ewk_Text_With_Direction*>(eventInfo)->string;
 #else
     const char* title = static_cast<const char*>(eventInfo);
@@ -57,7 +57,7 @@ void WebView::onUriChanged(void *userData, Evas_Object *webView, void *eventInfo
 void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
 {
     printf(" %s \n", __func__);
-#if USE_WEBKIT
+#if USE_WEBKIT || USE_ELM_WEB
     Ewk_Frame_Load_Error* error = static_cast<Ewk_Frame_Load_Error*>(eventInfo);
     printf(" %d %d (%s : %s : %s)\n %d\n",
             error->code,
@@ -91,7 +91,7 @@ void WebView::onLoadFinished(void *userData, Evas_Object *webView, void *eventIn
 void WebView::onFormSubmissionRequest(void *userData, Evas_Object *webView, void *eventInfo)
 {
     printf(" %s \n", __func__);
-#if USE_WEBKIT
+#if USE_WEBKIT || USE_ELM_WEB
 #else
     Ewk_Form_Submission_Request* request = static_cast<Ewk_Form_Submission_Request*>(eventInfo);
 
@@ -144,7 +144,13 @@ WebView::WebView(Browser* container)
     : m_container(container)
 {
     Evas* evas = evas_object_evas_get(container->object());
+#if USE_ELM_WEB
+    Evas_Object* webView = elm_web_add(container->object());
+    Evas_Object* ewkView = elm_web_webkit_view_get(webView);
+
+#else
     Evas_Object* ewkView = ewkViewAdd(container->object(), this);
+#endif
 
     setObject(ewkView);
 
