@@ -6,6 +6,7 @@ ADD_DEFINITIONS(-DPROJECT_NAME=\"Eagle\")
 # Check package dependency.
 SET(PKG_LIST
     eina ecore evas ecore-evas elementary
+    sqlite3
 )
 
 IF (USE_WEBKIT)
