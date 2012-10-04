@@ -74,7 +74,6 @@ void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
             ewk_web_error_type_get(error),
             ewk_web_error_description_get(error),
             ewk_web_error_url_get(error));
-    ewk_web_error_free(error);
 #endif
 }
 
