@@ -67,13 +67,13 @@ void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
             error->failing_url,
             error->resource_identifier);
 #else
-    Ewk_Web_Error* error = static_cast<Ewk_Web_Error*>(eventInfo);
+    Ewk_Error* error = static_cast<Ewk_Error*>(eventInfo);
     printf(" %d %d (%d : %s : %s)\n",
-            ewk_web_error_code_get(error),
-            ewk_web_error_cancellation_get(error),
-            ewk_web_error_type_get(error),
-            ewk_web_error_description_get(error),
-            ewk_web_error_url_get(error));
+            ewk_error_code_get(error),
+            ewk_error_cancellation_get(error),
+            ewk_error_type_get(error),
+            ewk_error_description_get(error),
+            ewk_error_url_get(error));
 #endif
 }
 
@@ -82,9 +82,12 @@ void WebView::onLoadFinished(void *userData, Evas_Object *webView, void *eventIn
     printf(" %s \n", __func__);
     AutoFormFill* formFillFeature = Features::instance().autoFormFill();
 
-    if (formFillFeature && formFillFeature->existURI(ewk_view_uri_get(webView))) {
+#if USE_WEBKIT || USE_ELM_WEB
+#else
+    if (formFillFeature && formFillFeature->existURI(ewk_view_url_get(webView))) {
         // FIXME: we need a way to change contents.
     }
+#endif
 }
 
 void WebView::onFormSubmissionRequest(void *userData, Evas_Object *webView, void *eventInfo)
@@ -99,13 +102,13 @@ void WebView::onFormSubmissionRequest(void *userData, Evas_Object *webView, void
     if (formFillFeature) {
         bool needToUpdate = true;
 
-        const char* uri = ewk_view_uri_get(webView);
-        if (formFillFeature->existURI(uri)) {
+        const char* url = ewk_view_url_get(webView);
+        if (formFillFeature->existURI(url)) {
             needToUpdate = false;
         }
 
         if (needToUpdate)
-            formFillFeature->saveFormValues(uri, request);
+            formFillFeature->saveFormValues(url, request);
     }
 
     ewk_form_submission_request_submit(request);
@@ -164,7 +167,11 @@ WebView::WebView(Browser* container)
     SMART_CALLBACK_ADD("inspector,view,create", onInspectorViewCreate);
     SMART_CALLBACK_ADD("inspector,view,close", onInspectorViewClose);
     SMART_CALLBACK_ADD("title,changed", onTitleChanged);
+#if USE_WEBKIT || USE_ELM_WEB
     SMART_CALLBACK_ADD("uri,changed", onUriChanged);
+#else
+    SMART_CALLBACK_ADD("url,changed", onUriChanged);
+#endif
     SMART_CALLBACK_ADD("load,error", onLoadError);
     SMART_CALLBACK_ADD("load,finished", onLoadFinished);
 
@@ -208,7 +215,11 @@ void WebView::initialize()
 
 void WebView::loadUrl(const char* url)
 {
+#if USE_WEBKIT || USE_ELM_WEB
     ewk_view_uri_set(object(), url);
+#else
+    ewk_view_url_set(object(), url);
+#endif
 }
 
 void WebView::back()
