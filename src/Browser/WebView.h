@@ -44,7 +44,11 @@ public:
     void reload();
     void stop();
 
-    void setInspectorView(const WebView& view);
+    void openInspectorView();
+    void setInspectorView(const WebView& inspectorView);
+
+    void scaleUp();
+    void scaleDown();
 private:
     WebView(Browser* container);
 

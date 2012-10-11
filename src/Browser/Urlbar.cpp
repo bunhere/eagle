@@ -25,6 +25,15 @@ static void urlbarActivated(void* data, Evas_Object* obj, void* eventInfo)
     urlbar->container()->loadUrl(elm_entry_markup_to_utf8(url));
 }
 
+void Urlbar::onKeyDown(void* data, Evas* e, Evas_Object*, void* event_info)
+{
+    Urlbar* urlbar= static_cast<Urlbar*>(data);
+    Evas_Event_Key_Down *ev = (Evas_Event_Key_Down*) event_info;
+    Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
+
+    urlbar->container()->executeShortCut(ev->key, ctrlPressed, false);
+}
+
 void Urlbar::back_clicked(void *data, Evas_Object *obj, const char *emission, const char *source)
 {
     Urlbar* self = static_cast<Urlbar*>(data);
@@ -70,6 +79,7 @@ Urlbar::Urlbar(Browser* container)
 
     elm_object_part_content_set(obj, "sw.url", m_entry);
 
+    evas_object_event_callback_add(m_entry, EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
     //connect signal
     //evas_object_smart_callback_add(m_entry, "changed", urlbarChanged, this);
     evas_object_smart_callback_add(m_entry, "activated", urlbarActivated, this);

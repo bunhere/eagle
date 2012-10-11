@@ -120,21 +120,7 @@ void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event
     Evas_Event_Key_Down *ev = (Evas_Event_Key_Down*) event_info;
     Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
 
-    if (ctrlPressed) {
-        if (!strcmp(ev->key, "i")) {
-            // FIXME: we need better way to handle setting.
-#if USE_WEBKIT
-            ewk_view_setting_enable_developer_extras_set(ewkObject, true);
-            ewk_view_web_inspector_show(ewkObject);
-#endif
-        } else if (!strcmp(ev->key, "KP_Add")) {
-            double ratio = ewk_view_scale_get(ewkObject);
-            ewk_view_scale_set(ewkObject, ratio + 0.1, 0, 0);
-        } else if (!strcmp(ev->key, "KP_Subtract")) {
-            double ratio = ewk_view_scale_get(ewkObject);
-            ewk_view_scale_set(ewkObject, ratio - 0.1, 0, 0);
-        }
-    }
+    toWebView(data)->container()->executeShortCut(ev->key, ctrlPressed, false);
 }
 
 void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
@@ -243,9 +229,30 @@ void WebView::stop()
     ewk_view_stop(object());
 }
 
+void WebView::openInspectorView()
+{
+#if USE_WEBKIT
+    // FIXME: we need better way to handle setting.
+    ewk_view_setting_enable_developer_extras_set(object(), true);
+    ewk_view_web_inspector_show(object());
+#endif
+}
+
 void WebView::setInspectorView(const WebView& view)
 {
 #if USE_WEBKIT
     ewk_view_web_inspector_view_set(object(), view.object());
 #endif
+}
+
+void WebView::scaleUp()
+{
+    double ratio = ewk_view_scale_get(object());
+    ewk_view_scale_set(object(), ratio + 0.1, 0, 0);
+}
+
+void WebView::scaleDown()
+{
+    double ratio = ewk_view_scale_get(object());
+    ewk_view_scale_set(object(), ratio - 0.1, 0, 0);
 }

@@ -23,6 +23,8 @@ public:
     void changeUrlEntry(const char* url);
     //static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
 
+    static void onKeyDown(void*, Evas*, Evas_Object*, void*);
+
     SIGNAL_FUNC_DECLARE(back_clicked);
     SIGNAL_FUNC_DECLARE(forward_clicked);
     SIGNAL_FUNC_DECLARE(reload_clicked);

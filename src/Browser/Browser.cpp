@@ -43,10 +43,11 @@ Browser::Browser()
         printf("%s theme path is failed\n", getTheme());
         return;
     }
-	evas_object_size_hint_weight_set(m_layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_size_hint_align_set(m_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
+
+    evas_object_size_hint_weight_set(m_layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(m_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_win_resize_object_add(object(), m_layout);
-	evas_object_show(m_layout);
+    evas_object_show(m_layout);
 
     elm_object_part_content_set(m_layout, "sw.urlbar", m_urlbar.object());
 
@@ -54,6 +55,7 @@ Browser::Browser()
     elm_object_part_content_set(m_layout, "sw.webview", m_webView->object());
     m_webView->show();
 
+    elm_object_focus_set(m_layout, true);
 }
 
 void Browser::loadUrl(const char* url)
@@ -115,4 +117,16 @@ void Browser::resize(int width, int height)
     Object::resize(width, height);
 
     m_webView->resize(width, height);
+}
+
+void Browser::executeShortCut(const char* key, bool ctrlPressed, bool altPressed)
+{
+    if (ctrlPressed) {
+        if (!strcmp(key, "i"))
+            m_webView->openInspectorView();
+        else if (!strcmp(key, "KP_Add"))
+            m_webView->scaleUp();
+        else if (!strcmp(key, "KP_Subtract"))
+            m_webView->scaleDown();
+    }
 }
