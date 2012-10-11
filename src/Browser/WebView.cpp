@@ -139,6 +139,7 @@ void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event
 
 void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
+    elm_object_focus_set(elm_object_top_widget_get(toWebView(data)->container()->object()), false);
     evas_object_focus_set(ewkObject, true);
 }
 
