@@ -32,5 +32,6 @@ do
     shift
 done
 
-./BuildTmp/$build_directory/eagle
-
+cd BuildTmp/$build_directory
+./eagle
+cd ../..
