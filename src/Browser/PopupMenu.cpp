@@ -23,16 +23,14 @@ PopupMenu::PopupMenu()
 
 Eina_Bool closeMe(void *data)
 {
-    printf("%s\n", __func__);
-    ewk_view_popup_menu_close(static_cast<Evas_Object*>(data));
+    ewk_popup_menu_close(static_cast<Ewk_Popup_Menu*>(data));
     return false;
 }
 
 void PopupMenu::menuItemSelected(void* data, Evas_Object* obj, void* event_info)
 {
-    printf("%s\n", __func__);
     PopupMenu* self = static_cast<PopupMenu*>(data);
-    if (!self || !self->m_currentView)
+    if (!self)
         return;
 
     Elm_Object_Item* selected = elm_list_selected_item_get(obj);
@@ -49,19 +47,18 @@ void PopupMenu::menuItemSelected(void* data, Evas_Object* obj, void* event_info)
         i++;
     }
 
-    ewk_view_popup_menu_select(self->m_currentView, i);
+    ewk_popup_menu_selected_index_set(self->m_popupMenu, i);
 
     // When I call ewk_view_popup_menu_close directly, crash occurs.
-    ecore_idler_add(closeMe, self->m_currentView);
+    ecore_idler_add(closeMe, self->m_popupMenu);
 }
 
-void PopupMenu::create(Evas_Object* ewkView, Eina_Rectangle rect, Eina_List* items, int selectedIndex)
+void PopupMenu::create(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu* popupMenu)
 {
-    printf("%s\n", __func__);
     if (!object())
         destroy();
 
-    m_currentView = ewkView;
+    m_popupMenu = popupMenu;
 
     // FIXME : It should be genlist for performance.
     Evas_Object* popupList = elm_list_add(ewkView);
@@ -72,6 +69,9 @@ void PopupMenu::create(Evas_Object* ewkView, Eina_Rectangle rect, Eina_List* ite
 
     void* itemv;
     const Eina_List* l;
+
+	int selectedIndex = ewk_popup_menu_selected_index_get(popupMenu);
+	const Eina_List* items = ewk_popup_menu_items_get(popupMenu);
 
     int cnt = eina_list_count(items);
     int index = 0;

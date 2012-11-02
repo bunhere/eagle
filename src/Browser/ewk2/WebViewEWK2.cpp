@@ -48,9 +48,9 @@ void ewkViewSmartDel(Evas_Object* o)
     _parent_sc.sc.del(o);
 }
 
-static Eina_Bool showPopupMenu(Ewk_View_Smart_Data* sd, Eina_Rectangle rect, Ewk_Text_Direction textDirection, double pageScaleFactor, Eina_List* items, int selectedIndex)
+static Eina_Bool showPopupMenu(Ewk_View_Smart_Data* sd, Eina_Rectangle rect, Ewk_Text_Direction textDirection, double pageScaleFactor, Ewk_Popup_Menu* popupMenu)
 {
-    PopupMenu::instance().create(sd->self, rect, items, selectedIndex);
+    PopupMenu::instance().create(sd->self, rect, popupMenu);
     return true;
 }
 

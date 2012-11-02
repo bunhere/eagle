@@ -11,12 +11,14 @@
 
 #include "EflWrappers/Object.h"
 
+typedef struct Ewk_Popup_Menu Ewk_Popup_Menu;
+
 class PopupMenu : public Object
 {
 public:
     static PopupMenu& instance();
 
-    void create(Evas_Object* ewkView, Eina_Rectangle rect, Eina_List* items, int selectedIndex);
+    void create(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu*);
     void destroy();
 private:
     PopupMenu();
@@ -24,5 +26,6 @@ private:
     static void menuItemSelected(void*, Evas_Object*, void*);
 
     Evas_Object* m_currentView;
+    Ewk_Popup_Menu* m_popupMenu;
 };
 #endif
