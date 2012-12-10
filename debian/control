@@ -1,0 +1,11 @@
+Source: eagle
+Section: unknown
+Priority: extra
+Maintainer: Ryuan Choi <ryuan.choi@gmail.com>
+Build-Depends:
+Standards-Version: 3.7.2
+
+Package: eagle
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: EFL based browser

@@ -14,3 +14,7 @@ mkdir -p build
 cmake .. (-DUSE_WEBKIT=On)
 make
 ./eagle
+
+How to release:
+
+dpkg-buildpackage -rfakeroot -uc -b

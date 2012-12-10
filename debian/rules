@@ -1,0 +1,65 @@
+#!/usr/bin/make -f
+
+package=eagle
+
+PREFIX ?= /usr
+CFLAGS ?= -Wall
+JOBS=--jobs=$(shell grep ^processor /proc/cpuinfo | wc -l)
+
+BUILD_DIR="Build$(package)"
+SOURCE_DIR=$(shell pwd)
+
+config.status:
+	dh_testdir
+	mkdir -p $(BUILD_DIR)
+	cd $(BUILD_DIR) && cmake $(SOURCE_DIR) -DCMAKE_INSTALL_PREFIX=$(PREFIX)
+
+	for f in `find $(CURDIR)/debian/ -name "*.in"`; do \
+		cat $$f > $${f%.in}; \
+		sed -i -e "s#@PREFIX@#$(PREFIX)#g" $${f%.in}; \
+	done
+
+build: config.status
+	dh_testdir
+	cd $(BUILD_DIR) && make $(JOBS)
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -rf $(BUILD_DIR)
+
+install:
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	cd $(BUILD_DIR) && make $(JOBS) DESTDIR=$(CURDIR)/debian/tmp install
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+#	dh_installchangelogs
+#	dh_installdocs
+#	dh_installexamples
+	dh_install --sourcedir=debian/tmp
+	dh_installman
+	dh_link
+#	dh_strip --dbg-package=XXX
+	dh_compress
+	dh_fixperms
+#	dh_perl
+	dh_makeshlibs
+	dh_installdeb
+#	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install
