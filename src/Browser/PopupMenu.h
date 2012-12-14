@@ -11,7 +11,7 @@
 
 #include "EflWrappers/Object.h"
 
-typedef struct Ewk_Popup_Menu Ewk_Popup_Menu;
+typedef struct EwkPopupMenu Ewk_Popup_Menu;
 
 class PopupMenu : public Object
 {
