@@ -18,6 +18,7 @@ class WebView;
 class Browser : public Window
 {
 public:
+    static void initialize();
     static Browser* create();
 
     void loadUrl(const char* url);
@@ -37,7 +38,6 @@ public:
 private:
     Browser();
 
-    static bool s_initialized;
     Urlbar m_urlbar;
 
     Evas_Object* m_layout;

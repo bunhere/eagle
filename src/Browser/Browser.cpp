@@ -12,16 +12,13 @@
 #include "WebView.h"
 #include <Elementary.h>
 
-bool Browser::s_initialized = false;
+void Browser::initialize()
+{
+    WebView::initialize();
+}
 
 Browser* Browser::create()
 {
-    if (!s_initialized) {
-        WebView::initialize();
-
-        s_initialized = true;
-    }
-
     Browser* newBrowser = new Browser;
     if (!newBrowser->object()) {
         delete newBrowser;
