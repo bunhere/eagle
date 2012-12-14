@@ -19,7 +19,13 @@ void Browser::initialize()
 
 Browser* Browser::create()
 {
-    Browser* newBrowser = new Browser;
+    BrowserConfig config;
+    return create(config);
+}
+
+Browser* Browser::create(const BrowserConfig& config)
+{
+    Browser* newBrowser = new Browser(config);
     if (!newBrowser->object()) {
         delete newBrowser;
         fprintf(stderr, "Could not create Window.\n");
@@ -28,9 +34,8 @@ Browser* Browser::create()
     return newBrowser;
 }
 
-Browser::Browser()
-    : m_urlbar(this)
-    , m_inspector(0)
+Browser::Browser(const BrowserConfig& config)
+    : m_inspector(0)
 {
     m_layout = elm_layout_add(object());
     //FIXME: add error handling
@@ -46,7 +51,11 @@ Browser::Browser()
     elm_win_resize_object_add(object(), m_layout);
     evas_object_show(m_layout);
 
-    elm_object_part_content_set(m_layout, "sw.urlbar", m_urlbar.object());
+    if (config.urlbar) {
+        m_urlbar = new Urlbar(this);
+        elm_object_part_content_set(m_layout, "sw.urlbar", m_urlbar->object());
+    } else
+        m_urlbar = 0;
 
     m_webView = WebView::create(this);
     elm_object_part_content_set(m_layout, "sw.webview", m_webView->object());
@@ -57,8 +66,6 @@ Browser::Browser()
 
 void Browser::loadUrl(const char* url)
 {
-    m_urlbar.changeUrlEntry(url);
-    printf(" %s will be loaded\n", url);
     m_webView->loadUrl(url);
 }
 

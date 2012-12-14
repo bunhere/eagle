@@ -9,16 +9,22 @@
 #ifndef Browser_h
 #define Browser_h
 
-#include "Browser/Urlbar.h"
 #include "EflWrappers/Window.h"
 
 class Urlbar;
 class WebView;
 
+class BrowserConfig
+{
+public:
+    bool urlbar;
+};
+
 class Browser : public Window
 {
 public:
     static void initialize();
+    static Browser* create(const BrowserConfig& config);
     static Browser* create();
 
     void loadUrl(const char* url);
@@ -34,11 +40,11 @@ public:
 
     virtual void resize(int width, int height);
 
-    Urlbar& urlbar() { return m_urlbar; }
+    Urlbar* urlbar() { return m_urlbar; }
 private:
-    Browser();
+    explicit Browser(const BrowserConfig&);
 
-    Urlbar m_urlbar;
+    Urlbar* m_urlbar;
 
     Evas_Object* m_layout;
     WebView* m_inspector;

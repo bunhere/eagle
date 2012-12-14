@@ -50,8 +50,9 @@ void WebView::onTitleChanged(void *userData, Evas_Object *webView, void *eventIn
 
 void WebView::onUriChanged(void *userData, Evas_Object *webView, void *eventInfo)
 {
-    Urlbar& urlbar = toWebView(userData)->container()->urlbar();
-    urlbar.changeUrlEntry(static_cast<const char*>(eventInfo));
+    Urlbar* urlbar = toWebView(userData)->container()->urlbar();
+    if (urlbar)
+        urlbar->changeUrlEntry(static_cast<const char*>(eventInfo));
 }
 
 void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
