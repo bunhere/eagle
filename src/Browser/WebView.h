@@ -9,11 +9,9 @@
 #ifndef WebView_h
 #define WebView_h
 
-#include <EflWrappers/Object.h>
+#include "Browser.h"
 
-class Browser;
-
-class WebView : public Object
+class WebView : public BrowserContent
 {
 public:
     ~WebView();

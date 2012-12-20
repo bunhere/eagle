@@ -14,6 +14,7 @@ EAPI_MAIN int
 elm_main(int argc, char** argv)
 {
     Features::instance().initialize();
+    Browser::initialize();
     Browser* defaultWindow = Browser::create();
     if (!defaultWindow)
         return -1;

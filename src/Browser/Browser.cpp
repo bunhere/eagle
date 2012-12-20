@@ -58,8 +58,7 @@ Browser::Browser(const BrowserConfig& config)
         m_urlbar = 0;
 
     m_webView = WebView::create(this);
-    elm_object_part_content_set(m_layout, "sw.webview", m_webView->object());
-    m_webView->show();
+    setContent(m_webView);
 
     elm_object_focus_set(m_layout, true);
 }
@@ -133,4 +132,17 @@ void Browser::executeShortCut(const char* key, bool ctrlPressed, bool altPressed
         else if (!strcmp(key, "KP_Subtract"))
             m_webView->scaleDown();
     }
+}
+
+void Browser::setContent(BrowserContent* content)
+{
+    if (m_content == content)
+        return;
+
+    if (content)
+        content->hide();
+
+    m_content = content;
+    elm_object_part_content_set(m_layout, "sw.bcontent", m_content->object());
+    m_content->show();
 }

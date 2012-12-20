@@ -15,6 +15,11 @@ void Object::show()
     evas_object_show(m_object);
 }
 
+void Object::hide()
+{
+    evas_object_hide(m_object);
+}
+
 void Object::move(int x, int y)
 {
     evas_object_move(m_object, x, y);

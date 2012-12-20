@@ -21,6 +21,7 @@ class Object
 {
 public:
     void show();
+    void hide();
     void move(int x, int y);
     virtual void resize(int width, int height);
 

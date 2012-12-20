@@ -20,6 +20,10 @@ public:
     bool urlbar;
 };
 
+class BrowserContent : public Object
+{
+};
+
 class Browser : public Window
 {
 public:
@@ -44,6 +48,9 @@ public:
 private:
     explicit Browser(const BrowserConfig&);
 
+    void setContent(BrowserContent*);
+
+    BrowserContent* m_content;
     Urlbar* m_urlbar;
 
     Evas_Object* m_layout;
