@@ -22,6 +22,9 @@ public:
 
 class BrowserContent : public Object
 {
+public:
+    BrowserContent(Evas_Object* o) : Object(o) {}
+    virtual ~BrowserContent() {}
 };
 
 class Browser : public Window

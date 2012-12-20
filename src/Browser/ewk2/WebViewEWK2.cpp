@@ -19,6 +19,7 @@ struct _View_Smart_Data
 {
     Ewk_View_Smart_Data base;
     WebView* cppInstance;
+    PopupMenu* popup;
 };
 
 static inline WebView* toCpp(Ewk_View_Smart_Data* sd)
@@ -45,18 +46,31 @@ static void ewkViewSmartAdd(Evas_Object* o)
 
 void ewkViewSmartDel(Evas_Object* o)
 {
+    View_Smart_Data* sd = (View_Smart_Data*)evas_object_smart_data_get(o);
+    if (sd && sd->popup)
+        delete vsd->popup;
+
     _parent_sc.sc.del(o);
 }
 
 static Eina_Bool showPopupMenu(Ewk_View_Smart_Data* sd, Eina_Rectangle rect, Ewk_Text_Direction textDirection, double pageScaleFactor, Ewk_Popup_Menu* popupMenu)
 {
-    PopupMenu::instance().create(sd->self, rect, popupMenu);
+    View_Smart_Data* vsd = (View_Smart_Data*)sd;
+    if (vsd->popup)
+        delete vsd->popup;
+
+    vsd->popup = PopupMenu::create(sd->self, rect, popupMenu);
+
     return true;
 }
 
 static Eina_Bool hidePopupMenu(Ewk_View_Smart_Data *sd)
 {
-    PopupMenu::instance().destroy();
+    View_Smart_Data* vsd = (View_Smart_Data*)sd;
+    vsd->popup->hide();
+    delete vsd->popup;
+    vsd->popup = 0;
+
     return true;
 }
 
@@ -84,6 +98,7 @@ Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
     Evas_Object* ewkView = ewk_view_smart_add(canvas, smart, ewk_context_default_get());
     View_Smart_Data* sd = (View_Smart_Data*)evas_object_smart_data_get(ewkView);
     sd->cppInstance = webView;
+    sd->popup = 0;
 
     return ewkView;
 }

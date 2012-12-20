@@ -16,12 +16,9 @@ typedef struct EwkPopupMenu Ewk_Popup_Menu;
 class PopupMenu : public Object
 {
 public:
-    static PopupMenu& instance();
-
-    void create(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu*);
-    void destroy();
+    static PopupMenu* create(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu*);
 private:
-    PopupMenu();
+    PopupMenu(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu*);
 
     static void menuItemSelected(void*, Evas_Object*, void*);
 

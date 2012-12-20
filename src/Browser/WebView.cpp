@@ -132,25 +132,17 @@ void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* eve
 
 WebView::WebView(Browser* container)
     : m_container(container)
+    , BrowserContent(ewkViewAdd(container->object(), this))
 {
     Evas* evas = evas_object_evas_get(container->object());
-#if USE_ELM_WEB
-    Evas_Object* webView = elm_web_add(container->object());
-    Evas_Object* ewkView = elm_web_webkit_view_get(webView);
 
-#else
-    Evas_Object* ewkView = ewkViewAdd(container->object(), this);
-#endif
+    evas_object_size_hint_weight_set(object(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 
-    setObject(ewkView);
-
-    evas_object_size_hint_weight_set(ewkView, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-
-    evas_object_event_callback_add(ewkView, EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
-    evas_object_event_callback_add(ewkView, EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
+    evas_object_event_callback_add(object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
+    evas_object_event_callback_add(object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
 
 #define SMART_CALLBACK_ADD(signal, func) \
-    evas_object_smart_callback_add(ewkView, signal, func, this)
+    evas_object_smart_callback_add(object(), signal, func, this)
 
     SMART_CALLBACK_ADD("inspector,view,create", onInspectorViewCreate);
     SMART_CALLBACK_ADD("inspector,view,close", onInspectorViewClose);

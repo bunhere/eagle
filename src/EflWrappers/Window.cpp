@@ -17,9 +17,9 @@ static const int sDefaultHeight = 600;
 Window* Window::head = 0;
 
 Window::Window()
+    : Object(elm_win_add(0, PROJECT_NAME, ELM_WIN_BASIC))
 {
-    Evas_Object* win = elm_win_add(0, PROJECT_NAME, ELM_WIN_BASIC);
-    if (!win)
+    if (!object())
         return;
 
     if (!head)
@@ -27,8 +27,6 @@ Window::Window()
     else
         next = 0;
     head = this;
-
-    setObject(win);
 
     evas_object_smart_callback_add(object(), "delete,request", onDeleteRequest, this);
     m_bg = elm_bg_add(object());

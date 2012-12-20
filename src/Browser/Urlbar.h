@@ -17,7 +17,7 @@ class Urlbar : public Object
 {
 public:
     Urlbar(Browser* container);
-    ~Urlbar();
+    ~Urlbar() {}
 
     Browser* container() { return m_container; };
     void changeUrlEntry(const char* url);

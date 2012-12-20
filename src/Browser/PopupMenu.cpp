@@ -10,17 +10,6 @@
 #include <EWebKit2.h>
 #include <Elementary.h>
 
-PopupMenu& PopupMenu::instance()
-{
-    static PopupMenu popup;
-
-    return popup;
-}
-
-PopupMenu::PopupMenu()
-{
-}
-
 Eina_Bool closeMe(void *data)
 {
     ewk_popup_menu_close(static_cast<Ewk_Popup_Menu*>(data));
@@ -53,25 +42,24 @@ void PopupMenu::menuItemSelected(void* data, Evas_Object* obj, void* event_info)
     ecore_idler_add(closeMe, self->m_popupMenu);
 }
 
-void PopupMenu::create(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu* popupMenu)
+PopupMenu* PopupMenu::create(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu* popupMenu)
 {
-    if (!object())
-        destroy();
+    return new PopupMenu(ewkView, rect, popupMenu);
+}
 
+PopupMenu::PopupMenu(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu* popupMenu)
+    : Object(elm_list_add(ewkView)) // FIXME : It should be genlist for performance.
+{
     m_popupMenu = popupMenu;
 
-    // FIXME : It should be genlist for performance.
-    Evas_Object* popupList = elm_list_add(ewkView);
-    setObject(popupList);
-
-    evas_object_size_hint_weight_set(popupList, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(popupList, EVAS_HINT_FILL, EVAS_HINT_FILL);
+    evas_object_size_hint_weight_set(object(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(object(), EVAS_HINT_FILL, EVAS_HINT_FILL);
 
     void* itemv;
     const Eina_List* l;
 
-	int selectedIndex = ewk_popup_menu_selected_index_get(popupMenu);
-	const Eina_List* items = ewk_popup_menu_items_get(popupMenu);
+	int selectedIndex = ewk_popup_menu_selected_index_get(m_popupMenu);
+	const Eina_List* items = ewk_popup_menu_items_get(m_popupMenu);
 
     int cnt = eina_list_count(items);
     int index = 0;
@@ -80,13 +68,13 @@ void PopupMenu::create(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu
 
         printf (" --- %d: %d\n", index, ewk_popup_menu_item_type_get(menuItem));
         const char* text = ewk_popup_menu_item_text_get(menuItem);
-        Elm_Object_Item* itemObject = elm_list_item_append(popupList, text, 0, 0, 0, 0);
+        Elm_Object_Item* itemObject = elm_list_item_append(object(), text, 0, 0, 0, 0);
         if (selectedIndex == index)
             elm_list_item_selected_set(itemObject, true);
         index++;
     }
 
-    evas_object_smart_callback_add(popupList, "selected", menuItemSelected, this);
+    evas_object_smart_callback_add(object(), "selected", menuItemSelected, this);
 
     int viewX = 0, viewY = 0;
     evas_object_geometry_get(ewkView, &viewX, &viewY, 0, 0);
@@ -94,13 +82,4 @@ void PopupMenu::create(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu
     move(viewX + rect.x, viewY + rect.y + rect.h);
     resize(rect.w, rect.h * cnt);
     show();
-}
-
-void PopupMenu::destroy()
-{
-    if (!object())
-        return;
-
-    evas_object_del(object());
-    setObject(0);
 }

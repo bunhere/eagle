@@ -62,38 +62,31 @@ void Urlbar::stop_clicked(void *data, Evas_Object *obj, const char *emission, co
 
 Urlbar::Urlbar(Browser* container)
     : m_container(container)
+    , Object(elm_layout_add(container->object()))
 {
-    Evas_Object* obj = elm_layout_add(container->object());
-
-    if (!elm_layout_file_set(obj, container->getTheme(), "eagle/browser-urlbar")) {
+    if (!elm_layout_file_set(object(), container->getTheme(), "eagle/browser-urlbar")) {
         //FIXME: add error handling
         printf("%s theme path is failed\n", container->getTheme());
         return;
     }
 
-    m_entry = elm_entry_add(obj);
+    m_entry = elm_entry_add(object());
     elm_entry_single_line_set(m_entry, true);
 
     evas_object_size_hint_weight_set(m_entry, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(m_entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
 
-    elm_object_part_content_set(obj, "sw.url", m_entry);
+    elm_object_part_content_set(object(), "sw.url", m_entry);
 
     evas_object_event_callback_add(m_entry, EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
     //connect signal
     //evas_object_smart_callback_add(m_entry, "changed", urlbarChanged, this);
     evas_object_smart_callback_add(m_entry, "activated", urlbarActivated, this);
 
-    edje_object_signal_callback_add(elm_layout_edje_get(obj), "mouse,clicked,1", "back", back_clicked, this);
-    edje_object_signal_callback_add(elm_layout_edje_get(obj), "mouse,clicked,1", "forward", forward_clicked, this);
-    edje_object_signal_callback_add(elm_layout_edje_get(obj), "reload", "", reload_clicked, this);
-    edje_object_signal_callback_add(elm_layout_edje_get(obj), "stop", "", stop_clicked, this);
-
-    setObject(obj);
-}
-
-Urlbar::~Urlbar()
-{
+    edje_object_signal_callback_add(elm_layout_edje_get(object()), "mouse,clicked,1", "back", back_clicked, this);
+    edje_object_signal_callback_add(elm_layout_edje_get(object()), "mouse,clicked,1", "forward", forward_clicked, this);
+    edje_object_signal_callback_add(elm_layout_edje_get(object()), "reload", "", reload_clicked, this);
+    edje_object_signal_callback_add(elm_layout_edje_get(object()), "stop", "", stop_clicked, this);
 }
 
 void Urlbar::changeUrlEntry(const char* url)

@@ -20,6 +20,12 @@
 class Object
 {
 public:
+    explicit Object(Evas_Object* o) : m_object(o) {}
+    virtual ~Object() {
+        if (!m_object)
+            evas_object_del(m_object);
+    }
+
     void show();
     void hide();
     void move(int x, int y);
@@ -29,8 +35,6 @@ public:
     int height() { return m_height; }
 
     Evas_Object* object() const { return m_object; }
-    void setObject(Evas_Object* obj) { m_object = obj; }
-
 private:
     Evas_Object* m_object;
 
