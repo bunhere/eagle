@@ -46,8 +46,8 @@ static void ewkViewSmartAdd(Evas_Object* o)
 
 void ewkViewSmartDel(Evas_Object* o)
 {
-    View_Smart_Data* sd = (View_Smart_Data*)evas_object_smart_data_get(o);
-    if (sd && sd->popup)
+    View_Smart_Data* vsd = (View_Smart_Data*)evas_object_smart_data_get(o);
+    if (vsd && vsd->popup)
         delete vsd->popup;
 
     _parent_sc.sc.del(o);
