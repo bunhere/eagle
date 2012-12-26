@@ -12,6 +12,11 @@
 #include "WebView.h"
 #include <Elementary.h>
 
+BrowserConfig::BrowserConfig()
+    : urlbar(true)
+{
+}
+
 void Browser::initialize()
 {
     WebView::initialize();
@@ -131,6 +136,11 @@ void Browser::executeShortCut(const char* key, bool ctrlPressed, bool altPressed
             m_webView->scaleUp();
         else if (!strcmp(key, "KP_Subtract"))
             m_webView->scaleDown();
+    } else if (altPressed) {
+        if (!strcmp(key, "Left"))
+            m_webView->back();
+        else if (!strcmp(key, "Right"))
+            m_webView->forward();
     }
 }
 

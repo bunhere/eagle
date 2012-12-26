@@ -17,6 +17,7 @@ class WebView;
 class BrowserConfig
 {
 public:
+    BrowserConfig();
     bool urlbar;
 };
 

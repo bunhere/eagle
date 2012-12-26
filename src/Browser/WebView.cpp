@@ -120,8 +120,9 @@ void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event
 {
     Evas_Event_Key_Down *ev = (Evas_Event_Key_Down*) event_info;
     Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
+    Eina_Bool altPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Alt");
 
-    toWebView(data)->container()->executeShortCut(ev->key, ctrlPressed, false);
+    toWebView(data)->container()->executeShortCut(ev->key, ctrlPressed, altPressed);
 }
 
 void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
