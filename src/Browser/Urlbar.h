@@ -25,10 +25,11 @@ public:
 
     static void onKeyDown(void*, Evas*, Evas_Object*, void*);
 
-    SIGNAL_FUNC_DECLARE(back_clicked);
-    SIGNAL_FUNC_DECLARE(forward_clicked);
-    SIGNAL_FUNC_DECLARE(reload_clicked);
-    SIGNAL_FUNC_DECLARE(stop_clicked);
+    SMART_CALLBACK_DECLARE(back_clicked);
+    SMART_CALLBACK_DECLARE(forward_clicked);
+    SMART_CALLBACK_DECLARE(reload_clicked);
+    SMART_CALLBACK_DECLARE(home_clicked);
+    //SIGNAL_FUNC_DECLARE(stop_clicked);
 private:
     Browser* m_container;
     Evas_Object* m_entry;

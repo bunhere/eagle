@@ -25,7 +25,14 @@ group { name: "eagle/browser-view";
                 rel1 { relative: 0.0 0.0; }
                 rel2 { relative: 1.0 0.0; }
             }
-
+            description { state: "hidden" 0.0;
+                visible: 1;
+                fixed: 1 1;
+                align: 0.0 1.0;
+                min: 0 URLBAR_HEIGHT;
+                rel1 { relative: 0.0 0.0; }
+                rel2 { relative: 1.0 0.0; }
+            }
         }
         PART_START("sw.bcontent", SWALLOW, 1)
             description { state: "default" 0.0;
@@ -42,6 +49,14 @@ group { name: "eagle/browser-view";
                 rel1 { relative: 0.0 0.5; }
                 rel2 { relative: 1.0 1.0; }
             }
+        }
+    }
+
+    programs {
+        program { name: "disable_urlbar";
+            signal: "disable_urlbar";
+            action: STATE_SET "hidden" 0.0;
+            target: "sw.urlbar";
         }
     }
 }

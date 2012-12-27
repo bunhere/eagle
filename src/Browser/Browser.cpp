@@ -59,8 +59,10 @@ Browser::Browser(const BrowserConfig& config)
     if (config.urlbar) {
         m_urlbar = new Urlbar(this);
         elm_object_part_content_set(m_layout, "sw.urlbar", m_urlbar->object());
-    } else
+    } else {
         m_urlbar = 0;
+        edje_object_signal_emit(elm_layout_edje_get(m_layout), "disable_urlbar", "");
+    }
 
     m_webView = WebView::create(this);
     setContent(m_webView);

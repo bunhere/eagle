@@ -7,14 +7,6 @@
  */
 
 group { name: "eagle/browser-urlbar";
-    images {
-        image: "resources/arrow_left2.png" COMP;
-        image: "resources/arrow_left3.png" COMP;
-        image: "resources/arrow_right2.png" COMP;
-        image: "resources/arrow_right3.png" COMP;
-        image: "resources/big_cross.png" COMP;
-        image: "resources/gtk-refresh.png" COMP;
-    }
     parts {
         PART_START("bg", RECT, 0)
             description { state: "default" 0.0;
@@ -22,61 +14,7 @@ group { name: "eagle/browser-urlbar";
                 align: 0.0 0.0;
                 rel1 { relative: 0.0 0.0; }
                 rel2 { relative: 1.0 1.0; }
-                color: 200 200 200 255;
-            }
-        }
-        PART_START("back", IMAGE, 1)
-            description { state: "default" 0.0;
-                visible: 1;
-                min: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
-                max: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
-                fixed: 1 1;
-                align: 0.0 0.5;
-                rel1 { relative: 0.0 0.0; }
-                rel2 { relative: 0.0 1.0; }
-                image {
-                    normal: "resources/arrow_left2.png";
-                }
-            }
-        }
-        PART_START("forward", IMAGE, 1)
-            description { state: "default" 0.0;
-                visible: 1;
-                min: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
-                max: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
-                fixed: 1 1;
-                align: 0.0 0.5;
-                rel1 { relative: 1.0 0.0; to_x: "back";}
-                rel2 { relative: 1.0 1.0; to_x: "back";}
-                image {
-                    normal: "resources/arrow_right2.png";
-                }
-            }
-        }
-        PART_START("reloadOrStop", IMAGE, 1)
-            description { state: "default" 0.0;
-                visible: 1;
-                min: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
-                max: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
-                fixed: 1 1;
-                align: 0.0 0.5;
-                rel1 { relative: 1.0 0.0; to_x: "forward";}
-                rel2 { relative: 1.0 1.0; to_x: "forward";}
-                image {
-                    normal: "resources/gtk-refresh.png";
-                }
-            }
-            description { state: "stop" 0.0;
-                visible: 1;
-                min: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
-                max: URLBAR_BUTTON_SIZE URLBAR_BUTTON_SIZE;
-                fixed: 1 1;
-                align: 0.0 0.5;
-                rel1 { relative: 1.0 0.0; to_x: "forward";}
-                rel2 { relative: 1.0 1.0; to_x: "forward";}
-                image {
-                    normal: "resources/big_cross.png";
-                }
+                color: 255 255 255 255;
             }
         }
         PART_START("sw.url", SWALLOW, 1)
@@ -84,29 +22,10 @@ group { name: "eagle/browser-urlbar";
                 visible: 1;
                 fixed: 1 1;
                 align: 0.0 0.5;
-                rel1 { relative: 1.1 0.0; to_x: "reloadOrStop";}
+                rel1 { relative: 0.0 0.0; }
                 rel2 { relative: 1.0 1.0; }
             }
 
         }
-        programs {
-            program { name: "reload_press";
-                signal: "mouse,down,1";
-                source: "reloadOrStop";
-                script {
-                    new st[10];
-                    new Float:vl;
-                    get_state(PART:"reloadOrStop", st, 10, vl);
-                    if (!strcmp(st, "default")) {
-                        set_state(PART:"reloadOrStop", "stop", 0.0);
-                        emit("reload", "");
-                    } else {
-                        set_state(PART:"reloadOrStop", "default", 0.0);
-                        emit("stop", "");
-                    }
-                }
-            }
-        }
     }
 }
-
