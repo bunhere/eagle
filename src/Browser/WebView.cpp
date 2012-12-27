@@ -228,14 +228,14 @@ void WebView::openInspectorView()
 #if USE_WEBKIT
     // FIXME: we need better way to handle setting.
     ewk_view_setting_enable_developer_extras_set(object(), true);
-    ewk_view_web_inspector_show(object());
+    ewk_view_inspector_show(object());
 #endif
 }
 
 void WebView::setInspectorView(const WebView& view)
 {
 #if USE_WEBKIT
-    ewk_view_web_inspector_view_set(object(), view.object());
+    ewk_view_inspector_view_set(object(), view.object());
 #endif
 }
 
