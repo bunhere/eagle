@@ -44,7 +44,7 @@ public:
     void createInspector(WebView* receivedWebView);
     void closeInspector();
     void executeShortCut(const char* key, bool ctrlPressed, bool altPressed);
-    const char* getTheme();
+    static const char* themePath();
 
     virtual void resize(int width, int height);
 

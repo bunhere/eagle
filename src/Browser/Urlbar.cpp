@@ -111,9 +111,9 @@ Urlbar::Urlbar(Browser* container)
     evas_object_show(button);
 
     Evas_Object* layout = elm_layout_add(container->object());
-    if (!elm_layout_file_set(layout, container->getTheme(), "eagle/browser-urlbar")) {
+    if (!elm_layout_file_set(layout, Browser::themePath(), "eagle/browser-urlbar")) {
         //FIXME: add error handling
-        printf("%s theme path is failed\n", container->getTheme());
+        printf("%s theme path is failed\n", Browser::themePath());
         return;
     }
     evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);

@@ -45,9 +45,9 @@ Browser::Browser(const BrowserConfig& config)
     m_layout = elm_layout_add(object());
     //FIXME: add error handling
 
-    if (!elm_layout_file_set(m_layout, getTheme(), "eagle/browser-view")) {
+    if (!elm_layout_file_set(m_layout, themePath(), "eagle/browser-view")) {
         //FIXME: add error handling
-        printf("%s theme path is failed\n", getTheme());
+        printf("%s theme path is failed\n", themePath());
         return;
     }
 
@@ -116,10 +116,10 @@ void Browser::closeInspector()
     m_inspector = 0;
 }
 
-const char* Browser::getTheme()
+const char* Browser::themePath()
 {
     //FIXME: Need to find real path
-    return "./theme/eagle.edj";
+    return THEME_DIR "/eagle.edj";
 }
 
 void Browser::resize(int width, int height)
