@@ -15,9 +15,9 @@
 
 static Evas_Object* create_toolbar_button(Evas_Object* parent, const char* iconName)
 {
-    Evas_Object *button = elm_button_add(parent);
+    Evas_Object* button = elm_button_add(parent);
 
-    Evas_Object *icon = elm_icon_add(parent);
+    Evas_Object* icon = elm_icon_add(parent);
     elm_icon_standard_set(icon, iconName);
     evas_object_size_hint_max_set(icon, URLBAR_BUTTON_SIZE, URLBAR_BUTTON_SIZE);
     evas_object_color_set(icon, 40, 100, 40, 128);

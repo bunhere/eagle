@@ -43,7 +43,6 @@ public:
     void stop();
 
     void openInspectorView();
-    void setInspectorView(const WebView& inspectorView);
 
     void scaleUp();
     void scaleDown();
@@ -51,6 +50,7 @@ private:
     WebView(Browser* container);
 
     Browser* m_container;
+    WebView* m_inspector;
 };
 
 #if !USE_ELM_WEB

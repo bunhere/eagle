@@ -25,14 +25,32 @@ inline static WebView* toWebView(void* userData)
     return static_cast<WebView*>(userData);
 }
 
-void WebView::onInspectorViewCreate(void *userData, Evas_Object *webView, void *eventInfo)
+void WebView::onInspectorViewCreate(void* userData, Evas_Object*, void*)
 {
-    toWebView(userData)->container()->createInspector(toWebView(userData));
+    WebView* webView = toWebView(userData);
+    WebView* inspector = webView->m_inspector;
+
+    if (!inspector) {
+        inspector = new WebView(webView->container());
+        webView->m_inspector = inspector;
+
+#if USE_WEBKIT
+        ewk_view_inspector_view_set(webView->object(), inspector->object());
+#endif
+    }
+
+    webView->container()->setInspector(inspector);
 }
 
-void WebView::onInspectorViewClose(void *userData, Evas_Object *webView, void *eventInfo)
+void WebView::onInspectorViewClose(void* userData, Evas_Object*, void*)
 {
-    toWebView(userData)->container()->closeInspector();
+    WebView* webView = toWebView(userData);
+    webView->container()->setInspector(0);
+
+    if (webView->m_inspector) {
+        delete webView->m_inspector;
+        webView->m_inspector = 0;
+    }
 }
 
 void WebView::onTitleChanged(void *userData, Evas_Object *webView, void *eventInfo)
@@ -45,6 +63,9 @@ void WebView::onTitleChanged(void *userData, Evas_Object *webView, void *eventIn
 #else
     const char* title = static_cast<const char*>(eventInfo);
 #endif
+
+    toWebView(userData)->setTitle(title);
+
     toWebView(userData)->container()->setTitle(title);
 }
 
@@ -60,7 +81,7 @@ void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
     printf(" %s \n", __func__);
 #if USE_WEBKIT || USE_ELM_WEB
     Ewk_Frame_Load_Error* error = static_cast<Ewk_Frame_Load_Error*>(eventInfo);
-    printf(" %d %d (%s : %s : %s)\n %d\n",
+    printf(" %d %d (%s : %s : %s)\n %ld\n",
             error->code,
             error->is_cancellation,
             error->domain,
@@ -132,9 +153,11 @@ void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* eve
 }
 
 WebView::WebView(Browser* container)
-    : m_container(container)
-    , BrowserContent(ewkViewAdd(container->object(), this))
+    : BrowserContent(ewkViewAdd(container->object(), this), BC_WEBVIEW)
+    , m_container(container)
+    , m_inspector(0)
 {
+
     Evas* evas = evas_object_evas_get(container->object());
 
     evas_object_size_hint_weight_set(object(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -171,16 +194,20 @@ WebView::~WebView()
 
     evas_object_smart_callback_del(object(), "inspector,view,create", onInspectorViewCreate);
     evas_object_smart_callback_del(object(), "inspector,view,close", onInspectorViewClose);
+
+    if (m_inspector)
+        delete m_inspector;
 }
 
 WebView* WebView::create(Browser* container)
 {
-    WebView* webview = new WebView(container);
+    WebView* webView = new WebView(container);
+    container->attachContent(webView);
 
     //FIXME: hard typed path is bad.
-    ewk_view_theme_set(webview->object(), "/usr/local/share/ewebkit-0/themes/default.edj");
+    ewk_view_theme_set(webView->object(), "/usr/local/share/ewebkit-0/themes/default.edj");
 
-    return webview;
+    return webView;
 }
 
 void WebView::initialize()
@@ -229,13 +256,6 @@ void WebView::openInspectorView()
     // FIXME: we need better way to handle setting.
     ewk_view_setting_enable_developer_extras_set(object(), true);
     ewk_view_inspector_show(object());
-#endif
-}
-
-void WebView::setInspectorView(const WebView& view)
-{
-#if USE_WEBKIT
-    ewk_view_inspector_view_set(object(), view.object());
 #endif
 }
 

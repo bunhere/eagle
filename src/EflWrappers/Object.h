@@ -22,7 +22,7 @@ class Object
 public:
     explicit Object(Evas_Object* o) : m_object(o) {}
     virtual ~Object() {
-        if (!m_object)
+        if (m_object)
             evas_object_del(m_object);
     }
 

@@ -7,11 +7,40 @@
  */
 
 group { name: "eagle/browser-view";
+    images {
+        image: "resources/tab0.png" COMP;
+    }
     parts {
         PART_START("bg", RECT, 0)
             description { state: "default" 0.0;
                 visible: 1;
                 align: 0.0 0.0;
+                rel1 { relative: 0.0 0.0; }
+                rel2 { relative: 1.0 1.0; }
+                color: 231 229 226 255;
+            }
+        }
+        PART_START("bg.multitabbar", IMAGE, 0)
+            description { state: "default" 0.0;
+                visible: 1;
+                fixed: 1 1;
+                min: 0 25;
+                align: 0.0 0.0;
+                rel1 { relative: 0.0 0.0; }
+                rel2 { relative: 1.0 0.0; }
+                image {
+                    normal: "resources/tab0.png";
+                }
+            }
+        }
+        PART_START("sw.multitabbar", SWALLOW, 1)
+            description { state: "default" 0.0;
+                visible: 1;
+                rel1 { relative: 0.0 0.0; to: "bg.multitabbar"; }
+                rel2 { relative: 1.0 1.0; to: "bg.multitabbar"; }
+            }
+            description { state: "hidden" 0.0;
+                visible: 1;
                 rel1 { relative: 0.0 0.0; }
                 rel2 { relative: 1.0 1.0; }
             }
@@ -22,16 +51,16 @@ group { name: "eagle/browser-view";
                 fixed: 1 1;
                 align: 0.0 0.0;
                 min: 0 URLBAR_HEIGHT;
-                rel1 { relative: 0.0 0.0; }
-                rel2 { relative: 1.0 0.0; }
+                rel1 { relative: 0.0 1.0; to_y: sw.multitabbar; }
+                rel2 { relative: 1.0 1.0; to_y: sw.multitabbar; }
             }
             description { state: "hidden" 0.0;
                 visible: 1;
                 fixed: 1 1;
                 align: 0.0 1.0;
                 min: 0 URLBAR_HEIGHT;
-                rel1 { relative: 0.0 0.0; }
-                rel2 { relative: 1.0 0.0; }
+                rel1 { relative: 0.0 1.0;  to_y: sw.multitabbar;}
+                rel2 { relative: 1.0 1.0;  to_y: sw.multitabbar;}
             }
         }
         PART_START("sw.bcontent", SWALLOW, 1)

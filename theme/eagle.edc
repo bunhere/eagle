@@ -11,4 +11,5 @@
 collections {
 #include "browser-urlbar.edc"
 #include "browser-view.edc"
+#include "multitab.edc"
 }

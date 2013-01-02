@@ -1,0 +1,63 @@
+/*
+ * Copyright (C) 2012 Ryuan Choi
+ *
+ * License LGPL-3, see COPYING file at project folder.
+ */
+
+group { name: "eagle/multitab";
+    images {
+        image: "resources/tab1.png" COMP;
+        image: "resources/tab2.png" COMP;
+    }
+    parts {
+        PART_START("bg", IMAGE, 0)
+            description { state: "default" 0.0;
+                visible: 1;
+                rel1 { relative: 0.0 0.0; }
+                rel2 { relative: 1.0 1.0; }
+                image {
+                    normal: "resources/tab2.png";
+                    border: 4 5 0 0;
+                }
+            }
+            description { state: "active" 0.0;
+                inherit: "default" 0.0;
+                image {
+                    normal: "resources/tab1.png";
+                    border: 4 5 0 0;
+                }
+            }
+        }
+        PART_START("title", SWALLOW, 0)
+            description { state: "default" 0.0;
+            visible: 1;
+            rel1 { to: "bg"; }
+            rel2 { to: "bg"; }
+        }
+    }
+
+    script {
+        public message(Msg_Type:type, id, ...) {
+            /* if (id == 0 && type == MSG_INT_SET) */
+            new active;
+            active = getarg(2);
+            if (active == 0)
+                run_program(PROGRAM:"inactive");
+            else
+                run_program(PROGRAM:"active");
+        }
+    }
+
+    programs {
+        program { name: "active";
+            signal: "active";
+            action: STATE_SET "active" 0.0;
+            target: "bg";
+        }
+        program { name: "inactive";
+            signal: "inactive";
+            action: STATE_SET "default" 0.0;
+            target: "bg";
+        }
+    }
+}

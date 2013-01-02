@@ -17,6 +17,7 @@ ADD_CUSTOM_COMMAND(
         ${EAGLE_THEME_SOURCE}
         ${CMAKE_SOURCE_DIR}/theme/browser-view.edc
         ${CMAKE_SOURCE_DIR}/theme/browser-urlbar.edc
+        ${CMAKE_SOURCE_DIR}/theme/multitab.edc
 )
 
 LIST(APPEND EAGLE_SOURCES

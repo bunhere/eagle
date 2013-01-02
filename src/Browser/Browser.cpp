@@ -9,12 +9,42 @@
 #include "Browser.h"
 
 #include "Urlbar.h"
+#include "MultitabBar.h"
+#include "Tab.h"
 #include "WebView.h"
 #include <Elementary.h>
+#include <algorithm>
 
 BrowserConfig::BrowserConfig()
     : urlbar(true)
+    , multitapBar(true)
 {
+}
+
+BrowserContent::~BrowserContent()
+{
+    if (m_title)
+        free(m_title);
+}
+
+void BrowserContent::setTitle(const char* title)
+{
+    if (!title || !title[0])
+        return;
+
+    m_title = strdup(title);
+
+    if (m_tab) {
+        m_tab->setTitle(m_title);
+    }
+}
+
+void BrowserContent::createTabIfNeeded()
+{
+    if (m_tab)
+        return;
+
+    m_tab = new Tab(this);
 }
 
 void Browser::initialize()
@@ -40,7 +70,6 @@ Browser* Browser::create(const BrowserConfig& config)
 }
 
 Browser::Browser(const BrowserConfig& config)
-    : m_inspector(0)
 {
     m_layout = elm_layout_add(object());
     //FIXME: add error handling
@@ -52,9 +81,10 @@ Browser::Browser(const BrowserConfig& config)
     }
 
     evas_object_size_hint_weight_set(m_layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(m_layout, EVAS_HINT_FILL, EVAS_HINT_FILL);
     elm_win_resize_object_add(object(), m_layout);
     evas_object_show(m_layout);
+
+    chooseContent(WebView::create(this));
 
     if (config.urlbar) {
         m_urlbar = new Urlbar(this);
@@ -64,56 +94,82 @@ Browser::Browser(const BrowserConfig& config)
         edje_object_signal_emit(elm_layout_edje_get(m_layout), "disable_urlbar", "");
     }
 
-    m_webView = WebView::create(this);
-    setContent(m_webView);
+    if (config.multitapBar) {
+        m_multitapBar = new MultitabBar(this);
+        updateMultitab();
+        elm_object_part_content_set(m_layout, "sw.multitabbar", m_multitapBar->object());
+    } else {
+        m_multitapBar = 0;
+        edje_object_signal_emit(elm_layout_edje_get(m_layout), "disable_multitabbar", "");
+    }
 
     elm_object_focus_set(m_layout, true);
 }
 
+Browser::~Browser()
+{
+    size_t size = m_contents.size();
+    for (size_t i = 0; i < size; ++i)
+        delete m_contents[i];
+
+    if (m_urlbar)
+        delete m_urlbar;
+
+    if (m_multitapBar)
+        delete m_multitapBar;
+}
+
 void Browser::loadUrl(const char* url)
 {
-    m_webView->loadUrl(url);
+    if (!m_content->isWebView())
+        return;
+
+    WebView* webView = (WebView*) m_content;
+    webView->loadUrl(url);
 }
 
 void Browser::back()
 {
-    m_webView->back();
+    if (!m_content->isWebView())
+        return;
+
+    WebView* webView = (WebView*) m_content;
+    webView->back();
 }
 
 void Browser::forward()
 {
-    m_webView->forward();
+    if (!m_content->isWebView())
+        return;
+
+    WebView* webView = (WebView*) m_content;
+    webView->forward();
 }
 
 void Browser::reload()
 {
-    m_webView->reload();
+    if (!m_content->isWebView())
+        return;
+
+    WebView* webView = (WebView*) m_content;
+    webView->reload();
 }
 
 void Browser::stop()
 {
-    m_webView->stop();
-}
-
-void Browser::createInspector(WebView* receivedWebView)
-{
-    printf( "%s is called\n", __func__);
-    if (!m_inspector) {
-        m_inspector = WebView::create(this);
-        elm_object_part_content_set(m_layout, "sw.inspector", m_inspector->object());
-        m_inspector->show();
-    }
-    receivedWebView->setInspectorView(*m_inspector);
-}
-
-void Browser::closeInspector()
-{
-    printf( "%s is called\n", __func__);
-    if (!m_inspector)
+    if (!m_content->isWebView())
         return;
 
-    delete m_inspector;
-    m_inspector = 0;
+    WebView* webView = (WebView*) m_content;
+    webView->stop();
+}
+
+void Browser::setInspector(const WebView* inspector)
+{
+    if (!inspector)
+        elm_object_part_content_unset(m_layout, "sw.inspector");
+    else
+        elm_object_part_content_set(m_layout, "sw.inspector", inspector->object());
 }
 
 const char* Browser::themePath()
@@ -126,27 +182,44 @@ void Browser::resize(int width, int height)
 {
     Object::resize(width, height);
 
-    m_webView->resize(width, height);
+    m_content->resize(width, height);
 }
 
 void Browser::executeShortCut(const char* key, bool ctrlPressed, bool altPressed)
 {
+    if (!m_content->isWebView())
+        return;
+
+    WebView* webView = (WebView*) m_content;
     if (ctrlPressed) {
         if (!strcmp(key, "i"))
-            m_webView->openInspectorView();
+            webView->openInspectorView();
         else if (!strcmp(key, "KP_Add"))
-            m_webView->scaleUp();
+            webView->scaleUp();
         else if (!strcmp(key, "KP_Subtract"))
-            m_webView->scaleDown();
+            webView->scaleDown();
     } else if (altPressed) {
         if (!strcmp(key, "Left"))
-            m_webView->back();
+            webView->back();
         else if (!strcmp(key, "Right"))
-            m_webView->forward();
+            webView->forward();
     }
 }
 
-void Browser::setContent(BrowserContent* content)
+void Browser::attachContent(BrowserContent* content)
+{
+    m_contents.push_back(content);
+
+    if (m_multitapBar)
+        m_multitapBar->update();
+}
+
+void Browser::detachContent(BrowserContent* content)
+{
+    m_contents.erase(std::find(m_contents.begin(), m_contents.end(), content));
+}
+
+void Browser::chooseContent(BrowserContent* content)
 {
     if (m_content == content)
         return;
@@ -157,4 +230,12 @@ void Browser::setContent(BrowserContent* content)
     m_content = content;
     elm_object_part_content_set(m_layout, "sw.bcontent", m_content->object());
     m_content->show();
+}
+
+void Browser::updateMultitab()
+{
+    if (!m_multitapBar)
+        return;
+
+    m_multitapBar->update();
 }
