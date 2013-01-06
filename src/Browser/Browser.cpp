@@ -37,6 +37,8 @@ void BrowserContent::setTitle(const char* title)
     if (m_tab) {
         m_tab->setTitle(m_title);
     }
+
+    m_container->titleChanged(this);
 }
 
 void BrowserContent::createTabIfNeeded()
@@ -45,6 +47,9 @@ void BrowserContent::createTabIfNeeded()
         return;
 
     m_tab = new Tab(this);
+
+    if (m_container->isActiveContent(this))
+        m_tab->setActive(true);
 }
 
 void Browser::initialize()
@@ -84,7 +89,7 @@ Browser::Browser(const BrowserConfig& config)
     elm_win_resize_object_add(object(), m_layout);
     evas_object_show(m_layout);
 
-    chooseContent(WebView::create(this));
+    attachContent(WebView::create(this), true);
 
     if (config.urlbar) {
         m_urlbar = new Urlbar(this);
@@ -164,6 +169,26 @@ void Browser::stop()
     webView->stop();
 }
 
+void Browser::titleChanged(BrowserContent* content)
+{
+    if (m_content != content)
+        return;
+
+    if (m_content->title())
+        setTitle(m_content->title());
+    else
+        setTitle(PROJECT_NAME);
+}
+
+void Browser::urlChanged(BrowserContent* content)
+{
+    if (m_content != content)
+        return;
+
+    if (m_urlbar)
+        m_urlbar->changeUrlEntry(content->url());
+}
+
 void Browser::setInspector(const WebView* inspector)
 {
     if (!inspector)
@@ -206,12 +231,17 @@ void Browser::executeShortCut(const char* key, bool ctrlPressed, bool altPressed
     }
 }
 
-void Browser::attachContent(BrowserContent* content)
+void Browser::addPage()
+{
+    attachContent(WebView::create(this), true);
+}
+
+void Browser::attachContent(BrowserContent* content, bool active)
 {
     m_contents.push_back(content);
 
-    if (m_multitapBar)
-        m_multitapBar->update();
+    if (active)
+        chooseContent(content);
 }
 
 void Browser::detachContent(BrowserContent* content)
@@ -224,12 +254,26 @@ void Browser::chooseContent(BrowserContent* content)
     if (m_content == content)
         return;
 
-    if (content)
-        content->hide();
+    if (m_content) {
+        if (m_content->tab())
+            m_content->tab()->setActive(false);
+
+        m_content->hide();
+    }
 
     m_content = content;
+    elm_object_part_content_unset(m_layout, "sw.bcontent"); // crash point?
     elm_object_part_content_set(m_layout, "sw.bcontent", m_content->object());
+
+    if (m_content->tab())
+        m_content->tab()->setActive(true);
+
+    urlChanged(m_content);
+    titleChanged(m_content);
+
     m_content->show();
+
+    updateMultitab();
 }
 
 void Browser::updateMultitab()

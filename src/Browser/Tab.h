@@ -14,11 +14,14 @@ class BrowserContent;
 class Tab : public Object
 {
 public:
-    Tab(BrowserContent* container);
+    explicit Tab(BrowserContent* linkedContent);
 
     void setActive(bool);
     void setTitle(const char* title);
 private:
+    static void onMouseUp(void*, Evas*, Evas_Object*, void*);
+
+    BrowserContent* m_linkedContent;
     Evas_Object* m_title;
     bool m_active;
 };

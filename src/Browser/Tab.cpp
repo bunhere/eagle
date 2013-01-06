@@ -9,22 +9,31 @@
 #include "WebView.h"
 #include <Elementary.h>
 
-Tab::Tab(BrowserContent* container)
-    : Object(elm_layout_add(container->object()))
+Tab::Tab(BrowserContent* linkedContent)
+    : Object(elm_layout_add(linkedContent->container()->object()))
+    , m_linkedContent(linkedContent)
     , m_active(false)
 {
+
     if (!elm_layout_file_set(object(), Browser::themePath(), "eagle/multitab")) {
         return;
     }
     evas_object_size_hint_weight_set(object(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(object(), EVAS_HINT_FILL, EVAS_HINT_FILL);
 
-    m_title = elm_label_add(container->object());
-    printf("TTEST\n");
-    elm_object_text_set(m_title, "TEST");
+    evas_object_event_callback_add(object(), EVAS_CALLBACK_MOUSE_UP, onMouseUp, m_linkedContent);
+
+    m_title = elm_label_add(linkedContent->container()->object());
+    elm_object_text_set(m_title, "Untitled");
     elm_object_part_content_set(object(), "title", m_title);
 
     evas_object_show(m_title);
+}
+
+void Tab::onMouseUp(void* data, Evas*, Evas_Object*, void*)
+{
+    BrowserContent* bc = static_cast<BrowserContent*>(data);
+    bc->container()->chooseContent(bc);
 }
 
 void Tab::setActive(bool active)

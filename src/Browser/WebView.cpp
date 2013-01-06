@@ -10,7 +10,6 @@
 #include <Browser/WebView.h>
 
 #include <Browser/Browser.h>
-#include <Browser/Urlbar.h>
 #include <Browser/Features/AutoFormFill.h>
 #include <Browser/Features/Features.h>
 
@@ -64,16 +63,23 @@ void WebView::onTitleChanged(void *userData, Evas_Object *webView, void *eventIn
     const char* title = static_cast<const char*>(eventInfo);
 #endif
 
-    toWebView(userData)->setTitle(title);
-
-    toWebView(userData)->container()->setTitle(title);
+    WebView* self = toWebView(userData);
+    self->setTitle(title);
 }
 
-void WebView::onUriChanged(void *userData, Evas_Object *webView, void *eventInfo)
+void WebView::onUriChanged(void* userData, Evas_Object*, void* eventInfo)
 {
-    Urlbar* urlbar = toWebView(userData)->container()->urlbar();
-    if (urlbar)
-        urlbar->changeUrlEntry(static_cast<const char*>(eventInfo));
+    WebView* self = toWebView(userData);
+    const char* newUrl = static_cast<const char*>(eventInfo);
+
+    if (self->m_url && !strcmp(self->m_url, newUrl))
+        return;
+
+    if (self->m_url)
+        free(self->m_url);
+
+    self->m_url = strdup(newUrl);
+    self->container()->urlChanged(self);
 }
 
 void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
@@ -153,9 +159,9 @@ void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* eve
 }
 
 WebView::WebView(Browser* container)
-    : BrowserContent(ewkViewAdd(container->object(), this), BC_WEBVIEW)
-    , m_container(container)
+    : BrowserContent(container, ewkViewAdd(container->object(), this), BC_WEBVIEW)
     , m_inspector(0)
+    , m_url(0)
 {
 
     Evas* evas = evas_object_evas_get(container->object());
@@ -202,7 +208,6 @@ WebView::~WebView()
 WebView* WebView::create(Browser* container)
 {
     WebView* webView = new WebView(container);
-    container->attachContent(webView);
 
     //FIXME: hard typed path is bad.
     ewk_view_theme_set(webView->object(), "/usr/local/share/ewebkit-0/themes/default.edj");

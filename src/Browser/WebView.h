@@ -20,7 +20,7 @@ public:
 
     static void initialize();
 
-    Browser* container() { return m_container; };
+    const char* url() const { return m_url; }
 
     SMART_CALLBACK_DECLARE(onFormSubmissionRequest);
 
@@ -49,8 +49,8 @@ public:
 private:
     WebView(Browser* container);
 
-    Browser* m_container;
     WebView* m_inspector;
+    char* m_url;
 };
 
 #if !USE_ELM_WEB

@@ -13,11 +13,18 @@ class Browser;
 class MultitabBar : public Object
 {
 public:
-    MultitabBar(Browser* container);
+    explicit MultitabBar(Browser* container);
+    ~MultitabBar();
+
+    Browser* container() { return m_container; };
 
     void update();
+
 private:
+    SMART_CALLBACK_DECLARE(add_clicked);
+
     Browser* m_container;
+    Evas_Object* m_addButton;
 };
 
 #endif

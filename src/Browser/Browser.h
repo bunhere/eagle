@@ -12,6 +12,7 @@
 #include "EflWrappers/Window.h"
 #include <vector>
 
+class Browser;
 class Urlbar;
 class MultitabBar;
 class Tab;
@@ -30,18 +31,24 @@ enum BrowserContentType { BC_WEBVIEW, BC_EMPTY };
 class BrowserContent : public Object
 {
 public:
-    BrowserContent(Evas_Object* o, BrowserContentType t) : Object(o), m_type(t), m_title(0) { }
+    BrowserContent(Browser* b, Evas_Object* o, BrowserContentType t) : Object(o), m_container(b), m_type(t), m_title(0) { }
     virtual ~BrowserContent();
+
+    Browser* container() { return m_container; };
 
     BrowserContentType type() { return m_type; }
     bool isWebView() { return type() == BC_WEBVIEW; }
 
     const char* title() const { return m_title; }
     void setTitle(const char*);
+
+    virtual const char* url() const { return "about:blank"; }
+
     Tab* tab() { return m_tab; }
     void createTabIfNeeded();
 
 private:
+    Browser* m_container;
     BrowserContentType m_type;
     Tab* m_tab;
     char* m_title;
@@ -56,16 +63,23 @@ public:
 
     ~Browser();
 
-    void attachContent(BrowserContent*);
+    void addPage();
+
+    void attachContent(BrowserContent*, bool);
     void detachContent(BrowserContent*);
     size_t contentsSize() const { return m_contents.size(); }
     BrowserContent* contentsAt(size_t i) { return m_contents[i]; }
+    bool isActiveContent(BrowserContent* bc) { return bc == m_content; }
+    void chooseContent(BrowserContent*);
 
     void loadUrl(const char* url);
     void back();
     void forward();
     void reload();
     void stop();
+
+    void titleChanged(BrowserContent* content);
+    void urlChanged(BrowserContent* content);
 
     void setInspector(const WebView*);
     void executeShortCut(const char* key, bool ctrlPressed, bool altPressed);
@@ -74,11 +88,8 @@ public:
     virtual void resize(int width, int height);
 
     void updateMultitab();
-    Urlbar* urlbar() { return m_urlbar; }
 private:
     explicit Browser(const BrowserConfig&);
-
-    void chooseContent(BrowserContent*);
 
     BrowserContent* m_content;
     Urlbar* m_urlbar;
