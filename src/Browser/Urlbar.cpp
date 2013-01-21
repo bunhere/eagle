@@ -54,13 +54,13 @@ void Urlbar::onKeyDown(void* data, Evas* e, Evas_Object*, void* event_info)
 void Urlbar::back_clicked(void* data, Evas_Object*, void*)
 {
     Urlbar* self = static_cast<Urlbar*>(data);
-    self->container()->back();
+    Browser::back(0, self->container(), 0);
 }
 
 void Urlbar::forward_clicked(void* data, Evas_Object*, void*)
 {
     Urlbar* self = static_cast<Urlbar*>(data);
-    self->container()->forward();
+    Browser::forward(0, self->container(), 0);
 }
 
 void Urlbar::reload_clicked(void* data, Evas_Object*, void*)

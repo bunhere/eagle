@@ -143,13 +143,11 @@ void WebView::onFormSubmissionRequest(void *userData, Evas_Object *webView, void
 #endif
 }
 
-void WebView::onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
+bool WebView::onKeyDown(const Evas_Event_Key_Down *ev)
 {
-    Evas_Event_Key_Down *ev = (Evas_Event_Key_Down*) event_info;
-    Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
-    Eina_Bool altPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Alt");
+    //container()->executeShortCut(ev->key, ctrlPressed, altPressed);
 
-    toWebView(data)->container()->executeShortCut(ev->key, ctrlPressed, altPressed);
+    return ShortCut::instance().feedKeyDownEvent(*ev, container(), this);
 }
 
 void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
@@ -168,7 +166,7 @@ WebView::WebView(Browser* container)
 
     evas_object_size_hint_weight_set(object(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 
-    evas_object_event_callback_add(object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
+    //evas_object_event_callback_add(object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
     evas_object_event_callback_add(object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
 
 #define SMART_CALLBACK_ADD(signal, func) \

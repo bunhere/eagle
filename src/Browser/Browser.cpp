@@ -15,6 +15,15 @@
 #include <Elementary.h>
 #include <algorithm>
 
+void Browser::initialize()
+{
+    WebView::initialize();
+
+    // register shortcuts.
+    ShortCut& s = ShortCut::instance();
+    s.addCommand('i', true, false, openInspectorView);
+}
+
 BrowserConfig::BrowserConfig()
     : urlbar(true)
     , multitapBar(true)
@@ -50,11 +59,6 @@ void BrowserContent::createTabIfNeeded()
 
     if (m_container->isActiveContent(this))
         m_tab->setActive(true);
-}
-
-void Browser::initialize()
-{
-    WebView::initialize();
 }
 
 Browser* Browser::create()
@@ -124,6 +128,25 @@ Browser::~Browser()
         delete m_multitapBar;
 }
 
+#define COMMAND_WEBVIEW_IMPLEMENT(name) \
+bool Browser::name(const CommandInfo*, Browser* browser, BrowserContent* content) \
+{ \
+    if (!content) \
+        return name(0, browser, browser->m_content); \
+ \
+    if (!content->isWebView()) \
+        return false; \
+ \
+    WebView* webView = (WebView*) content; \
+    webView->name(); \
+ \
+    return true; \
+}
+
+COMMAND_WEBVIEW_IMPLEMENT(openInspectorView)
+COMMAND_WEBVIEW_IMPLEMENT(back)
+COMMAND_WEBVIEW_IMPLEMENT(forward)
+
 void Browser::loadUrl(const char* url)
 {
     if (!m_content->isWebView())
@@ -131,24 +154,6 @@ void Browser::loadUrl(const char* url)
 
     WebView* webView = (WebView*) m_content;
     webView->loadUrl(url);
-}
-
-void Browser::back()
-{
-    if (!m_content->isWebView())
-        return;
-
-    WebView* webView = (WebView*) m_content;
-    webView->back();
-}
-
-void Browser::forward()
-{
-    if (!m_content->isWebView())
-        return;
-
-    WebView* webView = (WebView*) m_content;
-    webView->forward();
 }
 
 void Browser::reload()
@@ -217,9 +222,7 @@ void Browser::executeShortCut(const char* key, bool ctrlPressed, bool altPressed
 
     WebView* webView = (WebView*) m_content;
     if (ctrlPressed) {
-        if (!strcmp(key, "i"))
-            webView->openInspectorView();
-        else if (!strcmp(key, "KP_Add"))
+        if (!strcmp(key, "KP_Add"))
             webView->scaleUp();
         else if (!strcmp(key, "KP_Subtract"))
             webView->scaleDown();

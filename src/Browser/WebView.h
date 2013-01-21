@@ -33,7 +33,8 @@ public:
     SMART_CALLBACK_DECLARE(onTitleChanged);
     SMART_CALLBACK_DECLARE(onUriChanged);
 
-    static void onKeyDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
+    //static void onKeyDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
+    bool onKeyDown(const Evas_Event_Key_Down*);
     static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
 
     void loadUrl(const char* url);

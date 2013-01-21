@@ -46,10 +46,18 @@ void ewkViewSmartDel(Evas_Object* o)
     _parent_sc.sc.del(o);
 }
 
-static Evas_Object* ewkViewSmartWindowCreate(Ewk_View_Smart_Data *sd, Eina_Bool javascript, const Ewk_Window_Features *window_features)
+static Evas_Object* ewkViewSmartWindowCreate(Ewk_View_Smart_Data* sd, Eina_Bool javascript, const Ewk_Window_Features *window_features)
 {
     //FIXME
     return 0;
+}
+
+static Eina_Bool ewkViewSmartKeyDown(Ewk_View_Smart_Data* sd, const Evas_Event_Key_Down* down)
+{
+    if (!toCpp(sd)->onKeyDown(down))
+        return _parent_sc.key_down(sd, down);
+
+    return true;
 }
 
 Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
@@ -66,6 +74,7 @@ Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
         api.sc.del = ewkViewSmartDel;
 
         api.window_create = ewkViewSmartWindowCreate;
+        api.key_down = ewkViewSmartKeyDown;
 
         smart = evas_smart_class_new(&api.sc);
         if (!smart)

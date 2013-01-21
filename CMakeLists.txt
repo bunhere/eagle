@@ -38,6 +38,7 @@ SET(EAGLE_SOURCES
     src/Browser/Browser.cpp
     src/Browser/Urlbar.cpp
     src/Browser/MultitabBar.cpp
+    src/Browser/ShortCut.cpp
     src/Browser/Tab.cpp
     src/Browser/WebView.cpp
 

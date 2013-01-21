@@ -10,6 +10,7 @@
 #define Browser_h
 
 #include "EflWrappers/Window.h"
+#include "ShortCut.h"
 #include <vector>
 
 class Browser;
@@ -72,9 +73,13 @@ public:
     bool isActiveContent(BrowserContent* bc) { return bc == m_content; }
     void chooseContent(BrowserContent*);
 
+    COMMAND_DECLARE(openInspectorView);
+    //COMMAND_DECLARE(scaleUp);
+    //COMMAND_DECLARE(scaleDown);
+    COMMAND_DECLARE(back);
+    COMMAND_DECLARE(forward);
+
     void loadUrl(const char* url);
-    void back();
-    void forward();
     void reload();
     void stop();
 
