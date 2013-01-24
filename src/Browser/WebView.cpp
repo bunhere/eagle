@@ -216,6 +216,11 @@ WebView* WebView::create(Browser* container)
 
 void WebView::initialize()
 {
+#if USE_WEBKIT2
+    // FIXME: WebKit2 should support software backend also.
+    elm_config_preferred_engine_set("opengl_x11");
+#endif
+
     ewk_init();
 
 #if USE_WEBKIT
