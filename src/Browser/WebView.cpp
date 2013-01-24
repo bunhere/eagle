@@ -207,8 +207,9 @@ WebView* WebView::create(Browser* container)
 {
     WebView* webView = new WebView(container);
 
-    //FIXME: hard typed path is bad.
-    ewk_view_theme_set(webView->object(), "/usr/local/share/ewebkit-0/themes/default.edj");
+#ifdef WEBKIT_DEFAULT_THEME_PATH
+    ewk_view_theme_set(webView->object(), WEBKIT_DEFAULT_THEME_PATH "/themes/default.edj");
+#endif
 
     return webView;
 }
