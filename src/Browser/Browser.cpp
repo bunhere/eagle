@@ -22,6 +22,7 @@ void Browser::initialize()
     // register shortcuts.
     ShortCut& s = ShortCut::instance();
     s.addCommand('i', true, false, openInspectorView);
+    s.addCommand('t', true, false, addNewPage);
 
     s.addCommand("KP_Add", true, false, scaleUp);
     s.addCommand("KP_Subtract", true, false, scaleDown);
@@ -85,8 +86,16 @@ Browser* Browser::create(const BrowserConfig& config)
     return newBrowser;
 }
 
+void Browser::onFocusIn(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
+{
+    Browser* browser = static_cast<Browser*>(data);
+    browser->m_content->setFocus(true);
+}
+
 Browser::Browser(const BrowserConfig& config)
 {
+    evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_IN, onFocusIn, this);
+
     m_layout = elm_layout_add(object());
     //FIXME: add error handling
 
@@ -100,7 +109,7 @@ Browser::Browser(const BrowserConfig& config)
     elm_win_resize_object_add(object(), m_layout);
     evas_object_show(m_layout);
 
-    attachContent(WebView::create(this), true);
+    addNewPage(0);
 
     if (config.urlbar) {
         m_urlbar = new Urlbar(this);
@@ -118,8 +127,6 @@ Browser::Browser(const BrowserConfig& config)
         m_multitapBar = 0;
         edje_object_signal_emit(elm_layout_edje_get(m_layout), "disable_multitabbar", "");
     }
-
-    elm_object_focus_set(m_layout, true);
 }
 
 Browser::~Browser()
@@ -150,11 +157,20 @@ bool Browser::name(const CommandInfo*, Browser* browser, BrowserContent* content
     return true; \
 }
 
+#define COMMAND_BROWSER_IMPLEMENT(name) \
+bool Browser::name(const CommandInfo*, Browser* browser, BrowserContent* content) \
+{ \
+    browser->name(content); \
+    return true; \
+}
+
 COMMAND_WEBVIEW_IMPLEMENT(openInspectorView)
 COMMAND_WEBVIEW_IMPLEMENT(back)
 COMMAND_WEBVIEW_IMPLEMENT(forward)
 COMMAND_WEBVIEW_IMPLEMENT(scaleUp)
 COMMAND_WEBVIEW_IMPLEMENT(scaleDown)
+
+COMMAND_BROWSER_IMPLEMENT(addNewPage)
 
 void Browser::loadUrl(const char* url)
 {
@@ -224,7 +240,7 @@ void Browser::resize(int width, int height)
     m_content->resize(width, height);
 }
 
-void Browser::addPage()
+void Browser::addNewPage(BrowserContent*)
 {
     attachContent(WebView::create(this), true);
 }
@@ -251,6 +267,7 @@ void Browser::chooseContent(BrowserContent* content)
         if (m_content->tab())
             m_content->tab()->setActive(false);
 
+        m_content->setFocus(false);
         m_content->hide();
     }
 
@@ -263,6 +280,7 @@ void Browser::chooseContent(BrowserContent* content)
 
     urlChanged(m_content);
     titleChanged(m_content);
+    m_content->setFocus(true);
 
     m_content->show();
 

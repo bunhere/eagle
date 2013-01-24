@@ -143,17 +143,29 @@ void WebView::onFormSubmissionRequest(void *userData, Evas_Object *webView, void
 #endif
 }
 
-bool WebView::onKeyDown(const Evas_Event_Key_Down *ev)
+bool WebView::smartKeyDown(const Evas_Event_Key_Down *ev)
 {
-    //container()->executeShortCut(ev->key, ctrlPressed, altPressed);
-
     return ShortCut::instance().feedKeyDownEvent(*ev, container(), this);
+}
+
+void onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
+{
+}
+
+static void onFocusIn(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
+{
+    fprintf(stderr, "WebView %s called\n", __func__);
+}
+
+void onFocusOut(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
+{
+    fprintf(stderr, "WebView %s called\n", __func__);
 }
 
 void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
-    elm_object_focus_set(elm_object_top_widget_get(toWebView(data)->container()->object()), false);
-    evas_object_focus_set(ewkObject, true);
+    WebView* self = toWebView(data);
+    self->setFocus(true);
 }
 
 WebView::WebView(Browser* container)
@@ -166,8 +178,10 @@ WebView::WebView(Browser* container)
 
     evas_object_size_hint_weight_set(object(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 
-    //evas_object_event_callback_add(object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
+    evas_object_event_callback_add(object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
     evas_object_event_callback_add(object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
+    evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_IN, onFocusIn, this);
+    evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_OUT, onFocusOut, this);
 
 #define SMART_CALLBACK_ADD(signal, func) \
     evas_object_smart_callback_add(object(), signal, func, this)
@@ -228,6 +242,13 @@ void WebView::initialize()
     if (httpProxy)
         ewk_network_proxy_uri_set(httpProxy);
 #endif
+}
+
+void WebView::setFocus(bool focus)
+{
+    fprintf(stderr, "%s(%d)\n", __func__, focus);
+    elm_object_focus_set(elm_object_top_widget_get(container()->object()), false);
+    evas_object_focus_set(object(), focus);
 }
 
 void WebView::loadUrl(const char* url)

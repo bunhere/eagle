@@ -37,7 +37,7 @@ MultitabBar::~MultitabBar()
 void MultitabBar::add_clicked(void* data, Evas_Object*, void*)
 {
     MultitabBar* self = static_cast<MultitabBar*>(data);
-    self->container()->addPage();
+    self->container()->addNewPage();
 }
 
 void MultitabBar::update()

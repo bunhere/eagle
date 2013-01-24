@@ -64,6 +64,7 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
     Eina_Bool altPressed = evas_key_modifier_is_set(ev.modifiers, "Alt");
 
     char key = ev.key[0];
+    printf("[%s]\n", ev.key);
     if (isSmallAlphabet(key) || isNumeric(key))  {
         int modifier = altPressed << 1 + ctrlPressed - 1;
 

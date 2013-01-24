@@ -48,7 +48,7 @@ void Urlbar::onKeyDown(void* data, Evas* e, Evas_Object*, void* event_info)
     Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
     Eina_Bool altPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Alt");
 
-    printf(" [%s entered]\n", __func__);
+    printf(" [Urlbar::%s entered]\n", __func__);
     ShortCut::instance().feedKeyDownEvent(*ev, urlbar->container(), 0);
 }
 

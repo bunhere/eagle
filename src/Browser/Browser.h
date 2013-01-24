@@ -42,6 +42,7 @@ public:
 
     const char* title() const { return m_title; }
     void setTitle(const char*);
+    virtual void setFocus(bool) { }
 
     virtual const char* url() const { return "about:blank"; }
 
@@ -62,9 +63,11 @@ public:
     static Browser* create(const BrowserConfig& config);
     static Browser* create();
 
+    static void onFocusIn(void* data, Evas* e, Evas_Object* webview, void* event_info);
+
     ~Browser();
 
-    void addPage();
+    void addNewPage(BrowserContent* = 0);
 
     void attachContent(BrowserContent*, bool);
     void detachContent(BrowserContent*);
@@ -73,6 +76,7 @@ public:
     bool isActiveContent(BrowserContent* bc) { return bc == m_content; }
     void chooseContent(BrowserContent*);
 
+    COMMAND_DECLARE(addNewPage);
     COMMAND_DECLARE(openInspectorView);
     COMMAND_DECLARE(scaleUp);
     COMMAND_DECLARE(scaleDown);
@@ -83,8 +87,8 @@ public:
     void reload();
     void stop();
 
-    void titleChanged(BrowserContent* content);
-    void urlChanged(BrowserContent* content);
+    void titleChanged(BrowserContent*);
+    void urlChanged(BrowserContent*);
 
     void setInspector(const WebView*);
     static const char* themePath();

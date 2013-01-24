@@ -20,6 +20,8 @@ public:
 
     static void initialize();
 
+    void setFocus(bool);
+
     const char* url() const { return m_url; }
 
     SMART_CALLBACK_DECLARE(onFormSubmissionRequest);
@@ -34,7 +36,7 @@ public:
     SMART_CALLBACK_DECLARE(onUriChanged);
 
     //static void onKeyDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
-    bool onKeyDown(const Evas_Event_Key_Down*);
+    bool smartKeyDown(const Evas_Event_Key_Down*);
     static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
 
     void loadUrl(const char* url);

@@ -54,7 +54,7 @@ static Evas_Object* ewkViewSmartWindowCreate(Ewk_View_Smart_Data* sd, Eina_Bool 
 
 static Eina_Bool ewkViewSmartKeyDown(Ewk_View_Smart_Data* sd, const Evas_Event_Key_Down* down)
 {
-    if (!toCpp(sd)->onKeyDown(down))
+    if (!toCpp(sd)->smartKeyDown(down))
         return _parent_sc.key_down(sd, down);
 
     return true;
