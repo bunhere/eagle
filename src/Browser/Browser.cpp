@@ -23,6 +23,9 @@ void Browser::initialize()
     ShortCut& s = ShortCut::instance();
     s.addCommand('i', true, false, openInspectorView);
 
+    s.addCommand("KP_Add", true, false, scaleUp);
+    s.addCommand("KP_Subtract", true, false, scaleDown);
+
     // FIXME: It should be alt
     s.addCommand("Left", true, false, back);
     s.addCommand("Right", true, false, forward);
@@ -150,6 +153,8 @@ bool Browser::name(const CommandInfo*, Browser* browser, BrowserContent* content
 COMMAND_WEBVIEW_IMPLEMENT(openInspectorView)
 COMMAND_WEBVIEW_IMPLEMENT(back)
 COMMAND_WEBVIEW_IMPLEMENT(forward)
+COMMAND_WEBVIEW_IMPLEMENT(scaleUp)
+COMMAND_WEBVIEW_IMPLEMENT(scaleDown)
 
 void Browser::loadUrl(const char* url)
 {
@@ -217,20 +222,6 @@ void Browser::resize(int width, int height)
     Object::resize(width, height);
 
     m_content->resize(width, height);
-}
-
-void Browser::executeShortCut(const char* key, bool ctrlPressed, bool altPressed)
-{
-    if (!m_content->isWebView())
-        return;
-
-    WebView* webView = (WebView*) m_content;
-    if (ctrlPressed) {
-        if (!strcmp(key, "KP_Add"))
-            webView->scaleUp();
-        else if (!strcmp(key, "KP_Subtract"))
-            webView->scaleDown();
-    }
 }
 
 void Browser::addPage()

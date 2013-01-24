@@ -74,8 +74,8 @@ public:
     void chooseContent(BrowserContent*);
 
     COMMAND_DECLARE(openInspectorView);
-    //COMMAND_DECLARE(scaleUp);
-    //COMMAND_DECLARE(scaleDown);
+    COMMAND_DECLARE(scaleUp);
+    COMMAND_DECLARE(scaleDown);
     COMMAND_DECLARE(back);
     COMMAND_DECLARE(forward);
 
@@ -87,7 +87,6 @@ public:
     void urlChanged(BrowserContent* content);
 
     void setInspector(const WebView*);
-    void executeShortCut(const char* key, bool ctrlPressed, bool altPressed);
     static const char* themePath();
 
     virtual void resize(int width, int height);
