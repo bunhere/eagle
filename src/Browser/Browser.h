@@ -32,7 +32,7 @@ enum BrowserContentType { BC_WEBVIEW, BC_EMPTY };
 class BrowserContent : public Object
 {
 public:
-    BrowserContent(Browser* b, Evas_Object* o, BrowserContentType t) : Object(o), m_container(b), m_type(t), m_title(0) { }
+    BrowserContent(Browser* b, Evas_Object* o, BrowserContentType t) : Object(o), m_container(b), m_type(t), m_tab(0), m_title(0) { }
     virtual ~BrowserContent();
 
     Browser* container() { return m_container; };
