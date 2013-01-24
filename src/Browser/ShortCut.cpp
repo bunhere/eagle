@@ -36,13 +36,26 @@ bool ShortCut::addCommand(char key, bool ctrlPressed, bool altPressed, Command f
         else
             index = key - '0';
 
-        m_keyboardShortCuts[modifier][index] = fn;
+        m_keyboardAlphabetShortCuts[modifier][index] = fn;
     }
 
 }
 
 bool ShortCut::addCommand(const char* key, bool ctrlPressed, bool altPressed, Command fn)
 {
+    Command* commands;
+    std::map<std::string, Command*>::iterator i = m_keyboardOtherShortCuts.find(key);
+    if (i == m_keyboardOtherShortCuts.end()) {
+        commands = new Command[3];
+        commands[0] = 0;
+        commands[1] = 0;
+        commands[2] = 0;
+        m_keyboardOtherShortCuts[key] = commands;
+    } else
+        commands = i->second;
+
+    int modifier = altPressed << 1 + ctrlPressed - 1;
+    commands[modifier] = fn;
 }
 
 bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser, BrowserContent* content)
@@ -61,12 +74,19 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
         else
             index = key - '0';
 
-        if (m_keyboardShortCuts[modifier][index])
-            return m_keyboardShortCuts[modifier][index](0, browser, content);
+        if (m_keyboardAlphabetShortCuts[modifier][index])
+            return m_keyboardAlphabetShortCuts[modifier][index](0, browser, content);
     } else {
-        // FIXME : It should be implemented.
-        browser->executeShortCut(ev.key, ctrlPressed, altPressed);
-        return true;
+        fprintf(stderr, "%s\n", __func__);
+        std::map<std::string, Command*>::iterator i = m_keyboardOtherShortCuts.find(ev.key);
+        if (i == m_keyboardOtherShortCuts.end())
+            return false;
+
+        fprintf(stderr, "%s 2\n", __func__);
+        int modifier = altPressed << 1 + ctrlPressed - 1;
+        
+        if (Command cmd = i->second[modifier])
+            return cmd(0, browser, content);
     }
     return false;
 }

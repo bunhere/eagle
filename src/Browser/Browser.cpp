@@ -22,6 +22,10 @@ void Browser::initialize()
     // register shortcuts.
     ShortCut& s = ShortCut::instance();
     s.addCommand('i', true, false, openInspectorView);
+
+    // FIXME: It should be alt
+    s.addCommand("Left", true, false, back);
+    s.addCommand("Right", true, false, forward);
 }
 
 BrowserConfig::BrowserConfig()
@@ -226,11 +230,6 @@ void Browser::executeShortCut(const char* key, bool ctrlPressed, bool altPressed
             webView->scaleUp();
         else if (!strcmp(key, "KP_Subtract"))
             webView->scaleDown();
-    } else if (altPressed) {
-        if (!strcmp(key, "Left"))
-            webView->back();
-        else if (!strcmp(key, "Right"))
-            webView->forward();
     }
 }
 

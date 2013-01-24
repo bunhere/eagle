@@ -8,6 +8,8 @@
 #define ShortCut_h
 
 #include <Evas.h>
+#include <map>
+#include <string>
 
 typedef struct {
     char* key;
@@ -39,7 +41,8 @@ private:
 
     // 0: ctrlPressed / 1: altPressed / 2: both
     // 0 ~ 9 : number, 10 ~ 36 : alphabet
-    Command m_keyboardShortCuts[3][36];
+    Command m_keyboardAlphabetShortCuts[3][36];
+    std::map<std::string, Command*> m_keyboardOtherShortCuts;
 };
 
 #endif // #ifndef ShortCut_h
