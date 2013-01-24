@@ -18,20 +18,23 @@ help() {
 
 build_directory="WebKit2"
 
-while [ $# -gt 0 ]
+ret=
+for arg;
 do
-    if [ "$1" = "-1" ]
+    if [ "$arg" = "-1" ]
     then
         build_directory="WebKit"
+    else
+        ret="$ret $arg"
     fi
+
     if [ "$1" = "--help" ]
     then
         help
         exit;
     fi
-    shift
 done
 
 cd BuildTmp/$build_directory
-./eagle
+./eagle $ret
 cd ../..
