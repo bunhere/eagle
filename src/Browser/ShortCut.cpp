@@ -7,6 +7,11 @@
 #include "ShortCut.h"
 #include "Browser.h"
 
+static inline int modifierIndex(bool ctrlPressed, bool altPressed)
+{
+    return (altPressed << 1) + ctrlPressed - 1;
+}
+
 static inline bool isSmallAlphabet(char key)
 {
     return (key >= 'a' && key <= 'z');
@@ -24,13 +29,21 @@ ShortCut& ShortCut::instance()
     return *shortcut;
 }
 
+ShortCut::ShortCut()
+{
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 36; ++j)
+            m_keyboardAlphabetShortCuts[i][j] = 0;
+}
+
 bool ShortCut::addCommand(char key, bool ctrlPressed, bool altPressed, Command fn)
 {
     if (isSmallAlphabet(key) || isNumeric(key))  {
-        int modifier = altPressed << 1 + ctrlPressed - 1;
+        int modifier = modifierIndex(ctrlPressed, altPressed);
+        if (modifier)
+            return false;
 
         int index;
-
         if (isSmallAlphabet(key))
             index = key - 'a';
         else
@@ -39,6 +52,7 @@ bool ShortCut::addCommand(char key, bool ctrlPressed, bool altPressed, Command f
         m_keyboardAlphabetShortCuts[modifier][index] = fn;
     }
 
+    return true;
 }
 
 bool ShortCut::addCommand(const char* key, bool ctrlPressed, bool altPressed, Command fn)
@@ -54,8 +68,12 @@ bool ShortCut::addCommand(const char* key, bool ctrlPressed, bool altPressed, Co
     } else
         commands = i->second;
 
-    int modifier = altPressed << 1 + ctrlPressed - 1;
+    int modifier = modifierIndex(ctrlPressed, altPressed);
+    if (modifier < 0)
+        return false;
+
     commands[modifier] = fn;
+    return true;
 }
 
 bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser, BrowserContent* content)
@@ -64,12 +82,13 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
     Eina_Bool altPressed = evas_key_modifier_is_set(ev.modifiers, "Alt");
 
     char key = ev.key[0];
-    printf("[%s]\n", ev.key);
+    printf("[%s %d, %d]\n", ev.key, altPressed, ctrlPressed);
     if (isSmallAlphabet(key) || isNumeric(key))  {
-        int modifier = altPressed << 1 + ctrlPressed - 1;
+        int modifier = modifierIndex(ctrlPressed, altPressed);
+        if (modifier < 0)
+            return false;
 
         int index;
-
         if (isSmallAlphabet(key))
             index = key - 'a';
         else
@@ -78,13 +97,13 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
         if (m_keyboardAlphabetShortCuts[modifier][index])
             return m_keyboardAlphabetShortCuts[modifier][index](0, browser, content);
     } else {
-        fprintf(stderr, "%s\n", __func__);
         std::map<std::string, Command*>::iterator i = m_keyboardOtherShortCuts.find(ev.key);
         if (i == m_keyboardOtherShortCuts.end())
             return false;
 
-        fprintf(stderr, "%s 2\n", __func__);
-        int modifier = altPressed << 1 + ctrlPressed - 1;
+        int modifier = modifierIndex(ctrlPressed, altPressed);
+        if (modifier < 0)
+            return false;
         
         if (Command cmd = i->second[modifier])
             return cmd(0, browser, content);

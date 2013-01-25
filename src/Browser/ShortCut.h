@@ -37,7 +37,7 @@ public:
 
     bool feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser*, BrowserContent*);
 private:
-    ShortCut() { }
+    ShortCut();
 
     // 0: ctrlPressed / 1: altPressed / 2: both
     // 0 ~ 9 : number, 10 ~ 36 : alphabet
