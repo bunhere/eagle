@@ -23,6 +23,7 @@ void Browser::initialize()
     ShortCut& s = ShortCut::instance();
     s.addCommand('i', true, false, openInspectorView);
     s.addCommand('t', true, false, addNewPage);
+    s.addCommand('w', true, false, closePage);
 
     s.addCommand("KP_Add", true, false, scaleUp);
     s.addCommand("KP_Subtract", true, false, scaleDown);
@@ -42,6 +43,9 @@ BrowserContent::~BrowserContent()
 {
     if (m_title)
         free(m_title);
+
+    if (m_tab)
+        delete m_tab;
 }
 
 void BrowserContent::setTitle(const char* title)
@@ -171,6 +175,7 @@ COMMAND_WEBVIEW_IMPLEMENT(scaleUp)
 COMMAND_WEBVIEW_IMPLEMENT(scaleDown)
 
 COMMAND_BROWSER_IMPLEMENT(addNewPage)
+COMMAND_BROWSER_IMPLEMENT(closePage)
 
 void Browser::loadUrl(const char* url)
 {
@@ -245,6 +250,15 @@ void Browser::addNewPage(BrowserContent*)
     attachContent(WebView::create(this), true);
 }
 
+void Browser::closePage(BrowserContent* content)
+{
+    if (!content)
+        content = m_content;
+
+    detachContent(content);
+    delete content;
+}
+
 void Browser::attachContent(BrowserContent* content, bool active)
 {
     m_contents.push_back(content);
@@ -255,10 +269,32 @@ void Browser::attachContent(BrowserContent* content, bool active)
 
 void Browser::detachContent(BrowserContent* content)
 {
+    if (m_content == content) {
+        // FIXME : Need better way to find previous content
+        size_t size = m_contents.size();
+        if (size == 1) {
+            evas_object_smart_callback_call(object(), "delete,request", this);
+            return;
+        }
+
+        size_t newIndex = 0;
+        for (size_t i = 0; i < size; ++i)
+            if (m_content == m_contents[i]) {
+                if (i == 0)
+                    newIndex = 1;
+                else
+                    newIndex = i - 1;
+                break;
+            }
+
+        chooseContent(m_contents[newIndex], false);
+    }
     m_contents.erase(std::find(m_contents.begin(), m_contents.end(), content));
+
+    updateMultitab();
 }
 
-void Browser::chooseContent(BrowserContent* content)
+void Browser::chooseContent(BrowserContent* content, bool update)
 {
     if (m_content == content)
         return;
@@ -284,7 +320,8 @@ void Browser::chooseContent(BrowserContent* content)
 
     m_content->show();
 
-    updateMultitab();
+    if (update)
+        updateMultitab();
 }
 
 void Browser::updateMultitab()

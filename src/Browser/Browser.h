@@ -68,15 +68,17 @@ public:
     ~Browser();
 
     void addNewPage(BrowserContent* = 0);
+    void closePage(BrowserContent* = 0);
 
     void attachContent(BrowserContent*, bool);
     void detachContent(BrowserContent*);
     size_t contentsSize() const { return m_contents.size(); }
     BrowserContent* contentsAt(size_t i) { return m_contents[i]; }
     bool isActiveContent(BrowserContent* bc) { return bc == m_content; }
-    void chooseContent(BrowserContent*);
+    void chooseContent(BrowserContent*, bool updateMultitab = true);
 
     COMMAND_DECLARE(addNewPage);
+    COMMAND_DECLARE(closePage);
     COMMAND_DECLARE(openInspectorView);
     COMMAND_DECLARE(scaleUp);
     COMMAND_DECLARE(scaleDown);
