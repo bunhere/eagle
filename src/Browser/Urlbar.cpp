@@ -155,5 +155,8 @@ Urlbar::Urlbar(Browser* container)
 
 void Urlbar::changeUrlEntry(const char* url)
 {
-    elm_object_text_set(m_entry, url);
+    if (url)
+        elm_object_text_set(m_entry, url);
+    else
+        elm_object_text_set(m_entry, "about:blank");
 }

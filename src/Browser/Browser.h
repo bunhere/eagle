@@ -44,7 +44,7 @@ public:
     void setTitle(const char*);
     virtual void setFocus(bool) { }
 
-    virtual const char* url() const { return "about:blank"; }
+    virtual const char* url() const { return 0; }
 
     Tab* tab() { return m_tab; }
     void createTabIfNeeded();
