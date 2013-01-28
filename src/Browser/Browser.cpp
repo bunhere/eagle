@@ -92,13 +92,20 @@ Browser* Browser::create(const BrowserConfig& config)
 
 void Browser::onFocusIn(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
+    fprintf(stderr, "Browser %s called\n", __func__);
     Browser* browser = static_cast<Browser*>(data);
     browser->m_content->setFocus(true);
+}
+
+void Browser::onFocusOut(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
+{
+    fprintf(stderr, "Browser %s called\n", __func__);
 }
 
 Browser::Browser(const BrowserConfig& config)
 {
     evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_IN, onFocusIn, this);
+    evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_OUT, onFocusOut, this);
 
     m_layout = elm_layout_add(object());
     //FIXME: add error handling

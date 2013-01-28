@@ -21,8 +21,8 @@ public:
 
     Browser* container() { return m_container; };
     void changeUrlEntry(const char* url);
-    //static void onMouseDown(void* data, Evas* e, Evas_Object* webview, void* event_info);
 
+    static void onMouseDown(void*, Evas*, Evas_Object*, void*);
     static void onKeyDown(void*, Evas*, Evas_Object*, void*);
 
     SMART_CALLBACK_DECLARE(back_clicked);

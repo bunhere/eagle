@@ -63,7 +63,8 @@ public:
     static Browser* create(const BrowserConfig& config);
     static Browser* create();
 
-    static void onFocusIn(void* data, Evas* e, Evas_Object* webview, void* event_info);
+    static void onFocusIn(void*, Evas*, Evas_Object*, void*);
+    static void onFocusOut(void*, Evas*, Evas_Object*, void*);
 
     ~Browser();
 

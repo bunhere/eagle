@@ -12,6 +12,7 @@
 #include <Browser/Browser.h>
 #include <Browser/Features/AutoFormFill.h>
 #include <Browser/Features/Features.h>
+#include "FocusController.h"
 
 #if USE_WEBKIT || USE_ELM_WEB
 #include <EWebKit.h>
@@ -157,9 +158,10 @@ static void onFocusIn(void* data, Evas* e, Evas_Object* ewkObject, void* event_i
     fprintf(stderr, "WebView %s called\n", __func__);
 }
 
-void onFocusOut(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
+void onFocusOut(void* data, Evas*, Evas_Object*, void*)
 {
     fprintf(stderr, "WebView %s called\n", __func__);
+    FocusController::lostFocus(toWebView(data));
 }
 
 void WebView::onMouseDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
@@ -246,9 +248,7 @@ void WebView::initialize()
 
 void WebView::setFocus(bool focus)
 {
-    fprintf(stderr, "%s(%d)\n", __func__, focus);
-    elm_object_focus_set(elm_object_top_widget_get(container()->object()), false);
-    evas_object_focus_set(object(), focus);
+    FocusController::setFocus(this);
 }
 
 void WebView::loadUrl(const char* url)

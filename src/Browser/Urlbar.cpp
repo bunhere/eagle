@@ -10,6 +10,7 @@
 #include "Urlbar.h"
 
 #include "Browser.h"
+#include "FocusController.h"
 #include <Edje.h>
 #include <Elementary.h>
 
@@ -50,6 +51,12 @@ void Urlbar::onKeyDown(void* data, Evas* e, Evas_Object*, void* event_info)
 
     printf(" [Urlbar::%s entered]\n", __func__);
     ShortCut::instance().feedKeyDownEvent(*ev, urlbar->container(), 0);
+}
+
+void Urlbar::onMouseDown(void* data, Evas* e, Evas_Object*, void* event_info)
+{
+    Urlbar* urlbar= static_cast<Urlbar*>(data);
+    FocusController::setFocus(urlbar);
 }
 
 void Urlbar::back_clicked(void* data, Evas_Object*, void*)
@@ -127,6 +134,8 @@ Urlbar::Urlbar(Browser* container)
     evas_object_size_hint_align_set(m_entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
 
     evas_object_event_callback_add(m_entry, EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
+    evas_object_event_callback_add(m_entry, EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
+
     elm_entry_text_style_user_push(m_entry, "DEFAULT='font_size=16'");
     //connect signal
     //evas_object_smart_callback_add(m_entry, "changed", urlbarChanged, this);

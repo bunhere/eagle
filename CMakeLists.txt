@@ -50,6 +50,7 @@ SET(EAGLE_SOURCES
     src/Browser/Features/Features.cpp
 
     src/Browser/Browser.cpp
+    src/Browser/FocusController.cpp
     src/Browser/Urlbar.cpp
     src/Browser/MultitabBar.cpp
     src/Browser/ShortCut.cpp
