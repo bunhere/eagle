@@ -80,6 +80,7 @@ public:
 
     COMMAND_DECLARE(addNewPage);
     COMMAND_DECLARE(closePage);
+    COMMAND_DECLARE(movePage);
     COMMAND_DECLARE(openInspectorView);
     COMMAND_DECLARE(scaleUp);
     COMMAND_DECLARE(scaleDown);

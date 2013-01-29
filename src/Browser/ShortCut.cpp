@@ -7,11 +7,6 @@
 #include "ShortCut.h"
 #include "Browser.h"
 
-static inline int modifierIndex(unsigned skey)
-{
-    return skey - 1;
-}
-
 static inline bool isSmallAlphabet(char key)
 {
     return (key >= 'a' && key <= 'z');
@@ -20,6 +15,19 @@ static inline bool isSmallAlphabet(char key)
 static inline bool isNumeric(char key)
 {
     return (key >= '0' && key <= '9');
+}
+
+static inline int modifierIndex(unsigned skey)
+{
+    return skey - 1;
+}
+
+static inline int keyIndex(char key)
+{
+    if (isSmallAlphabet(key))
+        return key - 'a' + 10;
+
+    return key - '0';
 }
 
 ShortCut& ShortCut::instance()
@@ -40,15 +48,8 @@ bool ShortCut::addCommand(char key, SKEY skey, Command fn)
 {
     if (isSmallAlphabet(key) || isNumeric(key))  {
         int modifier = modifierIndex(skey);
-        if (modifier)
-            return false;
 
-        int index;
-        if (isSmallAlphabet(key))
-            index = key - 'a';
-        else
-            index = key - '0';
-
+        int index = keyIndex(key);
         m_keyboardAlphabetShortCuts[modifier][index] = fn;
     }
 
@@ -91,14 +92,11 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
         if (modifier < 0)
             return false;
 
-        int index;
-        if (isSmallAlphabet(key))
-            index = key - 'a';
-        else
-            index = key - '0';
+        int index = keyIndex(key);
 
+        CommandInfo cmdInfo(ev.key, skey);
         if (m_keyboardAlphabetShortCuts[modifier][index])
-            return m_keyboardAlphabetShortCuts[modifier][index](0, browser, content);
+            return m_keyboardAlphabetShortCuts[modifier][index](&cmdInfo, browser, content);
     } else {
         std::map<std::string, Command*>::iterator i = m_keyboardOtherShortCuts.find(ev.key);
         if (i == m_keyboardOtherShortCuts.end())
@@ -108,8 +106,10 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
         if (modifier < 0)
             return false;
         
-        if (Command cmd = i->second[modifier])
-            return cmd(0, browser, content);
+        if (Command cmd = i->second[modifier]) {
+            CommandInfo cmdInfo(ev.key, skey);
+            return cmd(&cmdInfo, browser, content);
+        }
     }
     return false;
 }

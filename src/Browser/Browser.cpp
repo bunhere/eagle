@@ -30,6 +30,9 @@ void Browser::initialize()
 
     s.addCommand("Left", ShortCut::ALT, back);
     s.addCommand("Right", ShortCut::ALT, forward);
+
+    for (int i = 1; i < 10; ++i)
+        s.addCommand('0' + i, ShortCut::ALT, movePage);
 }
 
 BrowserConfig::BrowserConfig()
@@ -182,6 +185,16 @@ COMMAND_WEBVIEW_IMPLEMENT(scaleDown)
 
 COMMAND_BROWSER_IMPLEMENT(addNewPage)
 COMMAND_BROWSER_IMPLEMENT(closePage)
+
+bool Browser::movePage(const ShortCut::CommandInfo* command, Browser* browser, BrowserContent*)
+{
+    int index = command->key()[0] - '0' - 1;
+    if (index >= browser->m_contents.size())
+        return false;
+
+    browser->chooseContent(browser->m_contents[index]);
+    return true;
+}
 
 void Browser::loadUrl(const char* url)
 {

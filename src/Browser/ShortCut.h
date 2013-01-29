@@ -28,6 +28,7 @@ public:
     };
 
     class CommandInfo {
+    public:
         CommandInfo(const char* key, unsigned skey)
             : m_key(strdup(key))
             , m_skey(skey)
@@ -37,8 +38,8 @@ public:
         {
             delete m_key;
         }
-        const char* key() { return m_key; }
-        unsigned skey() { return m_skey; }
+        const char* key() const { return m_key; }
+        unsigned skey() const { return m_skey; }
 
      private:
         char* m_key;
