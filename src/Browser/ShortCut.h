@@ -11,29 +11,47 @@
 #include <map>
 #include <string>
 
-typedef struct {
-    char* key;
-    bool ctrlPressed : 1;
-    bool altPressed : 1;
-    bool shiftPressed : 1;
-} CommandInfo;
-
 class Browser;
 class BrowserContent;
 
-typedef bool (*Command)(const CommandInfo*, Browser* browser, BrowserContent* content);
-
 #define COMMAND_DECLARE(name) \
-    static bool name(const CommandInfo*, Browser* browser, BrowserContent* content)
+    static bool name(const ShortCut::CommandInfo*, Browser* browser, BrowserContent* content)
 
 class ShortCut
 {
 public:
+    enum SKEY {
+        NONE = 0,
+        CTRL = 1,
+        ALT = 1 << 1,
+        SHIFT = 1 << 2
+    };
+
+    class CommandInfo {
+        CommandInfo(const char* key, unsigned skey)
+            : m_key(strdup(key))
+            , m_skey(skey)
+        {
+        }
+        ~CommandInfo()
+        {
+            delete m_key;
+        }
+        const char* key() { return m_key; }
+        unsigned skey() { return m_skey; }
+
+     private:
+        char* m_key;
+        unsigned m_skey;
+    };
+
     static ShortCut& instance();
     virtual ~ShortCut() { }
 
-    bool addCommand(char key, bool ctrlPressed, bool altPressed, Command);
-    bool addCommand(const char* key, bool ctrlPressed, bool altPressed, Command);
+    typedef bool (*Command)(const ShortCut::CommandInfo*, Browser*, BrowserContent*);
+
+    bool addCommand(char key, SKEY, Command);
+    bool addCommand(const char* key, SKEY, Command);
 
     bool feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser*, BrowserContent*);
 private:

@@ -21,16 +21,15 @@ void Browser::initialize()
 
     // register shortcuts.
     ShortCut& s = ShortCut::instance();
-    s.addCommand('i', true, false, openInspectorView);
-    s.addCommand('t', true, false, addNewPage);
-    s.addCommand('w', true, false, closePage);
+    s.addCommand('i', ShortCut::CTRL, openInspectorView);
+    s.addCommand('t', ShortCut::CTRL, addNewPage);
+    s.addCommand('w', ShortCut::CTRL, closePage);
 
-    s.addCommand("KP_Add", true, false, scaleUp);
-    s.addCommand("KP_Subtract", true, false, scaleDown);
+    s.addCommand("KP_Add", ShortCut::CTRL, scaleUp);
+    s.addCommand("KP_Subtract", ShortCut::CTRL, scaleDown);
 
-    // FIXME: It should be alt
-    s.addCommand("Left", true, false, back);
-    s.addCommand("Right", true, false, forward);
+    s.addCommand("Left", ShortCut::ALT, back);
+    s.addCommand("Right", ShortCut::ALT, forward);
 }
 
 BrowserConfig::BrowserConfig()
@@ -154,7 +153,7 @@ Browser::~Browser()
 }
 
 #define COMMAND_WEBVIEW_IMPLEMENT(name) \
-bool Browser::name(const CommandInfo*, Browser* browser, BrowserContent* content) \
+bool Browser::name(const ShortCut::CommandInfo*, Browser* browser, BrowserContent* content) \
 { \
     if (!content) \
         return name(0, browser, browser->m_content); \
@@ -169,7 +168,7 @@ bool Browser::name(const CommandInfo*, Browser* browser, BrowserContent* content
 }
 
 #define COMMAND_BROWSER_IMPLEMENT(name) \
-bool Browser::name(const CommandInfo*, Browser* browser, BrowserContent* content) \
+bool Browser::name(const ShortCut::CommandInfo*, Browser* browser, BrowserContent* content) \
 { \
     browser->name(content); \
     return true; \

@@ -7,9 +7,9 @@
 #include "ShortCut.h"
 #include "Browser.h"
 
-static inline int modifierIndex(bool ctrlPressed, bool altPressed)
+static inline int modifierIndex(unsigned skey)
 {
-    return (altPressed << 1) + ctrlPressed - 1;
+    return skey - 1;
 }
 
 static inline bool isSmallAlphabet(char key)
@@ -36,10 +36,10 @@ ShortCut::ShortCut()
             m_keyboardAlphabetShortCuts[i][j] = 0;
 }
 
-bool ShortCut::addCommand(char key, bool ctrlPressed, bool altPressed, Command fn)
+bool ShortCut::addCommand(char key, SKEY skey, Command fn)
 {
     if (isSmallAlphabet(key) || isNumeric(key))  {
-        int modifier = modifierIndex(ctrlPressed, altPressed);
+        int modifier = modifierIndex(skey);
         if (modifier)
             return false;
 
@@ -55,7 +55,7 @@ bool ShortCut::addCommand(char key, bool ctrlPressed, bool altPressed, Command f
     return true;
 }
 
-bool ShortCut::addCommand(const char* key, bool ctrlPressed, bool altPressed, Command fn)
+bool ShortCut::addCommand(const char* key, SKEY skey, Command fn)
 {
     Command* commands;
     std::map<std::string, Command*>::iterator i = m_keyboardOtherShortCuts.find(key);
@@ -68,7 +68,7 @@ bool ShortCut::addCommand(const char* key, bool ctrlPressed, bool altPressed, Co
     } else
         commands = i->second;
 
-    int modifier = modifierIndex(ctrlPressed, altPressed);
+    int modifier = modifierIndex(skey);
     if (modifier < 0)
         return false;
 
@@ -82,9 +82,12 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
     Eina_Bool altPressed = evas_key_modifier_is_set(ev.modifiers, "Alt");
 
     char key = ev.key[0];
+    unsigned skey = ctrlPressed ? CTRL : NONE;
+    skey |= altPressed ? ALT : NONE;
+
     printf("[%s %d, %d]\n", ev.key, altPressed, ctrlPressed);
     if (isSmallAlphabet(key) || isNumeric(key))  {
-        int modifier = modifierIndex(ctrlPressed, altPressed);
+        int modifier = modifierIndex(skey);
         if (modifier < 0)
             return false;
 
@@ -101,7 +104,7 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
         if (i == m_keyboardOtherShortCuts.end())
             return false;
 
-        int modifier = modifierIndex(ctrlPressed, altPressed);
+        int modifier = modifierIndex(skey);
         if (modifier < 0)
             return false;
         
