@@ -26,7 +26,7 @@ elm_main(int argc, char** argv)
     if (argc > 1)
         defaultURL = argv[1];
     else
-        defaultURL = "http://google.com";
+        defaultURL = "http://bunhere.tistory.com";
 
     defaultWindow->loadUrl(defaultURL);
 
