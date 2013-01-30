@@ -28,6 +28,7 @@ void Browser::initialize()
     s.addCommand("KP_Add", ShortCut::CTRL, scaleUp);
     s.addCommand("KP_Subtract", ShortCut::CTRL, scaleDown);
 
+    s.addCommand('d', ShortCut::ALT, focusAndSelectUrlBar);
     s.addCommand("Left", ShortCut::ALT, back);
     s.addCommand("Right", ShortCut::ALT, forward);
 
@@ -185,6 +186,7 @@ COMMAND_WEBVIEW_IMPLEMENT(scaleDown)
 
 COMMAND_BROWSER_IMPLEMENT(addNewPage)
 COMMAND_BROWSER_IMPLEMENT(closePage)
+COMMAND_BROWSER_IMPLEMENT(focusAndSelectUrlBar)
 
 bool Browser::movePage(const ShortCut::CommandInfo* command, Browser* browser, BrowserContent*)
 {
@@ -276,6 +278,11 @@ void Browser::closePage(BrowserContent* content)
 
     detachContent(content);
     delete content;
+}
+
+void Browser::focusAndSelectUrlBar(BrowserContent*)
+{
+    m_urlbar->focusAndSelectAll();
 }
 
 void Browser::attachContent(BrowserContent* content, bool active)

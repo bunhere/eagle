@@ -70,6 +70,7 @@ public:
 
     void addNewPage(BrowserContent* = 0);
     void closePage(BrowserContent* = 0);
+    void focusAndSelectUrlBar(BrowserContent* = 0);
 
     void attachContent(BrowserContent*, bool);
     void detachContent(BrowserContent*);
@@ -80,6 +81,7 @@ public:
 
     COMMAND_DECLARE(addNewPage);
     COMMAND_DECLARE(closePage);
+    COMMAND_DECLARE(focusAndSelectUrlBar);
     COMMAND_DECLARE(movePage);
     COMMAND_DECLARE(openInspectorView);
     COMMAND_DECLARE(scaleUp);

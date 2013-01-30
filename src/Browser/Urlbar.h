@@ -16,11 +16,12 @@ class Browser;
 class Urlbar : public Object
 {
 public:
-    Urlbar(Browser* container);
+    explicit Urlbar(Browser* container);
     ~Urlbar() {}
 
     Browser* container() { return m_container; };
     void changeUrlEntry(const char* url);
+    void focusAndSelectAll();
 
     static void onMouseDown(void*, Evas*, Evas_Object*, void*);
     static void onKeyDown(void*, Evas*, Evas_Object*, void*);

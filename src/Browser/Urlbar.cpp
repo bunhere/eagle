@@ -169,3 +169,9 @@ void Urlbar::changeUrlEntry(const char* url)
     else
         elm_object_text_set(m_entry, "about:blank");
 }
+
+void Urlbar::focusAndSelectAll()
+{
+    FocusController::setFocus(this);
+    elm_entry_select_all(m_entry);
+}
