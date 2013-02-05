@@ -83,6 +83,8 @@ private:
 
     Evas_Object* m_layout;
     std::vector<BrowserContent*> m_contents;
+
+    bool m_isEnteredFullScreen;
 };
 
 #endif

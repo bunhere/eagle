@@ -75,6 +75,7 @@ void Browser::onFocusOut(void* data, Evas* e, Evas_Object* ewkObject, void* even
 }
 
 Browser::Browser(const BrowserConfig& config)
+    : m_isEnteredFullScreen(false)
 {
     evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_IN, onFocusIn, this);
     evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_OUT, onFocusOut, this);
@@ -257,7 +258,8 @@ void Browser::focusAndSelectUrlBar(BrowserContent*)
 
 void Browser::toggleFullScreen(BrowserContent*)
 {
-    fprintf(stderr, "%s\n", __func__);
+    m_isEnteredFullScreen = !m_isEnteredFullScreen;
+    elm_win_fullscreen_set(object(), m_isEnteredFullScreen);
 }
 
 void Browser::attachContent(BrowserContent* content, bool active)
