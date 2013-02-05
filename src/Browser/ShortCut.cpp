@@ -19,7 +19,7 @@ static inline bool isNumeric(char key)
 
 static inline int modifierIndex(unsigned skey)
 {
-    return skey - 1;
+    return skey;
 }
 
 static inline int keyIndex(char key)
@@ -39,7 +39,7 @@ ShortCut& ShortCut::instance()
 
 ShortCut::ShortCut()
 {
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 4; ++i)
         for (int j = 0; j < 36; ++j)
             m_keyboardAlphabetShortCuts[i][j] = 0;
 }

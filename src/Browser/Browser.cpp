@@ -34,6 +34,8 @@ void Browser::initialize()
 
     for (int i = 1; i < 10; ++i)
         s.addCommand('0' + i, ShortCut::ALT, movePage);
+
+    s.addCommand("F11", ShortCut::NONE, toggleFullScreen);
 }
 
 BrowserConfig::BrowserConfig()
@@ -55,6 +57,9 @@ void BrowserContent::setTitle(const char* title)
 {
     if (!title || !title[0])
         return;
+
+    if (m_title)
+        free(m_title);
 
     m_title = strdup(title);
 
@@ -187,6 +192,7 @@ COMMAND_WEBVIEW_IMPLEMENT(scaleDown)
 COMMAND_BROWSER_IMPLEMENT(addNewPage)
 COMMAND_BROWSER_IMPLEMENT(closePage)
 COMMAND_BROWSER_IMPLEMENT(focusAndSelectUrlBar)
+COMMAND_BROWSER_IMPLEMENT(toggleFullScreen)
 
 bool Browser::movePage(const ShortCut::CommandInfo* command, Browser* browser, BrowserContent*)
 {
@@ -283,6 +289,11 @@ void Browser::closePage(BrowserContent* content)
 void Browser::focusAndSelectUrlBar(BrowserContent*)
 {
     m_urlbar->focusAndSelectAll();
+}
+
+void Browser::toggleFullScreen(BrowserContent*)
+{
+    fprintf(stderr, "%s\n", __func__);
 }
 
 void Browser::attachContent(BrowserContent* content, bool active)

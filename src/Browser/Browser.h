@@ -71,6 +71,7 @@ public:
     void addNewPage(BrowserContent* = 0);
     void closePage(BrowserContent* = 0);
     void focusAndSelectUrlBar(BrowserContent* = 0);
+    void toggleFullScreen(BrowserContent* = 0);
 
     void attachContent(BrowserContent*, bool);
     void detachContent(BrowserContent*);
@@ -88,6 +89,7 @@ public:
     COMMAND_DECLARE(scaleDown);
     COMMAND_DECLARE(back);
     COMMAND_DECLARE(forward);
+    COMMAND_DECLARE(toggleFullScreen);
 
     void loadUrl(const char* url);
     void reload();

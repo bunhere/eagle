@@ -23,7 +23,7 @@ public:
 
     void setFocus(bool);
 
-    const char* url() const { return m_url->baseUrl(); }
+    const char* url() const { return m_url ? m_url->baseUrl() : 0; }
 
     SMART_CALLBACK_DECLARE(onFormSubmissionRequest);
 
