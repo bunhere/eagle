@@ -10,6 +10,7 @@
 #define WebView_h
 
 #include "Browser.h"
+#include "ERU/ERUUrl.h"
 
 class WebView : public BrowserContent
 {
@@ -22,7 +23,7 @@ public:
 
     void setFocus(bool);
 
-    const char* url() const { return m_url; }
+    const char* url() const { return m_url->baseUrl(); }
 
     SMART_CALLBACK_DECLARE(onFormSubmissionRequest);
 
@@ -53,7 +54,7 @@ private:
     WebView(Browser* container);
 
     WebView* m_inspector;
-    char* m_url;
+    ERU::Url* m_url;
 };
 
 #if !USE_ELM_WEB

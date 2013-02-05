@@ -73,13 +73,13 @@ void WebView::onUriChanged(void* userData, Evas_Object*, void* eventInfo)
     WebView* self = toWebView(userData);
     const char* newUrl = static_cast<const char*>(eventInfo);
 
-    if (self->m_url && !strcmp(self->m_url, newUrl))
+    if (self->m_url && !strcmp(self->url(), newUrl))
         return;
 
     if (self->m_url)
-        free(self->m_url);
+        delete self->m_url;
 
-    self->m_url = strdup(newUrl);
+    self->m_url = new ERU::Url(newUrl);
     self->container()->urlChanged(self);
 }
 
@@ -217,6 +217,9 @@ WebView::~WebView()
 
     if (m_inspector)
         delete m_inspector;
+
+    if (m_url)
+        delete m_url;
 }
 
 WebView* WebView::create(Browser* container)
@@ -251,12 +254,17 @@ void WebView::setFocus(bool focus)
     FocusController::setFocus(this);
 }
 
-void WebView::loadUrl(const char* url)
+void WebView::loadUrl(const char* urlToLoad)
 {
+    if (m_url)
+        delete m_url;
+
+    m_url = new ERU::Url(urlToLoad);
+
 #if USE_WEBKIT || USE_ELM_WEB
-    ewk_view_uri_set(object(), url);
+    ewk_view_uri_set(object(), url());
 #else
-    ewk_view_url_set(object(), url);
+    ewk_view_url_set(object(), url());
 #endif
 }
 
