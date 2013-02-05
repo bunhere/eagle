@@ -6,6 +6,7 @@
 
 #include "Tab.h"
 
+#include "Browser.h"
 #include "WebView.h"
 #include <Elementary.h>
 

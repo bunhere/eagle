@@ -6,6 +6,7 @@
 
 #include "FocusController.h"
 
+#include "Browser.h"
 #include "EflWrappers/Object.h"
 #include "WebView.h"
 #include <Elementary.h>

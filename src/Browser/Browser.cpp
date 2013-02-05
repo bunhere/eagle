@@ -8,9 +8,10 @@
 
 #include "Browser.h"
 
-#include "Urlbar.h"
+#include "BrowserContent.h"
 #include "MultitabBar.h"
 #include "Tab.h"
+#include "Urlbar.h"
 #include "WebView.h"
 #include <Elementary.h>
 #include <algorithm>
@@ -42,43 +43,6 @@ BrowserConfig::BrowserConfig()
     : urlbar(true)
     , multitapBar(true)
 {
-}
-
-BrowserContent::~BrowserContent()
-{
-    if (m_title)
-        free(m_title);
-
-    if (m_tab)
-        delete m_tab;
-}
-
-void BrowserContent::setTitle(const char* title)
-{
-    if (!title || !title[0])
-        return;
-
-    if (m_title)
-        free(m_title);
-
-    m_title = strdup(title);
-
-    if (m_tab) {
-        m_tab->setTitle(m_title);
-    }
-
-    m_container->titleChanged(this);
-}
-
-void BrowserContent::createTabIfNeeded()
-{
-    if (m_tab)
-        return;
-
-    m_tab = new Tab(this);
-
-    if (m_container->isActiveContent(this))
-        m_tab->setActive(true);
 }
 
 Browser* Browser::create()

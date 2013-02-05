@@ -53,6 +53,7 @@ SET(EAGLE_SOURCES
     ${SOURCE_DIR}/Browser/Features/Features.cpp
 
     ${SOURCE_DIR}/Browser/Browser.cpp
+    ${SOURCE_DIR}/Browser/BrowserContent.cpp
     ${SOURCE_DIR}/Browser/FocusController.cpp
     ${SOURCE_DIR}/Browser/Urlbar.cpp
     ${SOURCE_DIR}/Browser/MultitabBar.cpp

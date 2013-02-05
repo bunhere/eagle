@@ -9,7 +9,7 @@
 #ifndef WebView_h
 #define WebView_h
 
-#include "Browser.h"
+#include "BrowserContent.h"
 #include "ERU/ERUUrl.h"
 
 class WebView : public BrowserContent
