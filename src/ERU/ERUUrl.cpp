@@ -14,6 +14,12 @@ namespace ERU {
 
 const unsigned MAX_SCHEME_SIZE = 10;
 
+static bool isWellknownScheme(const char* url)
+{
+    return !strncmp(url, "about", 5)
+        || !strncmp(url, "data", 4);
+}
+
 Url::Url(const char* rawUrl)
 {
     if (!rawUrl || !rawUrl[0]) {
@@ -28,7 +34,7 @@ Url::Url(const char* rawUrl)
     for (unsigned i = 0;i < MAX_SCHEME_SIZE; ++i) {
         if (rawUrl[i] == ':') {
             if ((rawUrl[i + 1] == '/' && rawUrl[i + 2] == '/')
-                || !strncmp(rawUrl, "about", 5)) {
+                || isWellknownScheme(rawUrl)) {
                 m_schemeSize = i;
                 schemeBuffer = rawUrl;
             }

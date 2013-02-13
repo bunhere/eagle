@@ -29,4 +29,6 @@ TEST(URLTest, url)
     checkUrl("test.com", "http", "http://test.com");
 
     checkUrl("ftp://test.com", "ftp", "ftp://test.com");
+
+    checkUrl("data:text/html", "data", "data:text/html");
 }
