@@ -10,8 +10,8 @@ http://www.webkit.org/coding/coding-style.html
 
 How to build:
 
-mkdir -p build
-cmake .. (-DUSE_WEBKIT=On)
+mkdir -p build && cd build
+cmake .. -DUSE_WEBKIT=On
 make
 ./eagle
 
