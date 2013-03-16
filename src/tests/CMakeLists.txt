@@ -1,14 +1,14 @@
 
-SET(TESTS_DIR "${SOURCE_DIR}/tests")
+set(TESTS_DIR "${SOURCE_DIR}/tests")
 
-SET(ERTESTS_BINARIES
+set(ERTESTS_BINARIES
     test_url
 )
 
-INCLUDE_DIRECTORIES("${THIRDPARTY_DIR}/gtest/include"
+include_directories("${THIRDPARTY_DIR}/gtest/include"
 )
 
-FOREACH(testName ${ERTESTS_BINARIES})
-    ADD_EXECUTABLE(${testName} "${TESTS_DIR}/${testName}.cpp" ${EAGLE_SOURCES})
-    TARGET_LINK_LIBRARIES(${testName} ${EAGLE_LDFLAGS} gtest)
-ENDFOREACH()
+foreach (testName ${ERTESTS_BINARIES})
+    add_executable(${testName} "${TESTS_DIR}/${testName}.cpp" ${EAGLE_SOURCES})
+    target_link_libraries(${testName} ${EAGLE_LDFLAGS} gtest)
+endforeach ()

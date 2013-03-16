@@ -1,12 +1,12 @@
 # gtest
-SET(GTEST_DIR "${THIRDPARTY_DIR}/gtest")
+set(GTEST_DIR "${THIRDPARTY_DIR}/gtest")
 
-INCLUDE_DIRECTORIES(
+include_directories(
     ${GTEST_DIR}/include
     ${GTEST_DIR}
 )
 
-ADD_LIBRARY(gtest SHARED
+add_library(gtest SHARED
     ${GTEST_DIR}/src/gtest.cc
     ${GTEST_DIR}/src/gtest-death-test.cc
     ${GTEST_DIR}/src/gtest-filepath.cc
@@ -16,4 +16,4 @@ ADD_LIBRARY(gtest SHARED
     ${GTEST_DIR}/src/gtest-typed-test.cc
 )
 
-ADD_DEFINITIONS(-DGTEST_CREATE_SHARED_LIBRARY=1)
+add_definitions(-DGTEST_CREATE_SHARED_LIBRARY=1)

@@ -1,54 +1,54 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT(Eagle CXX)
+cmake_minimum_required(VERSION 2.8)
+project(Eagle CXX)
 
-ADD_DEFINITIONS(-DPROJECT_NAME=\"Eagle\")
-ADD_DEFINITIONS(-DTHEME_DIR=\"${CMAKE_BINARY_DIR}/theme\")
+add_definitions(-DPROJECT_NAME=\"Eagle\")
+add_definitions(-DTHEME_DIR=\"${CMAKE_BINARY_DIR}/theme\")
 
-SET(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
-SET(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/src/3rdParty")
+set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/src/3rdParty")
 
 # Check package dependency.
-SET(PKG_LIST
+set(PKG_list
     eina ecore evas ecore-evas elementary
     sqlite3
 )
 
-IF (USE_WEBKIT)
-    ADD_DEFINITIONS(-DUSE_WEBKIT=1)
-    SET (WEBKIT_PKG_NAME ewebkit)
-    LIST(APPEND PKG_LIST ${WEBKIT_PKG_NAME})
-ELSEIF (USE_ELM_WEB)
+if (USE_WEBKIT)
+    add_definitions(-DUSE_WEBKIT=1)
+    set(WEBKIT_PKG_NAME ewebkit)
+    list(APPEND PKG_list ${WEBKIT_PKG_NAME})
+elseif (USE_ELM_WEB)
     #elementary have webkit/efl dependency
-    ADD_DEFINITIONS(-DUSE_ELM_WEB=1)
-ELSE ()
-    ADD_DEFINITIONS(-DUSE_WEBKIT2=1)
-    SET (WEBKIT_PKG_NAME ewebkit2)
-    LIST(APPEND PKG_LIST ${WEBKIT_PKG_NAME})
-ENDIF ()
+    add_definitions(-DUSE_ELM_WEB=1)
+else ()
+    add_definitions(-DUSE_WEBKIT2=1)
+    set(WEBKIT_PKG_NAME ewebkit2)
+    list(APPEND PKG_list ${WEBKIT_PKG_NAME})
+endif ()
 
-INCLUDE(FindPkgConfig)
-pkg_check_modules(PKGS REQUIRED ${PKG_LIST})
+include(FindPkgConfig)
+pkg_check_modules(PKGS REQUIRED ${PKG_list})
 
-FOREACH(flag ${PKGS_CFLAGS})
-    SET(EAGLE_CFLAGS "${EAGLE_CFLAGS} ${flag}")
-ENDFOREACH(flag)
+foreach(flag ${PKGS_CFLAGS})
+    set(EAGLE_CFLAGS "${EAGLE_CFLAGS} ${flag}")
+endforeach(flag)
 
-SET(EAGLE_LDFLAGS ${PKGS_LDFLAGS})
+set(EAGLE_LDFLAGS ${PKGS_LDFLAGS})
 
-IF (USE_WEBKIT OR USE_WEBKIT2)
-    FIND_PROGRAM(PKG_CONFIG_EXECUTABLE NAMES pkg-config DOC "pkg-config executable")
-    EXECUTE_PROCESS(
+if (USE_WEBKIT OR USE_WEBKIT2)
+    find_program(PKG_CONFIG_EXECUTABLE NAMES pkg-config DOC "pkg-config executable")
+    execute_process(
             COMMAND ${PKG_CONFIG_EXECUTABLE} "--variable=datadir" ewebkit
             OUTPUT_VARIABLE EWEBKIT_DATA
             RESULT_VARIABLE _pkgconfig_failed)
     string(REGEX REPLACE "[\r\n]" "" EWEBKIT_DATA "${EWEBKIT_DATA}")
-    MESSAGE("[${EWEBKIT_DATA}]")
-    ADD_DEFINITIONS("-DWEBKIT_DEFAULT_THEME_PATH=\"${EWEBKIT_DATA}\"")
-ENDIF ()
+    message("[${EWEBKIT_DATA}]")
+    add_definitions("-DWEBKIT_DEFAULT_THEME_PATH=\"${EWEBKIT_DATA}\"")
+endif ()
 
 
 # Set sources
-SET(EAGLE_SOURCES
+set(EAGLE_SOURCES
     ${SOURCE_DIR}/Browser/Features/AutoFormFill.cpp
     ${SOURCE_DIR}/Browser/Features/Features.cpp
 
@@ -67,36 +67,36 @@ SET(EAGLE_SOURCES
     ${SOURCE_DIR}/ERU/ERUUrl.cpp
 )
 
-IF (USE_WEBKIT)
-    LIST(APPEND EAGLE_SOURCES
+if (USE_WEBKIT)
+    list(APPEND EAGLE_SOURCES
         ${SOURCE_DIR}/Browser/ewk/WebViewEWK.cpp
     )
-ELSEIF (USE_ELM_WEB)
-ELSE ()
-    LIST(APPEND EAGLE_SOURCES
+elseif (USE_ELM_WEB)
+else ()
+    list(APPEND EAGLE_SOURCES
         ${SOURCE_DIR}/Browser/ewk2/WebViewEWK2.cpp
         ${SOURCE_DIR}/Browser/PopupMenu.cpp
     )
-ENDIF ()
+endif ()
 
-SET(EAGLE_EXECUTABLE_SOURCES
+set(EAGLE_EXECUTABLE_SOURCES
     ${EAGLE_SOURCES}
     ${SOURCE_DIR}/Main.cpp
 )
 
-INCLUDE(theme/CMakeLists.txt)
+include(theme/CMakeLists.txt)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ${EXTRA_CFLAGS} ${EAGLE_CFLAGS}")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ${EXTRA_CFLAGS} ${EAGLE_CFLAGS}")
 
-ADD_EXECUTABLE(eagle ${EAGLE_EXECUTABLE_SOURCES})
-TARGET_LINK_LIBRARIES(eagle ${EAGLE_LDFLAGS})
-INCLUDE_DIRECTORIES(eagle
+add_executable(eagle ${EAGLE_EXECUTABLE_SOURCES})
+target_link_libraries(eagle ${EAGLE_LDFLAGS})
+include_directories(eagle
     "src/"
     "theme/"
 )
 
-INSTALL (TARGETS eagle DESTINATION "bin")
+install(TARGETS eagle DESTINATION "bin")
 
-ADD_SUBDIRECTORY(src/3rdParty)
-ADD_SUBDIRECTORY(src/tests)
+add_subdirectory(src/3rdParty)
+add_subdirectory(src/tests)
 
