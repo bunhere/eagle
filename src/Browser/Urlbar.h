@@ -21,6 +21,7 @@ public:
 
     Browser* container() { return m_container; };
     void changeUrlEntry(const char* url);
+    void updateBackFordwardButton(bool backPossible, bool forwardPossible);
     void focusAndSelectAll();
 
     static void onMouseDown(void*, Evas*, Evas_Object*, void*);
@@ -34,6 +35,8 @@ public:
 private:
     Browser* m_container;
     Evas_Object* m_entry;
+    Evas_Object* m_backButton;
+    Evas_Object* m_forwardButton;
 };
 
 #endif

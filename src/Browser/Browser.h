@@ -65,8 +65,10 @@ public:
     void reload();
     void stop();
 
+    // For url bar
     void titleChanged(BrowserContent*);
     void urlChanged(BrowserContent*);
+    void backFordwardListChanged(BrowserContent*, bool backPossible, bool forwardPossible);
 
     void setInspector(const WebView*);
     static const char* themePath();

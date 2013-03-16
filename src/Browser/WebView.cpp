@@ -81,6 +81,10 @@ void WebView::onUriChanged(void* userData, Evas_Object*, void* eventInfo)
 
     self->m_url = new ERU::Url(newUrl);
     self->container()->urlChanged(self);
+
+#if USE_WEBKIT || USE_ELM_WEB
+    onBackForwardListChanged(userData, self->object(), 0);
+#endif
 }
 
 void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
@@ -117,6 +121,12 @@ void WebView::onLoadFinished(void *userData, Evas_Object *webView, void *eventIn
         // FIXME: we need a way to change contents.
     }
 #endif
+}
+
+void WebView::onBackForwardListChanged(void *userData, Evas_Object *webView, void *eventInfo)
+{
+    WebView* self = toWebView(userData);
+    self->container()->backFordwardListChanged(self, self->backPossible(), self->forwardPossible());
 }
 
 void WebView::onFormSubmissionRequest(void *userData, Evas_Object *webView, void *eventInfo)
@@ -198,6 +208,9 @@ WebView::WebView(Browser* container)
 #endif
     SMART_CALLBACK_ADD("load,error", onLoadError);
     SMART_CALLBACK_ADD("load,finished", onLoadFinished);
+
+    // signal for only WK2
+    SMART_CALLBACK_ADD("back,forward,list,changed", onBackForwardListChanged);
 
 #if USE_WEBKIT
 #else
@@ -286,6 +299,16 @@ void WebView::reload()
 void WebView::stop()
 {
     ewk_view_stop(object());
+}
+
+bool WebView::backPossible()
+{
+    return ewk_view_back_possible(object());
+}
+
+bool WebView::forwardPossible()
+{
+    return ewk_view_forward_possible(object());
 }
 
 void WebView::openInspectorView()

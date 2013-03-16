@@ -101,22 +101,22 @@ Urlbar::Urlbar(Browser* container)
     evas_object_size_hint_align_set(object(), EVAS_HINT_FILL, 0.0);
 
     /* Back button */
-    Evas_Object* button = create_toolbar_button(container->object(), "arrow_left");
-    evas_object_smart_callback_add(button, "clicked", back_clicked, this);
-    elm_object_disabled_set(button, EINA_TRUE);
-    evas_object_size_hint_weight_set(button, 0.0, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(button, 0.0, 0.5);
-    elm_box_pack_end(object(), button);
-    evas_object_show(button);
+    m_backButton = create_toolbar_button(container->object(), "arrow_left");
+    evas_object_smart_callback_add(m_backButton, "clicked", back_clicked, this);
+    elm_object_disabled_set(m_backButton, EINA_TRUE);
+    evas_object_size_hint_weight_set(m_backButton, 0.0, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(m_backButton, 0.0, 0.5);
+    elm_box_pack_end(object(), m_backButton);
+    evas_object_show(m_backButton);
 
     /* Forward button */
-    button = create_toolbar_button(container->object(), "arrow_right");
-    evas_object_smart_callback_add(button, "clicked", forward_clicked, this);
-    elm_object_disabled_set(button, EINA_TRUE);
-    evas_object_size_hint_weight_set(button, 0.0, EVAS_HINT_EXPAND);
-    evas_object_size_hint_align_set(button, 0.0, 0.5);
-    elm_box_pack_end(object(), button);
-    evas_object_show(button);
+    m_forwardButton = create_toolbar_button(container->object(), "arrow_right");
+    evas_object_smart_callback_add(m_forwardButton, "clicked", forward_clicked, this);
+    elm_object_disabled_set(m_forwardButton, EINA_TRUE);
+    evas_object_size_hint_weight_set(m_forwardButton, 0.0, EVAS_HINT_EXPAND);
+    evas_object_size_hint_align_set(m_forwardButton, 0.0, 0.5);
+    elm_box_pack_end(object(), m_forwardButton);
+    evas_object_show(m_forwardButton);
 
     Evas_Object* layout = elm_layout_add(container->object());
     if (!elm_layout_file_set(layout, Browser::themePath(), "eagle/browser-urlbar")) {
@@ -146,7 +146,7 @@ Urlbar::Urlbar(Browser* container)
     evas_object_show(layout);
 
     /* Refresh button */
-    button = create_toolbar_button(container->object(), "refresh");
+    Evas_Object* button = create_toolbar_button(container->object(), "refresh");
     evas_object_smart_callback_add(button, "clicked", reload_clicked, this);
     evas_object_size_hint_weight_set(button, 0.0, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(button, 1.0, 0.5);
@@ -168,6 +168,12 @@ void Urlbar::changeUrlEntry(const char* url)
         elm_object_text_set(m_entry, url);
     else
         elm_object_text_set(m_entry, "about:blank");
+}
+
+void Urlbar::updateBackFordwardButton(bool backPossible, bool forwardPossible)
+{
+    elm_object_disabled_set(m_backButton, !backPossible);
+    elm_object_disabled_set(m_forwardButton, !forwardPossible);
 }
 
 void Urlbar::focusAndSelectAll()

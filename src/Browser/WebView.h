@@ -33,6 +33,8 @@ public:
     SMART_CALLBACK_DECLARE(onLoadError);
     SMART_CALLBACK_DECLARE(onLoadFinished);
 
+    SMART_CALLBACK_DECLARE(onBackForwardListChanged);
+
     SMART_CALLBACK_DECLARE(onTitleChanged);
     SMART_CALLBACK_DECLARE(onUriChanged);
 
@@ -45,6 +47,9 @@ public:
     void forward();
     void reload();
     void stop();
+
+    bool backPossible();
+    bool forwardPossible();
 
     void openInspectorView();
 

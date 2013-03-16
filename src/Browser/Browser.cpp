@@ -216,6 +216,15 @@ void Browser::urlChanged(BrowserContent* content)
         m_urlbar->changeUrlEntry(content->url());
 }
 
+void Browser::backFordwardListChanged(BrowserContent* content, bool backPossible, bool forwardPossible)
+{
+    if (m_content != content)
+        return;
+
+    if (m_urlbar)
+        m_urlbar->updateBackFordwardButton(backPossible, forwardPossible);
+}
+
 void Browser::setInspector(const WebView* inspector)
 {
     if (!inspector)
