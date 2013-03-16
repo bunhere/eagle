@@ -7,6 +7,13 @@ add_definitions(-DTHEME_DIR=\"${CMAKE_BINARY_DIR}/theme\")
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/src/3rdParty")
 
+set(LIB_INSTALL_DIR "lib")
+set(EXEC_INSTALL_DIR "bin")
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${LIB_INSTALL_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${LIB_INSTALL_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${EXEC_INSTALL_DIR})
+
 # Check package dependency.
 set(PKG_list
     eina ecore evas ecore-evas elementary

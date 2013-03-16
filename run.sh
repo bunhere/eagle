@@ -35,6 +35,6 @@ do
     fi
 done
 
-cd BuildTmp/$build_directory
+cd BuildTmp/$build_directory/bin
 ./eagle $ret
 cd ../..
