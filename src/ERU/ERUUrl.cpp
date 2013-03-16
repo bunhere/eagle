@@ -29,13 +29,15 @@ static bool foundDomainStyle(const char* url)
         return true;
 
     int i = 0;
-    while (!url[i]) {
-        if (url[i] == '.')
+    while (const char ch = url[i++]) {
+        if (ch == '.')
             return true;
 
-        if (url[i] == '/')
+        if (ch == '/')
             return false;
     }
+
+    return false;
 }
 
 Url::Url(const char* rawUrl)
