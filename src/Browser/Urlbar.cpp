@@ -17,14 +17,14 @@
 static Evas_Object* create_toolbar_button(Evas_Object* parent, const char* iconName)
 {
     Evas_Object* button = elm_button_add(parent);
+    evas_object_size_hint_min_set(button, URLBAR_BUTTON_SIZE, URLBAR_BUTTON_SIZE);
 
     Evas_Object* icon = elm_icon_add(parent);
     elm_icon_standard_set(icon, iconName);
     evas_object_size_hint_max_set(icon, URLBAR_BUTTON_SIZE, URLBAR_BUTTON_SIZE);
     evas_object_color_set(icon, 40, 100, 40, 128);
-    evas_object_show(icon);
     elm_object_part_content_set(button, "icon", icon);
-    evas_object_size_hint_min_set(button, URLBAR_BUTTON_SIZE, URLBAR_BUTTON_SIZE);
+    evas_object_show(icon);
 
     return button;
 }
