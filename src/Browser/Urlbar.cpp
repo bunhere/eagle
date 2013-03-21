@@ -10,6 +10,7 @@
 #include "Urlbar.h"
 
 #include "Browser.h"
+#include "ERU/Logger.h"
 #include "FocusController.h"
 #include <Edje.h>
 #include <Elementary.h>
@@ -31,14 +32,15 @@ static Evas_Object* create_toolbar_button(Evas_Object* parent, const char* iconN
 
 static void urlbarChanged(void* data, Evas_Object* obj, void* eventInfo)
 {
-    printf(" [%s]\n", elm_object_text_get(obj));
+    LOG("url : %s", elm_object_text_get(obj));
 }
 
 static void urlbarActivated(void* data, Evas_Object* obj, void* eventInfo)
 {
     Urlbar* urlbar= static_cast<Urlbar*>(data);
     const char* url = elm_object_text_get(obj);
-    printf(" [%s entered]\n", elm_object_text_get(obj));
+    LOG("url : %s", elm_object_text_get(obj));
+
     urlbar->container()->loadUrl(elm_entry_markup_to_utf8(url));
 }
 
@@ -49,7 +51,7 @@ void Urlbar::onKeyDown(void* data, Evas* e, Evas_Object*, void* event_info)
     Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
     Eina_Bool altPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Alt");
 
-    printf(" [Urlbar::%s entered]\n", __func__);
+    LOG("");
     ShortCut::instance().feedKeyDownEvent(*ev, urlbar->container(), 0);
 }
 
@@ -75,7 +77,7 @@ void Urlbar::reload_clicked(void* data, Evas_Object*, void*)
 {
     Urlbar* self = static_cast<Urlbar*>(data);
     self->container()->reload();
-    printf(" %s \n" , __func__);
+    LOG("");
 }
 
 void Urlbar::home_clicked(void* data, Evas_Object*, void*)
@@ -88,7 +90,7 @@ void Urlbar::stop_clicked(void *data, Evas_Object *obj, const char *emission, co
 {
     Urlbar* self = static_cast<Urlbar*>(data);
     self->container()->stop();
-    printf(" %s \n" , __func__);
+    LOG("");
 }
 */
 
@@ -121,7 +123,7 @@ Urlbar::Urlbar(Browser* container)
     Evas_Object* layout = elm_layout_add(container->object());
     if (!elm_layout_file_set(layout, Browser::themePath(), "eagle/browser-urlbar")) {
         //FIXME: add error handling
-        printf("%s theme path is failed\n", Browser::themePath());
+        fprintf(stderr, "%s theme path is failed\n", Browser::themePath());
         return;
     }
     evas_object_size_hint_weight_set(layout, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);

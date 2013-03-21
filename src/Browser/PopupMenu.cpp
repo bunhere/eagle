@@ -7,6 +7,7 @@
  */
 
 #include "Browser/PopupMenu.h"
+#include "ERU/Logger.h"
 #include <EWebKit2.h>
 #include <Elementary.h>
 
@@ -66,7 +67,7 @@ PopupMenu::PopupMenu(Evas_Object* ewkView, Eina_Rectangle rect, Ewk_Popup_Menu* 
     EINA_LIST_FOREACH(items, l, itemv) {
         Ewk_Popup_Menu_Item* menuItem = static_cast<Ewk_Popup_Menu_Item*>(itemv);
 
-        printf (" --- %d: %d\n", index, ewk_popup_menu_item_type_get(menuItem));
+        LOG(" --- %d: %d\n", index, ewk_popup_menu_item_type_get(menuItem));
         const char* text = ewk_popup_menu_item_text_get(menuItem);
         Elm_Object_Item* itemObject = elm_list_item_append(object(), text, 0, 0, 0, 0);
         if (selectedIndex == index)

@@ -12,6 +12,7 @@
 #include <Browser/Browser.h>
 #include <Browser/Features/AutoFormFill.h>
 #include <Browser/Features/Features.h>
+#include "ERU/Logger.h"
 #include "FocusController.h"
 
 #if USE_WEBKIT || USE_ELM_WEB
@@ -89,10 +90,10 @@ void WebView::onUriChanged(void* userData, Evas_Object*, void* eventInfo)
 
 void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
 {
-    printf(" %s \n", __func__);
+    LOG("");
 #if USE_WEBKIT || USE_ELM_WEB
     Ewk_Frame_Load_Error* error = static_cast<Ewk_Frame_Load_Error*>(eventInfo);
-    printf(" %d %d (%s : %s : %s)\n %ld\n",
+    LOG(" %d %d (%s : %s : %s)\n %ld\n",
             error->code,
             error->is_cancellation,
             error->domain,
@@ -101,7 +102,7 @@ void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
             error->resource_identifier);
 #else
     Ewk_Error* error = static_cast<Ewk_Error*>(eventInfo);
-    printf(" %d %d (%d : %s : %s)\n",
+    LOG(" %d %d (%d : %s : %s)\n",
             ewk_error_code_get(error),
             ewk_error_cancellation_get(error),
             ewk_error_type_get(error),
@@ -112,7 +113,7 @@ void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
 
 void WebView::onLoadFinished(void *userData, Evas_Object *webView, void *eventInfo)
 {
-    printf(" %s \n", __func__);
+    LOG("");
     AutoFormFill* formFillFeature = Features::instance().autoFormFill();
 
 #if USE_WEBKIT || USE_ELM_WEB
@@ -131,7 +132,7 @@ void WebView::onBackForwardListChanged(void *userData, Evas_Object *webView, voi
 
 void WebView::onFormSubmissionRequest(void *userData, Evas_Object *webView, void *eventInfo)
 {
-    printf(" %s \n", __func__);
+    LOG("");
 #if USE_WEBKIT || USE_ELM_WEB
 #else
     Ewk_Form_Submission_Request* request = static_cast<Ewk_Form_Submission_Request*>(eventInfo);
@@ -165,12 +166,12 @@ void onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 
 static void onFocusIn(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
-    fprintf(stderr, "WebView %s called\n", __func__);
+    LOG("");
 }
 
 void onFocusOut(void* data, Evas*, Evas_Object*, void*)
 {
-    fprintf(stderr, "WebView %s called\n", __func__);
+    LOG("");
     FocusController::lostFocus(toWebView(data));
 }
 

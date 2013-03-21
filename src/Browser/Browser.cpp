@@ -9,6 +9,7 @@
 #include "Browser.h"
 
 #include "BrowserContent.h"
+#include "ERU/Logger.h"
 #include "MultitabBar.h"
 #include "Tab.h"
 #include "Urlbar.h"
@@ -64,14 +65,14 @@ Browser* Browser::create(const BrowserConfig& config)
 
 void Browser::onFocusIn(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
-    fprintf(stderr, "Browser %s called\n", __func__);
+    LOG("");
     Browser* browser = static_cast<Browser*>(data);
     browser->m_content->setFocus(true);
 }
 
 void Browser::onFocusOut(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
-    fprintf(stderr, "Browser %s called\n", __func__);
+    LOG("");
 }
 
 Browser::Browser(const BrowserConfig& config)
@@ -85,7 +86,7 @@ Browser::Browser(const BrowserConfig& config)
 
     if (!elm_layout_file_set(m_layout, themePath(), "eagle/browser-view")) {
         //FIXME: add error handling
-        printf("%s theme path is failed\n", themePath());
+        fprintf(stderr, "%s theme path is failed\n", themePath());
         return;
     }
 

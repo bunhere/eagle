@@ -34,7 +34,7 @@ const char SQL_INSERT_FORMFILLITEM[] =
 void AutoFormFill::initialize()
 {
     if (sqlite3_open("./test.db", &m_database) != SQLITE_OK)
-        printf("sqlite3_open error : %s\n", sqlite3_errmsg(m_database));
+        fprintf(stderr, "sqlite3_open error : %s\n", sqlite3_errmsg(m_database));
 
     sqlite3_exec(m_database, SQL_CREATE, 0, 0, 0);
 

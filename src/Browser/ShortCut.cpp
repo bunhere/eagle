@@ -5,6 +5,8 @@
  */
 
 #include "ShortCut.h"
+
+#include "ERU/Logger.h"
 #include "Browser.h"
 
 static inline bool isSmallAlphabet(char key)
@@ -86,7 +88,7 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
     unsigned skey = ctrlPressed ? CTRL : NONE;
     skey |= altPressed ? ALT : NONE;
 
-    printf("[%s %d, %d]\n", ev.key, altPressed, ctrlPressed);
+    LOG("%s %d, %d", ev.key, altPressed, ctrlPressed);
     if (isSmallAlphabet(key) || isNumeric(key))  {
         int modifier = modifierIndex(skey);
         if (modifier < 0)

@@ -14,6 +14,15 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${LIB_INSTALL_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${LIB_INSTALL_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${EXEC_INSTALL_DIR})
 
+# features
+set(ENABLE_LOG ON)
+
+if (ENABLE_LOG)
+    add_definitions(-DENABLE_LOG=1)
+else ()
+    add_definitions(-DENABLE_LOG=0)
+endif ()
+
 # Check package dependency.
 set(PKG_list
     eina ecore evas ecore-evas elementary
@@ -72,6 +81,7 @@ set(EAGLE_SOURCES
     ${SOURCE_DIR}/EflWrappers/Window.cpp
 
     ${SOURCE_DIR}/ERU/ERUUrl.cpp
+    ${SOURCE_DIR}/ERU/Logger.cpp
 )
 
 if (USE_WEBKIT)
