@@ -95,7 +95,7 @@ Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
             return 0;
     }
 
-    Evas_Object* ewkView = ewk_view_smart_add(canvas, smart, ewk_context_default_get());
+    Evas_Object* ewkView = ewk_view_smart_add(canvas, smart, ewk_context_default_get(), ewk_page_group_create(""));
     View_Smart_Data* sd = (View_Smart_Data*)evas_object_smart_data_get(ewkView);
     sd->cppInstance = webView;
     sd->popup = 0;
