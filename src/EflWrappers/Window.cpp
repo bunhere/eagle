@@ -11,12 +11,9 @@
 #include <Elementary.h>
 #include <stdio.h>
 
-static const int sDefaultWidth = 800;
-static const int sDefaultHeight = 600;
-
 Window* Window::head = 0;
 
-Window::Window()
+Window::Window(int width, int height)
     : Object(elm_win_add(0, PROJECT_NAME, ELM_WIN_BASIC))
 {
     if (!object())
@@ -35,7 +32,8 @@ Window::Window()
     elm_win_resize_object_add(object(), m_bg);
     evas_object_show(m_bg);
 
-    resize(sDefaultWidth, sDefaultHeight);
+    fprintf(stderr, "%d, %d\n", width, height);
+    resize(width, height);
 }
 
 void Window::setTitle(const char* title)

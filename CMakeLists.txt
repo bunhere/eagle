@@ -23,6 +23,11 @@ else ()
     add_definitions(-DENABLE_LOG=0)
 endif ()
 
+if (USE_MOBILE_PROFILE)
+    # Now, this is only used for default resolution
+    add_definitions(-DUSE_MOBILE_PROFILE)
+endif ()
+
 # Check package dependency.
 set(PKG_list
     eina ecore evas ecore-evas elementary

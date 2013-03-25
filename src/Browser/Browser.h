@@ -22,6 +22,10 @@ class BrowserConfig
 {
 public:
     BrowserConfig();
+
+    int width;
+    int height;
+
     bool urlbar;
     bool multitapBar;
 };

@@ -13,6 +13,7 @@ help() {
     echo
     echo "Options:"
     echo "  -1                  : build with webkit1 (default is to build with webkit2)"
+    echo "  --mobile            : build like mobile"
     echo "  --help              : show this help message and exit"
 }
 
@@ -25,6 +26,10 @@ do
     then
         options="$options -DUSE_WEBKIT=On"
         build_directory="WebKit"
+    fi
+    if [ "$1" = "--mobile" ]
+    then
+        options="$options -DUSE_MOBILE_PROFILE=On"
     fi
     if [ "$1" = "--help" ]
     then

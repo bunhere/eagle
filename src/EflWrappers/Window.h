@@ -14,7 +14,7 @@
 class Window : public Object
 {
 public:
-    Window();
+    Window(int width, int height);
 
     void setTitle(const char* title);
 

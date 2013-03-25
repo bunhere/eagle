@@ -17,6 +17,14 @@
 #include <Elementary.h>
 #include <algorithm>
 
+#ifdef USE_MOBILE_PROFILE
+static const int sDefaultWidth = 480;
+static const int sDefaultHeight = 800;
+#else
+static const int sDefaultWidth = 800;
+static const int sDefaultHeight = 600;
+#endif
+
 void Browser::initialize()
 {
     WebView::initialize();
@@ -41,7 +49,9 @@ void Browser::initialize()
 }
 
 BrowserConfig::BrowserConfig()
-    : urlbar(true)
+    : width(sDefaultWidth)
+    , height(sDefaultHeight)
+    , urlbar(true)
     , multitapBar(true)
 {
 }
@@ -76,7 +86,8 @@ void Browser::onFocusOut(void* data, Evas* e, Evas_Object* ewkObject, void* even
 }
 
 Browser::Browser(const BrowserConfig& config)
-    : m_isEnteredFullScreen(false)
+    : Window(config.width, config.height)
+    , m_isEnteredFullScreen(false)
 {
     evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_IN, onFocusIn, this);
     evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_OUT, onFocusOut, this);
