@@ -131,6 +131,7 @@ Urlbar::Urlbar(Browser* container)
 
     m_entry = elm_entry_add(object());
     elm_entry_single_line_set(m_entry, true);
+    elm_entry_scrollable_set(m_entry, true);
 
     evas_object_size_hint_weight_set(m_entry, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(m_entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
