@@ -24,7 +24,7 @@ void ERULog(const char* file, int line, const char* function, const char* format
     fprintf(stderr, format, args);
 
     int formatLength = strlen(format);
-    if (!formatLength || format[formatLength - 1] == '\n')
+    if (!formatLength || format[formatLength - 1] != '\n')
         fprintf(stderr, "\n");
 }
 
