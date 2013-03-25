@@ -53,6 +53,14 @@ void ewkViewSmartDel(Evas_Object* o)
     _parent_sc.sc.del(o);
 }
 
+static Eina_Bool ewkViewSmartKeyDown(Ewk_View_Smart_Data* sd, const Evas_Event_Key_Down* down)
+{
+    if (!toCpp(sd)->smartKeyDown(down))
+        return _parent_sc.key_down(sd, down);
+
+    return true;
+}
+
 static Eina_Bool showPopupMenu(Ewk_View_Smart_Data* sd, Eina_Rectangle rect, Ewk_Text_Direction textDirection, double pageScaleFactor, Ewk_Popup_Menu* popupMenu)
 {
     View_Smart_Data* vsd = (View_Smart_Data*)sd;
@@ -86,6 +94,8 @@ Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
 
         api.sc.add = ewkViewSmartAdd;
         api.sc.del = ewkViewSmartDel;
+
+        api.key_down = ewkViewSmartKeyDown;
 
         api.popup_menu_show = showPopupMenu;
         api.popup_menu_hide = hidePopupMenu;
