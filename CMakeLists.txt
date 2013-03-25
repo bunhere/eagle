@@ -42,6 +42,7 @@ elseif (USE_ELM_WEB)
     #elementary have webkit/efl dependency
     add_definitions(-DUSE_ELM_WEB=1)
 else ()
+    set(USE_WEBKIT2 On)
     add_definitions(-DUSE_WEBKIT2=1)
     set(WEBKIT_PKG_NAME ewebkit2)
     list(APPEND PKG_list ${WEBKIT_PKG_NAME})
