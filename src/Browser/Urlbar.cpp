@@ -44,15 +44,18 @@ static void urlbarActivated(void* data, Evas_Object* obj, void* eventInfo)
     urlbar->container()->loadUrl(elm_entry_markup_to_utf8(url));
 }
 
-void Urlbar::onKeyDown(void* data, Evas* e, Evas_Object*, void* event_info)
+void Urlbar::filterPrepend(void* data, Evas_Object* entry, char** text)
 {
     Urlbar* urlbar= static_cast<Urlbar*>(data);
-    Evas_Event_Key_Down *ev = (Evas_Event_Key_Down*) event_info;
-    Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
-    Eina_Bool altPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Alt");
 
-    LOG("");
-    ShortCut::instance().feedKeyDownEvent(*ev, urlbar->container(), 0);
+    Evas* evas = evas_object_evas_get(entry);
+    const Evas_Modifier* modifier = evas_key_modifier_get(evas);
+    Eina_Bool ctrlPressed = evas_key_modifier_is_set(modifier, "Control");
+    Eina_Bool altPressed = evas_key_modifier_is_set(modifier, "Alt");
+    LOG("%s (%d, %d)", *text, ctrlPressed, altPressed);
+
+    if (ShortCut::instance().process(*text, ctrlPressed, altPressed, urlbar->container(), 0))
+        *text = 0;
 }
 
 void Urlbar::onMouseDown(void* data, Evas* e, Evas_Object*, void* event_info)
@@ -136,7 +139,8 @@ Urlbar::Urlbar(Browser* container)
     evas_object_size_hint_weight_set(m_entry, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
     evas_object_size_hint_align_set(m_entry, EVAS_HINT_FILL, EVAS_HINT_FILL);
 
-    evas_object_event_callback_add(m_entry, EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
+    elm_entry_markup_filter_prepend(m_entry, filterPrepend, this);
+
     evas_object_event_callback_add(m_entry, EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
 
     elm_entry_text_style_user_push(m_entry, "DEFAULT='font_size=16'");

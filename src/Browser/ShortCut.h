@@ -53,6 +53,7 @@ public:
     bool addCommand(char key, SKEY, Command);
     bool addCommand(const char* key, SKEY, Command);
 
+    bool process(const char* text, bool ctrlPressed, bool altPressed, Browser* browser, BrowserContent* content);
     bool feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser*, BrowserContent*);
 private:
     ShortCut();

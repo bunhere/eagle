@@ -79,16 +79,12 @@ bool ShortCut::addCommand(const char* key, SKEY skey, Command fn)
     return true;
 }
 
-bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser, BrowserContent* content)
+bool ShortCut::process(const char* text, bool ctrlPressed, bool altPressed, Browser* browser, BrowserContent* content)
 {
-    Eina_Bool ctrlPressed = evas_key_modifier_is_set(ev.modifiers, "Control");
-    Eina_Bool altPressed = evas_key_modifier_is_set(ev.modifiers, "Alt");
-
-    char key = ev.key[0];
+    char key = text[0];
     unsigned skey = ctrlPressed ? CTRL : NONE;
     skey |= altPressed ? ALT : NONE;
 
-    LOG("%s %d, %d", ev.key, altPressed, ctrlPressed);
     if (isSmallAlphabet(key) || isNumeric(key))  {
         int modifier = modifierIndex(skey);
         if (modifier < 0)
@@ -96,11 +92,11 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
 
         int index = keyIndex(key);
 
-        CommandInfo cmdInfo(ev.key, skey);
+        CommandInfo cmdInfo(text, skey);
         if (m_keyboardAlphabetShortCuts[modifier][index])
             return m_keyboardAlphabetShortCuts[modifier][index](&cmdInfo, browser, content);
     } else {
-        std::map<std::string, Command*>::iterator i = m_keyboardOtherShortCuts.find(ev.key);
+        std::map<std::string, Command*>::iterator i = m_keyboardOtherShortCuts.find(text);
         if (i == m_keyboardOtherShortCuts.end())
             return false;
 
@@ -109,9 +105,18 @@ bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser,
             return false;
         
         if (Command cmd = i->second[modifier]) {
-            CommandInfo cmdInfo(ev.key, skey);
+            CommandInfo cmdInfo(text, skey);
             return cmd(&cmdInfo, browser, content);
         }
     }
     return false;
+}
+
+bool ShortCut::feedKeyDownEvent(const Evas_Event_Key_Down& ev, Browser* browser, BrowserContent* content)
+{
+    Eina_Bool ctrlPressed = evas_key_modifier_is_set(ev.modifiers, "Control");
+    Eina_Bool altPressed = evas_key_modifier_is_set(ev.modifiers, "Alt");
+
+    LOG("%s %d, %d", ev.key, altPressed, ctrlPressed);
+    return process(ev.key, ctrlPressed, altPressed, browser, content);
 }
