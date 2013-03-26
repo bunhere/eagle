@@ -19,9 +19,7 @@ void ERULog(const char* file, int line, const char* function, const char* format
 
     va_list args;
     va_start(args, format);
-    va_end(args);
-
-    fprintf(stderr, format, args);
+    vfprintf(stderr, format, args);
 
     int formatLength = strlen(format);
     if (!formatLength || format[formatLength - 1] != '\n')
