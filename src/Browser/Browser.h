@@ -42,6 +42,7 @@ public:
 
     ~Browser();
 
+    void createNewBrowser(BrowserContent* = 0);
     void addNewPage(BrowserContent* = 0);
     void closePage(BrowserContent* = 0);
     void focusAndSelectUrlBar(BrowserContent* = 0);
@@ -54,6 +55,7 @@ public:
     bool isActiveContent(BrowserContent* bc) { return bc == m_content; }
     void chooseContent(BrowserContent*, bool updateMultitab = true);
 
+    COMMAND_DECLARE(createNewBrowser);
     COMMAND_DECLARE(addNewPage);
     COMMAND_DECLARE(closePage);
     COMMAND_DECLARE(focusAndSelectUrlBar);

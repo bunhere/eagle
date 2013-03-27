@@ -32,6 +32,7 @@ void Browser::initialize()
     // register shortcuts.
     ShortCut& s = ShortCut::instance();
     s.addCommand('i', ShortCut::CTRL, openInspectorView);
+    s.addCommand('n', ShortCut::CTRL, createNewBrowser);
     s.addCommand('t', ShortCut::CTRL, addNewPage);
     s.addCommand('w', ShortCut::CTRL, closePage);
 
@@ -87,6 +88,8 @@ void Browser::onFocusOut(void* data, Evas* e, Evas_Object* ewkObject, void* even
 
 Browser::Browser(const BrowserConfig& config)
     : Window(config.width, config.height)
+    , m_content(0)
+    , m_urlbar(0)
     , m_isEnteredFullScreen(false)
 {
     evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_IN, onFocusIn, this);
@@ -166,6 +169,7 @@ COMMAND_WEBVIEW_IMPLEMENT(forward)
 COMMAND_WEBVIEW_IMPLEMENT(scaleUp)
 COMMAND_WEBVIEW_IMPLEMENT(scaleDown)
 
+COMMAND_BROWSER_IMPLEMENT(createNewBrowser)
 COMMAND_BROWSER_IMPLEMENT(addNewPage)
 COMMAND_BROWSER_IMPLEMENT(closePage)
 COMMAND_BROWSER_IMPLEMENT(focusAndSelectUrlBar)
@@ -256,6 +260,16 @@ void Browser::resize(int width, int height)
     Object::resize(width, height);
 
     m_content->resize(width, height);
+}
+
+void Browser::createNewBrowser(BrowserContent*)
+{
+    Browser* defaultWindow = Browser::create();
+    if (!defaultWindow)
+        return;
+
+    defaultWindow->setTitle("Eagle");
+    defaultWindow->show();
 }
 
 void Browser::addNewPage(BrowserContent*)
