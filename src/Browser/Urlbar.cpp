@@ -46,16 +46,42 @@ static void urlbarActivated(void* data, Evas_Object* obj, void* eventInfo)
 
 void Urlbar::filterPrepend(void* data, Evas_Object* entry, char** text)
 {
-    Urlbar* urlbar= static_cast<Urlbar*>(data);
+    LOG("");
 
     Evas* evas = evas_object_evas_get(entry);
     const Evas_Modifier* modifier = evas_key_modifier_get(evas);
     Eina_Bool ctrlPressed = evas_key_modifier_is_set(modifier, "Control");
+
+    // text with ctrlPressed is translated like ev->string(a->1, ...)
+    // We should not write it in urlbar.
+    if (ctrlPressed) {
+        free(*text);
+        *text = 0;
+        return;
+    }
+
     Eina_Bool altPressed = evas_key_modifier_is_set(modifier, "Alt");
     LOG("%s (%d, %d)", *text, ctrlPressed, altPressed);
 
-    if (ShortCut::instance().process(*text, ctrlPressed, altPressed, urlbar->container(), 0))
+    Urlbar* urlbar= static_cast<Urlbar*>(data);
+    if (ShortCut::instance().process(*text, ctrlPressed, altPressed, urlbar->container(), 0)) {
+        free(*text);
         *text = 0;
+    }
+}
+
+void Urlbar::onKeyDown(void* data, Evas* e, Evas_Object*, void* event_info)
+{
+    LOG("");
+
+    // ctrlPressed key and special characters should be processed by key down.
+    Evas_Event_Key_Down *ev = (Evas_Event_Key_Down*) event_info;
+    Eina_Bool ctrlPressed = evas_key_modifier_is_set(evas_key_modifier_get(e), "Control");
+    if (!ctrlPressed && ev->key[1] == 0)
+        return;
+
+    Urlbar* urlbar= static_cast<Urlbar*>(data);
+    ShortCut::instance().feedKeyDownEvent(*ev, urlbar->container(), 0);
 }
 
 void Urlbar::onMouseDown(void* data, Evas* e, Evas_Object*, void* event_info)
@@ -141,6 +167,7 @@ Urlbar::Urlbar(Browser* container)
 
     elm_entry_markup_filter_prepend(m_entry, filterPrepend, this);
 
+    evas_object_event_callback_add(m_entry, EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
     evas_object_event_callback_add(m_entry, EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
 
     elm_entry_text_style_user_push(m_entry, "DEFAULT='font_size=16'");

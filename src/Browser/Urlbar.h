@@ -26,6 +26,7 @@ public:
 
     static void filterPrepend(void* data, Evas_Object* entry, char** text);
 
+    static void onKeyDown(void*, Evas*, Evas_Object*, void*);
     static void onMouseDown(void*, Evas*, Evas_Object*, void*);
 
     SMART_CALLBACK_DECLARE(back_clicked);
