@@ -167,6 +167,7 @@ void onKeyDown(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 static void onFocusIn(void* data, Evas* e, Evas_Object* ewkObject, void* event_info)
 {
     LOG("");
+    FocusController::setFocus(toWebView(data));
 }
 
 void onFocusOut(void* data, Evas*, Evas_Object*, void*)
