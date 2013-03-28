@@ -90,6 +90,7 @@ Browser::Browser(const BrowserConfig& config)
     : Window(config.width, config.height)
     , m_content(0)
     , m_urlbar(0)
+    , m_multitapBar(0)
     , m_isEnteredFullScreen(false)
 {
     evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_IN, onFocusIn, this);
@@ -283,7 +284,10 @@ void Browser::closePage(BrowserContent* content)
         content = m_content;
 
     detachContent(content);
+    m_contents.erase(std::find(m_contents.begin(), m_contents.end(), content));
     delete content;
+
+    updateMultitab();
 }
 
 void Browser::focusAndSelectUrlBar(BrowserContent*)
@@ -327,9 +331,6 @@ void Browser::detachContent(BrowserContent* content)
 
         chooseContent(m_contents[newIndex], false);
     }
-    m_contents.erase(std::find(m_contents.begin(), m_contents.end(), content));
-
-    updateMultitab();
 }
 
 void Browser::chooseContent(BrowserContent* content, bool update)

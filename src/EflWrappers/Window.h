@@ -18,6 +18,8 @@ public:
 
     void setTitle(const char* title);
 
+    static Eina_Bool destroy(void* object);
+
     /* smart callback functions */
     static void onDeleteRequest(void* data, Evas_Object* obj, void* eventInfo);
 

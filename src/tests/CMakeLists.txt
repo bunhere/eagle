@@ -3,6 +3,7 @@ set(TESTS_DIR "${SOURCE_DIR}/tests")
 
 set(ERTESTS_BINARIES
     test_url
+    test_window
 )
 
 include_directories("${THIRDPARTY_DIR}/gtest/include"

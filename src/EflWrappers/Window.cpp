@@ -19,10 +19,7 @@ Window::Window(int width, int height)
     if (!object())
         return;
 
-    if (!head)
-        next = head;
-    else
-        next = 0;
+    next = head;
     head = this;
 
     evas_object_smart_callback_add(object(), "delete,request", onDeleteRequest, this);
@@ -41,8 +38,44 @@ void Window::setTitle(const char* title)
     elm_win_title_set(object(), title);
 }
 
+Eina_Bool Window::destroy(void* data)
+{
+    Evas_Object* object = static_cast<Evas_Object*>(data);
+    fprintf(stderr, "---(%d)\n", __LINE__);
+    if (!head)
+        return false;
+
+    fprintf(stderr, "---(%d)\n", __LINE__);
+    if (!head->next) {
+        elm_exit();
+        return false;
+    }
+
+    fprintf(stderr, "---(%d)\n", __LINE__);
+    Window* prev = head;
+    if (head->object() == object) {
+        head = head->next;
+        delete prev;
+        return false;
+    }
+
+    fprintf(stderr, "---(%d)\n", __LINE__);
+    Window* it = head->next;
+    while (it) {
+        if (it->object() == object) {
+            prev->next = it->next;
+            delete it;
+            return false;
+        }
+        prev = it;
+        it = it->next;
+    }
+    fprintf(stderr, "---(%d)\n", __LINE__);
+
+    return false;
+}
+
 void Window::onDeleteRequest(void* data, Evas_Object* obj, void* eventInfo)
 {
-    //FIXME
-    elm_exit();
+    ecore_idler_add(Window::destroy, obj);
 }
