@@ -34,6 +34,7 @@ void Browser::initialize()
     s.addCommand('i', ShortCut::CTRL, openInspectorView);
     s.addCommand('n', ShortCut::CTRL, createNewBrowser);
     s.addCommand('t', ShortCut::CTRL, addNewPage);
+    s.addCommand('u', ShortCut::CTRL, setSourceMode);
     s.addCommand('w', ShortCut::CTRL, closePage);
 
     s.addCommand("KP_Add", ShortCut::CTRL, scaleUp);
@@ -164,11 +165,12 @@ bool Browser::name(const ShortCut::CommandInfo*, Browser* browser, BrowserConten
     return true; \
 }
 
-COMMAND_WEBVIEW_IMPLEMENT(openInspectorView)
 COMMAND_WEBVIEW_IMPLEMENT(back)
 COMMAND_WEBVIEW_IMPLEMENT(forward)
+COMMAND_WEBVIEW_IMPLEMENT(openInspectorView)
 COMMAND_WEBVIEW_IMPLEMENT(scaleUp)
 COMMAND_WEBVIEW_IMPLEMENT(scaleDown)
+COMMAND_WEBVIEW_IMPLEMENT(setSourceMode)
 
 COMMAND_BROWSER_IMPLEMENT(createNewBrowser)
 COMMAND_BROWSER_IMPLEMENT(addNewPage)

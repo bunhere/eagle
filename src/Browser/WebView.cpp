@@ -126,6 +126,7 @@ void WebView::onLoadFinished(void *userData, Evas_Object *webView, void *eventIn
 
 void WebView::onBackForwardListChanged(void *userData, Evas_Object *webView, void *eventInfo)
 {
+    LOG("");
     WebView* self = toWebView(userData);
     self->container()->backFordwardListChanged(self, self->backPossible(), self->forwardPossible());
 }
@@ -319,6 +320,14 @@ void WebView::openInspectorView()
     // FIXME: we need better way to handle setting.
     ewk_view_setting_enable_developer_extras_set(object(), true);
     ewk_view_inspector_show(object());
+#endif
+}
+
+void WebView::setSourceMode()
+{
+#if !USE_WEBKIT
+    fprintf(stderr, "%s\n", __func__);
+    ewk_view_source_mode_set(object(), true);
 #endif
 }
 

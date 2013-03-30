@@ -55,16 +55,18 @@ public:
     bool isActiveContent(BrowserContent* bc) { return bc == m_content; }
     void chooseContent(BrowserContent*, bool updateMultitab = true);
 
+    COMMAND_DECLARE(back);
+    COMMAND_DECLARE(forward);
+    COMMAND_DECLARE(openInspectorView);
+    COMMAND_DECLARE(scaleUp);
+    COMMAND_DECLARE(scaleDown);
+    COMMAND_DECLARE(setSourceMode);
+
     COMMAND_DECLARE(createNewBrowser);
     COMMAND_DECLARE(addNewPage);
     COMMAND_DECLARE(closePage);
     COMMAND_DECLARE(focusAndSelectUrlBar);
     COMMAND_DECLARE(movePage);
-    COMMAND_DECLARE(openInspectorView);
-    COMMAND_DECLARE(scaleUp);
-    COMMAND_DECLARE(scaleDown);
-    COMMAND_DECLARE(back);
-    COMMAND_DECLARE(forward);
     COMMAND_DECLARE(toggleFullScreen);
 
     void loadUrl(const char* url);

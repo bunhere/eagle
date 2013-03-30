@@ -44,13 +44,35 @@ static void ewkViewSmartAdd(Evas_Object* o)
     _parent_sc.sc.add(o);
 }
 
-void ewkViewSmartDel(Evas_Object* o)
+static void ewkViewSmartDel(Evas_Object* o)
 {
     View_Smart_Data* vsd = (View_Smart_Data*)evas_object_smart_data_get(o);
     if (vsd && vsd->popup)
         delete vsd->popup;
 
     _parent_sc.sc.del(o);
+}
+
+static Evas_Object* ewkViewWindowCreate(Ewk_View_Smart_Data* sd, const char* url, const Ewk_Window_Features* windowFeatures)
+{
+    int x = 0;
+    int y = 0;
+    int width = 0;
+    int height = 0;
+
+    ewk_window_features_geometry_get(windowFeatures, &x, &y, &width, &height);
+
+    BrowserConfig config;
+    if (width)
+        config.width = width;
+    if (height)
+        config.height = height;
+
+    Browser* browser = Browser::create(config);
+    browser->show();
+
+    BrowserContent* content = browser->contentsAt(0);
+    return content->object();
 }
 
 static Eina_Bool ewkViewSmartKeyDown(Ewk_View_Smart_Data* sd, const Evas_Event_Key_Down* down)
@@ -95,6 +117,7 @@ Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
         api.sc.add = ewkViewSmartAdd;
         api.sc.del = ewkViewSmartDel;
 
+        api.window_create = ewkViewWindowCreate;
         api.key_down = ewkViewSmartKeyDown;
 
         api.popup_menu_show = showPopupMenu;

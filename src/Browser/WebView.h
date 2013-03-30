@@ -52,6 +52,7 @@ public:
     bool forwardPossible();
 
     void openInspectorView();
+    void setSourceMode();
 
     void scaleUp();
     void scaleDown();
