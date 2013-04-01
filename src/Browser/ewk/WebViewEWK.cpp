@@ -46,10 +46,26 @@ void ewkViewSmartDel(Evas_Object* o)
     _parent_sc.sc.del(o);
 }
 
-static Evas_Object* ewkViewSmartWindowCreate(Ewk_View_Smart_Data* sd, Eina_Bool javascript, const Ewk_Window_Features *window_features)
+static Evas_Object* ewkViewSmartWindowCreate(Ewk_View_Smart_Data* sd, Eina_Bool javascript, const Ewk_Window_Features* windowFeatures)
 {
-    //FIXME
-    return 0;
+    int x = 0;
+    int y = 0;
+    int width = 0;
+    int height = 0;
+
+    ewk_window_features_int_property_get(windowFeatures, &x, &y, &width, &height);
+
+    BrowserConfig config;
+    if (width)
+        config.width = width;
+    if (height)
+        config.height = height;
+
+    Browser* browser = Browser::create(config);
+    browser->show();
+
+    BrowserContent* content = browser->contentsAt(0);
+    return content->object();
 }
 
 static Eina_Bool ewkViewSmartKeyDown(Ewk_View_Smart_Data* sd, const Evas_Event_Key_Down* down)

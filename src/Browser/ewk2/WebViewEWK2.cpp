@@ -53,7 +53,7 @@ static void ewkViewSmartDel(Evas_Object* o)
     _parent_sc.sc.del(o);
 }
 
-static Evas_Object* ewkViewWindowCreate(Ewk_View_Smart_Data* sd, const char* url, const Ewk_Window_Features* windowFeatures)
+static Evas_Object* ewkViewSmartWindowCreate(Ewk_View_Smart_Data* sd, const char* url, const Ewk_Window_Features* windowFeatures)
 {
     int x = 0;
     int y = 0;
@@ -117,7 +117,7 @@ Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView)
         api.sc.add = ewkViewSmartAdd;
         api.sc.del = ewkViewSmartDel;
 
-        api.window_create = ewkViewWindowCreate;
+        api.window_create = ewkViewSmartWindowCreate;
         api.key_down = ewkViewSmartKeyDown;
 
         api.popup_menu_show = showPopupMenu;
