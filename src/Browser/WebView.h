@@ -11,6 +11,7 @@
 
 #include "BrowserContent.h"
 #include "ERU/ERUUrl.h"
+#include <Elementary.h>
 
 class WebView : public BrowserContent
 {
@@ -18,8 +19,15 @@ public:
     ~WebView();
 
     static WebView* create(Browser* container);
-
     static void initialize();
+
+    inline Evas_Object* webViewObject() {
+#if USE_ELM_WEB
+        return elm_web_webkit_view_get(object());
+#else
+        return object();
+#endif
+    }
 
     void setFocus(bool);
 
@@ -63,8 +71,6 @@ private:
     ERU::Url* m_url;
 };
 
-#if !USE_ELM_WEB
 Evas_Object* ewkViewAdd(Evas_Object* parent, WebView* webView);
-#endif
 
 #endif

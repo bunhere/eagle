@@ -36,7 +36,7 @@ void WebView::onInspectorViewCreate(void* userData, Evas_Object*, void*)
         webView->m_inspector = inspector;
 
 #if USE_WEBKIT
-        ewk_view_inspector_view_set(webView->object(), inspector->object());
+        ewk_view_inspector_view_set(webView->webViewObject(), inspector->webViewObject());
 #endif
     }
 
@@ -84,7 +84,7 @@ void WebView::onUriChanged(void* userData, Evas_Object*, void* eventInfo)
     self->container()->urlChanged(self);
 
 #if USE_WEBKIT || USE_ELM_WEB
-    onBackForwardListChanged(userData, self->object(), 0);
+    onBackForwardListChanged(userData, self->webViewObject(), 0);
 #endif
 }
 
@@ -191,15 +191,15 @@ WebView::WebView(Browser* container)
 
     Evas* evas = evas_object_evas_get(container->object());
 
-    evas_object_size_hint_weight_set(object(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+    evas_object_size_hint_weight_set(webViewObject(), EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 
-    evas_object_event_callback_add(object(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
-    evas_object_event_callback_add(object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
-    evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_IN, onFocusIn, this);
-    evas_object_event_callback_add(object(), EVAS_CALLBACK_FOCUS_OUT, onFocusOut, this);
+    evas_object_event_callback_add(webViewObject(), EVAS_CALLBACK_KEY_DOWN, onKeyDown, this);
+    evas_object_event_callback_add(webViewObject(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown, this);
+    evas_object_event_callback_add(webViewObject(), EVAS_CALLBACK_FOCUS_IN, onFocusIn, this);
+    evas_object_event_callback_add(webViewObject(), EVAS_CALLBACK_FOCUS_OUT, onFocusOut, this);
 
 #define SMART_CALLBACK_ADD(signal, func) \
-    evas_object_smart_callback_add(object(), signal, func, this)
+    evas_object_smart_callback_add(webViewObject(), signal, func, this)
 
     SMART_CALLBACK_ADD("inspector,view,create", onInspectorViewCreate);
     SMART_CALLBACK_ADD("inspector,view,close", onInspectorViewClose);
@@ -226,10 +226,10 @@ WebView::WebView(Browser* container)
 
 WebView::~WebView()
 {
-    evas_object_event_callback_del(object(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown);
+    evas_object_event_callback_del(webViewObject(), EVAS_CALLBACK_MOUSE_DOWN, onMouseDown);
 
-    evas_object_smart_callback_del(object(), "inspector,view,create", onInspectorViewCreate);
-    evas_object_smart_callback_del(object(), "inspector,view,close", onInspectorViewClose);
+    evas_object_smart_callback_del(webViewObject(), "inspector,view,create", onInspectorViewCreate);
+    evas_object_smart_callback_del(webViewObject(), "inspector,view,close", onInspectorViewClose);
 
     if (m_inspector)
         delete m_inspector;
@@ -243,7 +243,7 @@ WebView* WebView::create(Browser* container)
     WebView* webView = new WebView(container);
 
 #ifdef WEBKIT_DEFAULT_THEME_PATH
-    ewk_view_theme_set(webView->object(), WEBKIT_DEFAULT_THEME_PATH "/themes/default.edj");
+    ewk_view_theme_set(webView->webViewObject(), WEBKIT_DEFAULT_THEME_PATH "/themes/default.edj");
 #endif
 
     return webView;
@@ -278,67 +278,67 @@ void WebView::loadUrl(const char* urlToLoad)
     m_url = new ERU::Url(urlToLoad);
 
 #if USE_WEBKIT || USE_ELM_WEB
-    ewk_view_uri_set(object(), url());
+    ewk_view_uri_set(webViewObject(), url());
 #else
-    ewk_view_url_set(object(), url());
+    ewk_view_url_set(webViewObject(), url());
 #endif
 }
 
 void WebView::back()
 {
-    ewk_view_back(object());
+    ewk_view_back(webViewObject());
 }
 
 void WebView::forward()
 {
-    ewk_view_forward(object());
+    ewk_view_forward(webViewObject());
 }
 
 void WebView::reload()
 {
-    ewk_view_reload(object());
+    ewk_view_reload(webViewObject());
 }
 
 void WebView::stop()
 {
-    ewk_view_stop(object());
+    ewk_view_stop(webViewObject());
 }
 
 bool WebView::backPossible()
 {
-    return ewk_view_back_possible(object());
+    return ewk_view_back_possible(webViewObject());
 }
 
 bool WebView::forwardPossible()
 {
-    return ewk_view_forward_possible(object());
+    return ewk_view_forward_possible(webViewObject());
 }
 
 void WebView::openInspectorView()
 {
 #if USE_WEBKIT
     // FIXME: we need better way to handle setting.
-    ewk_view_setting_enable_developer_extras_set(object(), true);
-    ewk_view_inspector_show(object());
+    ewk_view_setting_enable_developer_extras_set(webViewObject(), true);
+    ewk_view_inspector_show(webViewObject());
 #endif
 }
 
 void WebView::setSourceMode()
 {
-#if !USE_WEBKIT
+#if !USE_WEBKIT && !USE_ELM_WEB
     fprintf(stderr, "%s\n", __func__);
-    ewk_view_source_mode_set(object(), true);
+    ewk_view_source_mode_set(webViewObject(), true);
 #endif
 }
 
 void WebView::scaleUp()
 {
-    double ratio = ewk_view_scale_get(object());
-    ewk_view_scale_set(object(), ratio + 0.1, 0, 0);
+    double ratio = ewk_view_scale_get(webViewObject());
+    ewk_view_scale_set(webViewObject(), ratio + 0.1, 0, 0);
 }
 
 void WebView::scaleDown()
 {
-    double ratio = ewk_view_scale_get(object());
-    ewk_view_scale_set(object(), ratio - 0.1, 0, 0);
+    double ratio = ewk_view_scale_get(webViewObject());
+    ewk_view_scale_set(webViewObject(), ratio - 0.1, 0, 0);
 }

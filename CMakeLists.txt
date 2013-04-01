@@ -95,6 +95,9 @@ if (USE_WEBKIT)
         ${SOURCE_DIR}/Browser/ewk/WebViewEWK.cpp
     )
 elseif (USE_ELM_WEB)
+    list(APPEND EAGLE_SOURCES
+        ${SOURCE_DIR}/Browser/elm/WebViewElm.cpp
+    )
 else ()
     list(APPEND EAGLE_SOURCES
         ${SOURCE_DIR}/Browser/ewk2/WebViewEWK2.cpp
