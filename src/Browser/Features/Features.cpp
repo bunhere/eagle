@@ -8,20 +8,23 @@
 
 #include "Features.h"
 
-#include "AutoFormFill.h"
+AutoFormFill* Features::s_autoFormFill = 0;
+DatabaseHandle* Features::s_databaseHandle = 0;
 
-Features& Features::instance()
+void Features::flush()
 {
-    static Features features;
-    return features;
+    if (s_autoFormFill) {
+        delete s_autoFormFill;
+    }
 }
 
-Features::Features()
+DatabaseHandle::DatabaseHandle()
 {
-    m_autoFormFill = new AutoFormFill;
+    if (sqlite3_open("./test.db", &m_database) != SQLITE_OK)
+        fprintf(stderr, "sqlite3_open error : %s\n", sqlite3_errmsg(m_database));
 }
 
-void Features::initialize()
+DatabaseHandle::~DatabaseHandle()
 {
-    m_autoFormFill->initialize();
+    sqlite3_close(m_database);
 }

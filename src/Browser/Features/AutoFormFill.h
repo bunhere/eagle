@@ -18,13 +18,13 @@
 typedef struct sqlite3 sqlite3;
 typedef struct _Eina_List Eina_List;
 
+class DatabaseHandle;
+
 class AutoFormFill
 {
 public:
-    AutoFormFill();
+    explicit AutoFormFill(DatabaseHandle*);
     ~AutoFormFill();
-
-    void initialize();
 
     void loadSavedSites();
     bool existURI(const char* uri);
@@ -34,7 +34,7 @@ public:
 #endif
 private:
 
-    sqlite3* m_database;
+    DatabaseHandle* m_handle;
     Eina_List* m_uriList;
 };
 #endif

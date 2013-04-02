@@ -7,8 +7,9 @@
  */
 
 #include "AutoFormFill.h"
-#include <sqlite3.h>
 
+#include "Features.h"
+#include <sqlite3.h>
 #include <stdio.h>
 
 const char SQL_CREATE[] =
@@ -31,24 +32,16 @@ const char SQL_INSERT_FORMFILL[] =
 const char SQL_INSERT_FORMFILLITEM[] =
     "insert into tbAutoFormFillItem values(?, ?, ?);";
 
-void AutoFormFill::initialize()
-{
-    if (sqlite3_open("./test.db", &m_database) != SQLITE_OK)
-        fprintf(stderr, "sqlite3_open error : %s\n", sqlite3_errmsg(m_database));
-
-    sqlite3_exec(m_database, SQL_CREATE, 0, 0, 0);
-
-    loadSavedSites();
-}
-
-AutoFormFill::AutoFormFill()
+AutoFormFill::AutoFormFill(DatabaseHandle* handle)
     : m_uriList(0)
+    , m_handle(handle)
 {
+    sqlite3_exec(m_handle->db(), SQL_CREATE, 0, 0, 0);
+    loadSavedSites();
 }
 
 AutoFormFill::~AutoFormFill()
 {
-    sqlite3_close(m_database);
 }
 
 void AutoFormFill::loadSavedSites()
@@ -58,7 +51,7 @@ void AutoFormFill::loadSavedSites()
     int rows;
     int columns;
 
-    if (sqlite3_get_table(m_database, SQL_LOAD_SAVED_SITES, &result, &rows, &columns, &err) != SQLITE_OK)
+    if (sqlite3_get_table(m_handle->db(), SQL_LOAD_SAVED_SITES, &result, &rows, &columns, &err) != SQLITE_OK)
         return;
 
     for (int i = 0; i < rows; ++i) {
@@ -82,15 +75,15 @@ bool AutoFormFill::existURI(const char* uri)
 #else
 void AutoFormFill::saveFormValues(const char* uri, Ewk_Form_Submission_Request* request)
 {
-    sqlite3_exec(m_database, "begin transaction;", 0, 0, 0);
+    sqlite3_exec(m_handle->db(), "begin transaction;", 0, 0, 0);
     const char* exeSql = eina_stringshare_printf(SQL_INSERT_FORMFILL, uri);
-    sqlite3_exec(m_database, exeSql, 0, 0, 0);
+    sqlite3_exec(m_handle->db(), exeSql, 0, 0, 0);
 
-    int pid = sqlite3_last_insert_rowid(m_database);
+    int pid = sqlite3_last_insert_rowid(m_handle->db());
 
     sqlite3_stmt* state;
     const char* tail;
-    sqlite3_prepare_v2(m_database, SQL_INSERT_FORMFILLITEM, strlen(SQL_INSERT_FORMFILLITEM), &state, &tail);
+    sqlite3_prepare_v2(m_handle->db(), SQL_INSERT_FORMFILLITEM, strlen(SQL_INSERT_FORMFILLITEM), &state, &tail);
 
     Eina_List* list = ewk_form_submission_request_field_names_get(request);
 
@@ -108,6 +101,6 @@ void AutoFormFill::saveFormValues(const char* uri, Ewk_Form_Submission_Request* 
     }
     sqlite3_finalize(state);
 
-    sqlite3_exec(m_database, "commit transaction;", 0, 0, 0);
+    sqlite3_exec(m_handle->db(), "commit transaction;", 0, 0, 0);
 }
 #endif

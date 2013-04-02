@@ -114,7 +114,7 @@ void WebView::onLoadError(void *userData, Evas_Object *webView, void *eventInfo)
 void WebView::onLoadFinished(void *userData, Evas_Object *webView, void *eventInfo)
 {
     LOG("");
-    AutoFormFill* formFillFeature = Features::instance().autoFormFill();
+    AutoFormFill* formFillFeature = Features::autoFormFill();
 
 #if USE_WEBKIT || USE_ELM_WEB
 #else
@@ -138,7 +138,7 @@ void WebView::onFormSubmissionRequest(void *userData, Evas_Object *webView, void
 #else
     Ewk_Form_Submission_Request* request = static_cast<Ewk_Form_Submission_Request*>(eventInfo);
 
-    AutoFormFill* formFillFeature = Features::instance().autoFormFill();
+    AutoFormFill* formFillFeature = Features::autoFormFill();
 
     if (formFillFeature) {
         bool needToUpdate = true;
