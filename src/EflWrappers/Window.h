@@ -15,6 +15,7 @@ class Window : public Object
 {
 public:
     Window(int width, int height);
+    virtual ~Window() { }
 
     void setTitle(const char* title);
 
