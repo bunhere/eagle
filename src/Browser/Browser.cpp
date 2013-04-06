@@ -21,8 +21,8 @@
 static const int sDefaultWidth = 480;
 static const int sDefaultHeight = 800;
 #else
-static const int sDefaultWidth = 800;
-static const int sDefaultHeight = 600;
+static const int sDefaultWidth = 0;
+static const int sDefaultHeight = 0;
 #endif
 
 void Browser::initialize()

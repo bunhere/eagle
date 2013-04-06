@@ -30,7 +30,7 @@ endif ()
 
 # Check package dependency.
 set(PKG_list
-    eina ecore evas ecore-evas elementary
+    eina ecore evas ecore-evas ecore-x elementary
     sqlite3
 )
 

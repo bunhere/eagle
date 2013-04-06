@@ -8,6 +8,7 @@
 
 #include "Window.h"
 
+#include <Ecore_X.h>
 #include <Elementary.h>
 #include <stdio.h>
 
@@ -29,6 +30,13 @@ Window::Window(int width, int height)
     elm_win_resize_object_add(object(), m_bg);
     evas_object_show(m_bg);
 
+    if (width <= 0 || height <= 0) {
+        ecore_x_screen_size_get(ecore_x_default_screen_get(), &width, &height);
+        if (width <= 0 || height <= 0) {
+            width = 1;
+            height = 1;
+        }
+    }
     resize(width, height);
 }
 
