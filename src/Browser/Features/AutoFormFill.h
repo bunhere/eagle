@@ -15,7 +15,6 @@
 #include <EWebKit2.h>
 #endif
 
-typedef struct sqlite3 sqlite3;
 typedef struct _Eina_List Eina_List;
 
 class DatabaseHandle;

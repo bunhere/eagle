@@ -29,7 +29,6 @@ Window::Window(int width, int height)
     elm_win_resize_object_add(object(), m_bg);
     evas_object_show(m_bg);
 
-    fprintf(stderr, "%d, %d\n", width, height);
     resize(width, height);
 }
 
@@ -41,17 +40,14 @@ void Window::setTitle(const char* title)
 Eina_Bool Window::destroy(void* data)
 {
     Evas_Object* object = static_cast<Evas_Object*>(data);
-    fprintf(stderr, "---(%d)\n", __LINE__);
     if (!head)
         return false;
 
-    fprintf(stderr, "---(%d)\n", __LINE__);
     if (!head->next) {
         elm_exit();
         return false;
     }
 
-    fprintf(stderr, "---(%d)\n", __LINE__);
     Window* prev = head;
     if (head->object() == object) {
         head = head->next;
@@ -59,7 +55,6 @@ Eina_Bool Window::destroy(void* data)
         return false;
     }
 
-    fprintf(stderr, "---(%d)\n", __LINE__);
     Window* it = head->next;
     while (it) {
         if (it->object() == object) {
@@ -70,7 +65,6 @@ Eina_Bool Window::destroy(void* data)
         prev = it;
         it = it->next;
     }
-    fprintf(stderr, "---(%d)\n", __LINE__);
 
     return false;
 }
