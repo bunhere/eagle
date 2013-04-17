@@ -29,8 +29,14 @@ if (USE_MOBILE_PROFILE)
 endif ()
 
 # Check package dependency.
+find_package(Ecore REQUIRED COMPONENTS file X)
+find_package(Edje REQUIRED)
+find_package(Eina REQUIRED)
+find_package(Eo REQUIRED)
+find_package(Evas REQUIRED)
+find_package(Elementary REQUIRED)
+
 set(PKG_list
-    eina ecore evas ecore-evas ecore-x elementary
     sqlite3
 )
 
@@ -56,6 +62,18 @@ foreach(flag ${PKGS_CFLAGS})
 endforeach(flag)
 
 set(EAGLE_LDFLAGS ${PKGS_LDFLAGS})
+
+set(EAGLE_LIBRARIES
+    ${ECORE_LIBRARIES}
+    ${ECORE_FILE_LIBRARIES}
+    ${ECORE_X_LIBRARIES}
+    ${EDJE_LIBRARIES}
+    ${EO_LIBRARIES}
+    ${EINA_LIBRARIES}
+    ${EVAS_LIBRARIES}
+    ${ELEMENTARY_LIBRARIES}
+    ${EAGLE_LDFLAGS}
+)
 
 if (USE_WEBKIT OR USE_WEBKIT2)
     find_program(PKG_CONFIG_EXECUTABLE NAMES pkg-config DOC "pkg-config executable")
@@ -115,7 +133,8 @@ include(theme/CMakeLists.txt)
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ${EXTRA_CFLAGS} ${EAGLE_CFLAGS}")
 
 add_executable(eagle ${EAGLE_EXECUTABLE_SOURCES})
-target_link_libraries(eagle ${EAGLE_LDFLAGS})
+include_directories(${ELEMENTARY_INCLUDE_DIRS})
+target_link_libraries(eagle ${EAGLE_LIBRARIES})
 include_directories(eagle
     "src/"
     "theme/"
