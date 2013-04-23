@@ -8,7 +8,6 @@
 #define Features_h
 
 #include "AutoFormFill.h"
-#include "HistoryManager.h"
 #include <sqlite3.h>
 
 class DatabaseHandle
@@ -38,15 +37,9 @@ public:
             s_autoFormFill = new AutoFormFill(featureDatabase());
         return s_autoFormFill;
     }
-    inline static HistoryManager* historyManager() {
-        if (!s_historyManager)
-            s_historyManager = new HistoryManager(featureDatabase());
-        return s_historyManager;
-    }
 private:
     static DatabaseHandle* s_databaseHandle;
 
     static AutoFormFill* s_autoFormFill;
-    static HistoryManager* s_historyManager;
 };
 #endif
